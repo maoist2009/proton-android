@@ -150,7 +150,8 @@ class SettingsViewModel @Inject constructor(
             override val iconRes: Int = if (isEnabled) R.drawable.feature_splittunneling_on else R.drawable.feature_splittunneling_off
         ) : SettingViewState<Boolean>(
             value = isEnabled,
-            isRestricted = isFreeUser,
+            isFreeUser = false,
+            isRestricted = false,
             titleRes = R.string.settings_split_tunneling_title,
             settingValueView = SettingValue.SettingStringRes(if (isEnabled) R.string.split_tunneling_state_on else R.string.split_tunneling_state_off),
             descriptionRes = R.string.settings_split_tunneling_description,
