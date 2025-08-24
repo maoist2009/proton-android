@@ -36,6 +36,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true  # This is CRITICAL - fetches Git tags needed for versioning
 
       - name: Setup Java
         id: setup-java
@@ -71,16 +72,6 @@ jobs:
         run: |
           echo "Installing CMake ${{ env.ANDROID_CMAKE_VERSION }}"
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;${{ env.ANDROID_CMAKE_VERSION }}"
-          echo "ANDROID_CMAKE_HOME=$ANDROID_HOME/cmake/${{ env.ANDROID_CMAKE_VERSION }}" >> $GITHUB_ENV
-
-      - name: Cache Android SDK
-        id: android-sdk-cache
-        uses: actions/cache@v4
-        with:
-          path: $ANDROID_HOME
-          key: ${{ runner.os }}-android-sdk-${{ hashFiles('**/build.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-android-sdk-
 
       - name: Install SWIG
         run: |
