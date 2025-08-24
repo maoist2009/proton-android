@@ -27,7 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"
-      ANDROID_NDK_HOME: ${{ runner.tool_cache }}/ndk/25.1.8937393
       SWIG_VERSION: "4.1.1"
 
     steps:
@@ -37,6 +36,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Java
+        id: setup-java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -57,7 +57,7 @@ jobs:
         id: android-sdk-cache
         uses: actions/cache@v4
         with:
-          path: ${{ runner.tool_cache }}/android
+          path: /usr/local/lib/android/sdk
           key: ${{ runner.os }}-android-sdk-${{ hashFiles('**/build.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-android-sdk-
@@ -89,8 +89,7 @@ jobs:
           echo "count=0" > $HOME/.android/repositories.cfg
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
         env:
-          JAVA_HOME: ${{ java-latest }}
-          ANDROID_HOME: ${{ runner.tool_cache }}/android
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
@@ -98,8 +97,7 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleProductionVanillaOpenSourceDebug --stacktrace
         env:
-          ANDROID_NDK_HOME: ${{ runner.tool_cache }}/ndk/25.1.8937393
-          JAVA_HOME: ${{ java-latest }}
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
 
       - name: Verify APK exists
         run: |
