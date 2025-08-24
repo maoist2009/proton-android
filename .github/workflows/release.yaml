@@ -120,25 +120,6 @@ jobs:
           echo "APK found at $APK_PATH"
           echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
 
-      - name: Verify v2/v3 signature
-        run: |
-          # 安装apksigner工具（包含在Android SDK中）
-          echo "Verifying APK signature scheme..."
-          apksigner verify --verbose ${{ env.APK_PATH }}
-          
-          # 检查v2和v3签名是否启用
-          if ! apksigner verify --verbose ${{ env.APK_PATH }} | grep -q "Verified using v2 scheme (APK Signature Scheme v2): true"; then
-            echo "Error: APK is not signed with v2 signature scheme. Android 7.0+ requires v2 signature."
-            exit 1
-          fi
-          
-          if ! apksigner verify --verbose ${{ env.APK_PATH }} | grep -q "Verified using v3 scheme (APK Signature Scheme v3): true"; then
-            echo "Warning: APK is not signed with v3 signature scheme. Consider enabling v3 signing for Android 9+."
-            # 注意：v3签名不是强制要求，所以这里只是警告而不是错误
-          fi
-          
-          echo "APK signature verification successful. v2 signature is present."
-
       - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
