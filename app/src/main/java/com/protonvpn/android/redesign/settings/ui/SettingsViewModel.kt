@@ -150,7 +150,6 @@ class SettingsViewModel @Inject constructor(
             override val iconRes: Int = if (isEnabled) R.drawable.feature_splittunneling_on else R.drawable.feature_splittunneling_off
         ) : SettingViewState<Boolean>(
             value = isEnabled,
-            isFreeUser = false,
             isRestricted = false,
             titleRes = R.string.settings_split_tunneling_title,
             settingValueView = SettingValue.SettingStringRes(if (isEnabled) R.string.split_tunneling_state_on else R.string.split_tunneling_state_off),
@@ -243,7 +242,7 @@ class SettingsViewModel @Inject constructor(
             overrideProfilePrimaryLabel: ConnectIntentPrimaryLabel.Profile?,
         ) : SettingViewState<Boolean>(
             value = value,
-            isRestricted = isFreeUser,
+            isRestricted = false,
             titleRes = R.string.settings_advanced_allow_lan_title,
             settingValueView =
                 if (overrideProfilePrimaryLabel != null) {
