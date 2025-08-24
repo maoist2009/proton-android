@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'src/**'  # Monitor all source code changes
+      - 'src/**'
       - 'build.gradle'
       - 'gradle/**'
       - 'CMakeLists.txt'
@@ -28,6 +28,8 @@ jobs:
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"
       SWIG_VERSION: "4.1.1"
+      ANDROID_NDK_VERSION: "25.1.8937393"
+      ANDROID_CMAKE_VERSION: "3.22.1"
 
     steps:
       - name: Checkout repository
@@ -53,24 +55,34 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Set up Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
+
+      - name: Install Android NDK
+        run: |
+          echo "Installing NDK ${{ env.ANDROID_NDK_VERSION }}"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+
+      - name: Install CMake
+        run: |
+          echo "Installing CMake ${{ env.ANDROID_CMAKE_VERSION }}"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;${{ env.ANDROID_CMAKE_VERSION }}"
+          echo "ANDROID_CMAKE_HOME=$ANDROID_HOME/cmake/${{ env.ANDROID_CMAKE_VERSION }}" >> $GITHUB_ENV
+
       - name: Cache Android SDK
         id: android-sdk-cache
         uses: actions/cache@v4
         with:
-          path: /usr/local/lib/android/sdk
+          path: $ANDROID_HOME
           key: ${{ runner.os }}-android-sdk-${{ hashFiles('**/build.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-android-sdk-
 
-      - name: Setup Android SDK
-        if: steps.android-sdk-cache.outputs.cache-hit != 'true'
-        uses: android-actions/setup-android@v1
-        with:
-          ndk: '25.1.8937393'
-          cmake: '3.22.1'
-
       - name: Install SWIG
-        if: steps.android-sdk-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y libpcre3-dev
@@ -88,8 +100,6 @@ jobs:
           mkdir -p $HOME/.android
           echo "count=0" > $HOME/.android/repositories.cfg
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        env:
-          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
