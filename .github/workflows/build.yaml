@@ -1,0 +1,117 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'  # Monitor all source code changes
+      - 'build.gradle'
+      - 'gradle/**'
+      - 'CMakeLists.txt'
+      - '**.cpp'
+      - '**.h'
+      - 'swig/**'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'gradle/**'
+      - 'CMakeLists.txt'
+      - '**.cpp'
+      - '**.h'
+      - 'swig/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"
+      ANDROID_NDK_HOME: ${{ runner.tool_cache }}/ndk/25.1.8937393
+      SWIG_VERSION: "4.1.1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache Android SDK
+        id: android-sdk-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.tool_cache }}/android
+          key: ${{ runner.os }}-android-sdk-${{ hashFiles('**/build.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-android-sdk-
+
+      - name: Setup Android SDK
+        if: steps.android-sdk-cache.outputs.cache-hit != 'true'
+        uses: android-actions/setup-android@v1
+        with:
+          ndk: '25.1.8937393'
+          cmake: '3.22.1'
+
+      - name: Install SWIG
+        if: steps.android-sdk-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpcre3-dev
+          wget https://downloads.sourceforge.net/project/swig/swig/swig-${{ env.SWIG_VERSION }}/swig-${{ env.SWIG_VERSION }}.tar.gz
+          tar -xzf swig-${{ env.SWIG_VERSION }}.tar.gz
+          cd swig-${{ env.SWIG_VERSION }}
+          ./configure
+          make
+          sudo make install
+          cd ..
+          rm -rf swig-${{ env.SWIG_VERSION }}*
+
+      - name: Accept Android licenses
+        run: |
+          mkdir -p $HOME/.android
+          echo "count=0" > $HOME/.android/repositories.cfg
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        env:
+          JAVA_HOME: ${{ java-latest }}
+          ANDROID_HOME: ${{ runner.tool_cache }}/android
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleProductionVanillaOpenSourceDebug --stacktrace
+        env:
+          ANDROID_NDK_HOME: ${{ runner.tool_cache }}/ndk/25.1.8937393
+          JAVA_HOME: ${{ java-latest }}
+
+      - name: Verify APK exists
+        run: |
+          if [ ! -f $(find app/build/outputs/apk/productionVanillaOpenSource/debug/ -name "*.apk" | head -1) ]; then
+            echo "Error: APK file not found after build"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProductionVanillaOpenSource-Debug-APK
+          path: app/build/outputs/apk/productionVanillaOpenSource/debug/*.apk
+          if-no-files-found: error
