@@ -100,9 +100,9 @@ abstract class BaseApplyEffectiveUserSettings(
         val effectiveVpnAccelerator = !isUserPlusOrAbove || settings.vpnAccelerator
         val netShieldAvailable = vpnUser.getNetShieldAvailability() == NetShieldAvailability.AVAILABLE
         val effectiveSplitTunneling =
-            if (isUserPlusOrAbove) settings.splitTunneling
+            if (true) settings.splitTunneling
             else SplitTunnelingSettings(isEnabled = false)
-        val lanConnections = isTv || (isUserPlusOrAbove && settings.lanConnections)
+        val lanConnections = isTv || settings.lanConnections
         return settings.copy(
             defaultProfileId = if (isUserPlusOrAbove || isTv) settings.defaultProfileId else null,
             lanConnections = lanConnections,
