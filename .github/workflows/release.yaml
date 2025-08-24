@@ -1,0 +1,158 @@
+name: Android Release Build
+
+on:
+  push:
+    tags:
+      - '*'  # 仅当推送标签时构建（例如 v1.0.0）
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"
+      SWIG_VERSION: "4.1.1"
+      ANDROID_NDK_VERSION: "25.1.8937393"
+      ANDROID_CMAKE_VERSION: "3.22.1"
+      # 确保在 build.gradle 中设置了正确的签名配置
+      # signingConfigs {
+      #   release {
+      #     v1SigningEnabled true
+      #     v2SigningEnabled true
+      #     v3SigningEnabled true
+      #   }
+      # }
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true  # 确保获取Git标签，解决"Tag doesn't match the version name pattern: null"错误
+
+      - name: Setup Java
+        id: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
+
+      - name: Install Android NDK
+        run: |
+          echo "Installing NDK ${{ env.ANDROID_NDK_VERSION }}"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+
+      - name: Install CMake
+        run: |
+          echo "Installing CMake ${{ env.ANDROID_CMAKE_VERSION }}"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;${{ env.ANDROID_CMAKE_VERSION }}"
+
+      - name: Install SWIG
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpcre3-dev
+          wget https://downloads.sourceforge.net/project/swig/swig/swig-${{ env.SWIG_VERSION }}/swig-${{ env.SWIG_VERSION }}.tar.gz
+          tar -xzf swig-${{ env.SWIG_VERSION }}.tar.gz
+          cd swig-${{ env.SWIG_VERSION }}
+          ./configure
+          make
+          sudo make install
+          cd ..
+          rm -rf swig-${{ env.SWIG_VERSION }}*
+
+      - name: Accept Android licenses
+        run: |
+          mkdir -p $HOME/.android
+          echo "count=0" > $HOME/.android/repositories.cfg
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Set up keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "Error: KEYSTORE_BASE64 secret is not set"
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
+          echo "Keystore file created at $(pwd)/release-keystore.jks"
+          ls -la
+
+      - name: Build release APK
+        run: |
+          ./gradlew assembleProductionVanillaOpenSourceRelease \
+            -PkeyStoreFilePath=./release-keystore.jks \
+            -PkeyStoreKeyAlias=${{ secrets.KEYSTORE_KEY_ALIAS }} \
+            -PkeyStorePassword=${{ secrets.KEYSTORE_PASSWORD }} \
+            -PkeyStoreKeyPassword=${{ secrets.KEYSTORE_KEY_PASSWORD }} \
+            --stacktrace
+        env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
+
+      - name: Verify APK exists
+        run: |
+          APK_PATH=$(find app/build/outputs/apk/productionVanillaOpenSource/release/ -name "*.apk" | head -1)
+          if [ ! -f "$APK_PATH" ]; then
+            echo "Error: Release APK file not found after build"
+            exit 1
+          fi
+          echo "APK found at $APK_PATH"
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
+
+      - name: Verify v2/v3 signature
+        run: |
+          # 安装apksigner工具（包含在Android SDK中）
+          echo "Verifying APK signature scheme..."
+          apksigner verify --verbose ${{ env.APK_PATH }}
+          
+          # 检查v2和v3签名是否启用
+          if ! apksigner verify --verbose ${{ env.APK_PATH }} | grep -q "Verified using v2 scheme (APK Signature Scheme v2): true"; then
+            echo "Error: APK is not signed with v2 signature scheme. Android 7.0+ requires v2 signature."
+            exit 1
+          fi
+          
+          if ! apksigner verify --verbose ${{ env.APK_PATH }} | grep -q "Verified using v3 scheme (APK Signature Scheme v3): true"; then
+            echo "Warning: APK is not signed with v3 signature scheme. Consider enabling v3 signing for Android 9+."
+            # 注意：v3签名不是强制要求，所以这里只是警告而不是错误
+          fi
+          
+          echo "APK signature verification successful. v2 signature is present."
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProductionVanillaOpenSource-Release-APK
+          path: ${{ env.APK_PATH }}
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body_path: ./release-notes/${{ github.ref_name }}.md
+          files: ${{ env.APK_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
