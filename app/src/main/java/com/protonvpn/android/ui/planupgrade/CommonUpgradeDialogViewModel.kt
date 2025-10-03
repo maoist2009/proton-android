@@ -68,7 +68,10 @@ abstract class CommonUpgradeDialogViewModel(
     sealed class State {
         object Initializing : State()
         object UpgradeDisabled : State()
-        object LoadingPlans : State()
+        data class LoadingPlans(
+            val expectedCycleCount: Int,
+            val buttonLabelOverride: String?,
+        ) : State()
         class LoadError(
             @StringRes val messageRes: Int? = null,
             val error: Throwable? = null
@@ -77,8 +80,8 @@ abstract class CommonUpgradeDialogViewModel(
             val allPlans: List<PlanModel>,
             val selectedPlan: PlanModel,
             val selectedPlanPriceInfo: Map<PlanCycle, PriceInfo>,
-            val showRenewPrice: Boolean,
             val inProgress: Boolean = false,
+            val buttonLabelOverride: String? = null,
         ) : State()
         object PlansFallback : State() // Conditions for short flow were not met, start normal account flow
         data class PurchaseSuccess(
@@ -93,8 +96,8 @@ abstract class CommonUpgradeDialogViewModel(
     val eventPurchaseError: ReceiveChannel<PurchaseError> = purchaseError
     val state = MutableStateFlow<State>(State.Initializing)
 
-    fun reportUpgradeFlowStart(upgradeSource: UpgradeSource) {
-        upgradeTelemetry.onUpgradeFlowStarted(upgradeSource)
+    fun reportUpgradeFlowStart(upgradeSource: UpgradeSource, reference: String? = null) {
+        upgradeTelemetry.onUpgradeFlowStarted(upgradeSource, reference)
     }
 
     fun setupOrchestrators(activity: ComponentActivity) {

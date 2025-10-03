@@ -45,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -59,8 +58,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.protonvpn.android.R
 import com.protonvpn.android.di.WallClock
-import com.protonvpn.android.redesign.base.ui.upsellBorderGradientEnd
-import com.protonvpn.android.redesign.base.ui.upsellBorderGradientStart
+import com.protonvpn.android.base.ui.upsellBorderGradientEnd
+import com.protonvpn.android.base.ui.upsellBorderGradientStart
 import com.protonvpn.android.utils.tickFlow
 import kotlinx.coroutines.launch
 import me.proton.core.compose.theme.ProtonTheme

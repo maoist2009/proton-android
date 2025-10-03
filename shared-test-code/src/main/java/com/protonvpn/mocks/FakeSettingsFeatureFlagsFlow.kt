@@ -24,5 +24,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeSettingsFeatureFlagsFlow(
-    private val flow: Flow<SettingsFeatureFlagsFlow.Flags> = flowOf(SettingsFeatureFlagsFlow.Flags(true, true))
+    private val flow: Flow<SettingsFeatureFlagsFlow.Flags> = flowOf(
+        value = SettingsFeatureFlagsFlow.Flags(
+            isIPv6Enabled = true,
+            isDirectLanConnectionsEnabled = true,
+            isTvNetShieldSettingEnabled = true,
+            isTvCustomDnsSettingEnabled = true,
+            isTvAutoConnectEnabled = true,
+        )
+    )
 ) : Flow<SettingsFeatureFlagsFlow.Flags> by flow

@@ -24,9 +24,9 @@ package com.protonvpn.tests.base.ui.ui
 import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.unit.dp
 import androidx.test.filters.SdkSuppress
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_P2P
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_RESTRICTED
-import com.protonvpn.android.models.vpn.Server
+import com.protonvpn.android.servers.api.SERVER_FEATURE_P2P
+import com.protonvpn.android.servers.api.SERVER_FEATURE_RESTRICTED
+import com.protonvpn.android.servers.Server
 import com.protonvpn.android.models.vpn.VpnCountry
 import com.protonvpn.android.profiles.data.Profile
 import com.protonvpn.android.profiles.data.ProfileAutoOpen
@@ -480,7 +480,7 @@ class GetConnectIntentViewStateTestsCompose : FusionComposeTest() {
             ),
             connectIntent = intent,
             userId = UserId("dummy id"),
-            autoOpen = ProfileAutoOpen.None(""),
+            autoOpen = ProfileAutoOpen.None,
         )
         profiles.set(profile)
         setConnectIntentRowComposable(profile.connectIntent, isFreeUser = false)

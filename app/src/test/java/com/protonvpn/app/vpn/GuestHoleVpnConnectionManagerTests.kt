@@ -30,7 +30,7 @@ import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.logging.ProtonLogger
 import com.protonvpn.android.models.config.VpnProtocol
 import com.protonvpn.android.models.vpn.ConnectionParams
-import com.protonvpn.android.models.vpn.Server
+import com.protonvpn.android.servers.Server
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
 import com.protonvpn.android.netshield.NetShieldStats
 import com.protonvpn.android.redesign.vpn.AnyConnectIntent
@@ -191,8 +191,8 @@ class GuestHoleVpnConnectionManagerTests {
 
         // Can't use runBlocking because ServerManager uses testScope's StandardTestDispatcher, so it would deadlock.
         testScope.launch {
-            serverManager.setServers(listOf(createServer("serverId")), null)
-            serverManager.setBuiltInGuestHoleServersForTesting(listOf(createServer("ghServerId")))
+            serverManager.setServers(listOf(createServer("serverId", tier = 0)), null, null)
+            serverManager.setBuiltInGuestHoleServersForTesting(listOf(createServer("ghServerId", tier = 0)))
         }
         testScope.runCurrent()
 

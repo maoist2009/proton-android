@@ -22,9 +22,11 @@ package com.protonvpn.mocks
 import com.protonvpn.android.appconfig.UserCountryIpBased
 import com.protonvpn.android.appconfig.UserCountryPhysical
 import com.protonvpn.android.auth.usecase.CurrentUser
-import com.protonvpn.android.models.vpn.Server
+import com.protonvpn.android.servers.Server
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
 import com.protonvpn.android.servers.ServersDataManager
+import com.protonvpn.android.servers.UpdateServersWithBinaryStatus
+import com.protonvpn.android.servers.api.LogicalsStatusId
 import com.protonvpn.android.ui.home.ServerListUpdaterPrefs
 import com.protonvpn.android.utils.ServerManager
 import com.protonvpn.test.shared.MockSharedPreferencesProvider
@@ -44,13 +46,16 @@ fun createInMemoryServerManager(
     supportsProtocol: SupportsProtocol,
     currentUser: CurrentUser,
     initialServers: List<Server>,
+    initialStatusId: LogicalsStatusId? = null,
+    updateWithBinaryStatus: UpdateServersWithBinaryStatus = FakeUpdateServersWithBinaryStatus(),
     builtInGuestHoles: List<Server> = emptyList(),
     physicalUserCountry: UserCountryPhysical = createNoopUserCountry(),
 ): ServerManager {
-    val serverStore = createInMemoryServersStore(initialServers)
+    val serverStore = createInMemoryServersStore(initialServers, initialStatusId)
     val serversDataManager = ServersDataManager(
         testDispatcherProvider,
-        serverStore
+        serverStore,
+        updateWithBinaryStatus,
     )
     val serverManager = ServerManager(
         testScope.backgroundScope,
@@ -61,7 +66,7 @@ fun createInMemoryServerManager(
         physicalUserCountry,
     )
     testScope.launch {
-        serverManager.setServers(initialServers, "en")
+        serverManager.setServers(initialServers, initialStatusId, "en")
     }
     testScope.runCurrent()
     serverManager.setBuiltInGuestHoleServersForTesting(builtInGuestHoles)

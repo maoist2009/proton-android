@@ -33,7 +33,7 @@ import com.protonvpn.android.managed.ManagedConfig
 import com.protonvpn.android.models.login.GenericResponse
 import com.protonvpn.android.models.login.VPNInfo
 import com.protonvpn.android.models.login.VpnInfoResponse
-import com.protonvpn.android.models.vpn.ServerList
+import com.protonvpn.android.servers.UpdateServerListFromApi
 import com.protonvpn.android.tv.login.TvLoginViewModel
 import com.protonvpn.android.tv.login.TvLoginViewState
 import com.protonvpn.android.ui.home.ServerListUpdater
@@ -121,7 +121,7 @@ class TvLoginViewModelTests {
             SessionForkSelectorResponse(selector, "USERC0D3")
         )
         coEvery { api.getForkedSession(selector) } returns ApiResult.Success(forkedSessionResponse)
-        coEvery { serverListUpdater.updateServerList() } returns ApiResult.Success(ServerList(listOf()))
+        coEvery { serverListUpdater.updateServerList() } returns UpdateServerListFromApi.Result.Success
     }
 
     @Test

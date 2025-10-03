@@ -25,6 +25,7 @@ import com.protonvpn.android.appconfig.ApiNotificationManager
 import com.protonvpn.android.appconfig.ApiNotificationTypes
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.ui.ForegroundActivityTracker
+import com.protonvpn.android.ui.promooffers.usecase.EnsureIapOfferStillValid
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -42,6 +43,14 @@ class PromoActivityOpener @Inject constructor() {
         activity.startActivity(PromoOfferActivity.createIntent(activity, notificationId))
     }
 }
+
+@Reusable
+class PromoIapActivityOpener @Inject constructor() {
+    fun open(activity: Activity, notificationId: String) {
+        PromoOfferIapActivity.launch(activity, notificationId)
+    }
+}
+
 @Reusable
 class NpsActivityOpener @Inject constructor() {
     fun open(activity: Activity, notificationId: String) {
@@ -54,9 +63,11 @@ class OneTimePopupNotificationTrigger @Inject constructor(
     mainScope: CoroutineScope,
     foregroundActivityTracker: ForegroundActivityTracker,
     private val apiNotificationManager: ApiNotificationManager,
+    private val ensureIapOfferStillValid: EnsureIapOfferStillValid,
     currentUser: CurrentUser,
     private val promoOffersPrefs: PromoOffersPrefs,
     private val promoActivityOpener: PromoActivityOpener,
+    private val promoIapOpener: PromoIapActivityOpener,
     private val npsActivityOpener: NpsActivityOpener
 ) {
 
@@ -83,18 +94,29 @@ class OneTimePopupNotificationTrigger @Inject constructor(
         val oneTimeNotification = apiNotificationManager.activeListFlow
             .first()
             .firstOrNull { notification ->
-                (notification.isOneTimeNotification() || notification.isNpsType()) &&
+                (notification.isOneTimeNotification() || notification.isNpsType() || notification.isOneTimeIap()) &&
                         !promoOffersPrefs.visitedOffers.contains(notification.id)
             }
 
         oneTimeNotification?.let {
             promoOffersPrefs.addVisitedOffer(it.id)
 
-            if (it.isNpsType()) {
-                delay(NPS_NOTIFICATION_DELAY)
-                npsActivityOpener.open(activity, it.id)
-            } else {
-                promoActivityOpener.open(activity, it.id)
+            when {
+                it.isNpsType() -> {
+                    delay(NPS_NOTIFICATION_DELAY)
+                    npsActivityOpener.open(activity, it.id)
+                }
+
+                it.isOneTimeIap() -> {
+                    val iapDetails = it.offer?.panel?.button?.iapActionDetails
+                    if (iapDetails != null && ensureIapOfferStillValid(iapDetails)) {
+                        promoIapOpener.open(activity, it.id)
+                    }
+                }
+
+                else -> {
+                    promoActivityOpener.open(activity, it.id)
+                }
             }
         }
     }
@@ -104,4 +126,8 @@ class OneTimePopupNotificationTrigger @Inject constructor(
 
     private fun ApiNotification.isOneTimeNotification(): Boolean =
         type == ApiNotificationTypes.TYPE_ONE_TIME_POPUP && offer != null && offer.panel != null
+
+    private fun ApiNotification.isOneTimeIap(): Boolean =
+        type == ApiNotificationTypes.TYPE_INTERNAL_ONE_TIME_IAP_POPUP && offer != null && offer.panel != null &&
+            offer.panel.fullScreenImage != null && offer.panel.button != null
 }

@@ -36,6 +36,7 @@ import com.protonvpn.android.di.WallClock
 import com.protonvpn.android.managed.ManagedConfig
 import com.protonvpn.android.models.login.LoginResponse
 import com.protonvpn.android.models.login.toVpnUserEntity
+import com.protonvpn.android.servers.UpdateServerListFromApi
 import com.protonvpn.android.tv.login.TvLoginViewState.Companion.toLoginError
 import com.protonvpn.android.ui.home.ServerListUpdater
 import com.protonvpn.android.utils.Constants
@@ -43,7 +44,6 @@ import com.protonvpn.android.utils.ServerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import me.proton.core.account.domain.entity.Account
@@ -199,11 +199,11 @@ class TvLoginViewModel @Inject constructor(
         state.value = TvLoginViewState.Loading
         appConfig.forceUpdate(userId)
         when (val result = serverListUpdater.updateServerList()) {
-            is ApiResult.Success -> {
+            UpdateServerListFromApi.Result.Success -> {
                 guestHole.releaseNeedGuestHole(VpnLogin.GUEST_HOLE_ID)
                 state.value = TvLoginViewState.Success
             }
-            is ApiResult.Error ->
+            is UpdateServerListFromApi.Result.Error ->
                 state.value = result.toLoginError()
         }
     }
@@ -262,6 +262,10 @@ sealed class TvLoginViewState(
     )
 
     companion object {
+
+        fun UpdateServerListFromApi.Result.Error.toLoginError() =
+            if (apiError != null) apiError.toLoginError()
+            else Error(R.string.loaderErrorGeneric, R.string.try_again)
 
         fun ApiResult.Error.toLoginError(): Error = when (this) {
             is ApiResult.Error.NoInternet ->

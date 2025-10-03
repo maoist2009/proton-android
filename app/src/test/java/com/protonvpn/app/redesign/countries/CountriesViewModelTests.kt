@@ -22,7 +22,7 @@ package com.protonvpn.app.redesign.countries
 import androidx.lifecycle.SavedStateHandle
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.models.vpn.ConnectionParams
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_TOR
+import com.protonvpn.android.servers.api.SERVER_FEATURE_TOR
 import com.protonvpn.android.redesign.CityStateId
 import com.protonvpn.android.redesign.CountryId
 import com.protonvpn.android.redesign.countries.Translator
@@ -102,7 +102,7 @@ class CountriesViewModelTests {
             createServer(exitCountry = "RO", tier = 1),
             createServer(exitCountry = "LV", tier = 1), // Starts with Ł in Polish, should be in front of R.
         )
-        serverManager.setServers(servers, null)
+        serverManager.setServers(servers, null, null)
         viewModel.localeFlow.value = localePl
 
         val state = viewModel.stateFlow.filterNotNull().first()
@@ -117,7 +117,7 @@ class CountriesViewModelTests {
             createServer(serverName = "high", exitCountry = "PL", city = city, loadPercent = 50.13f, tier = 1),
             createServer(serverName = "low", exitCountry = "PL", city = city, loadPercent = 6.24f, tier = 1),
         )
-        serverManager.setServers(servers, null)
+        serverManager.setServers(servers, null, null)
         viewModel.localeFlow.value = localePl
 
         val cityItem = ServerGroupItemData.City(
@@ -139,13 +139,11 @@ class CountriesViewModelTests {
 
     @Test
     fun selectFilterScenario() = runTest {
-        serverManager.setServers(
-            listOf(
-                server(exitCountry = "US"),
-                server(exitCountry = "JP", features = SERVER_FEATURE_TOR),
-            ),
-            null
+        val servers = listOf(
+            createServer(exitCountry = "US"),
+            createServer(exitCountry = "JP", features = SERVER_FEATURE_TOR),
         )
+        serverManager.setServers(servers, null, null)
         viewModel.localeFlow.value = Locale.US
 
         val expectedFilters = listOf(ServerFilterType.All, ServerFilterType.Tor)
@@ -170,7 +168,8 @@ class CountriesViewModelTests {
         var connectCalled = false
         val viewModel = countriesViewModelInjector.getViewModel(connect = { _, _, _ -> connectCalled = true })
         serverManager.setServers(
-            listOf(server(exitCountry = "US"), server(exitCountry = "JP")),
+            listOf(createServer(exitCountry = "US"), createServer(exitCountry = "JP")),
+            null,
             null
         )
         viewModel.localeFlow.value = localePl
@@ -197,7 +196,8 @@ class CountriesViewModelTests {
             connect = { _, _, _ -> connectCalled = true }
         )
         serverManager.setServers(
-            listOf(server(exitCountry = "US"), server(exitCountry = "JP")),
+            listOf(createServer(exitCountry = "US"), createServer(exitCountry = "JP")),
+            null,
             null
         )
         viewModel.localeFlow.value = localePl
@@ -232,7 +232,8 @@ class CountriesViewModelTests {
             )
         )
         serverManager.setServers(
-            listOf(server(exitCountry = "US"), server(exitCountry = "JP", features = SERVER_FEATURE_TOR)),
+            listOf(createServer(exitCountry = "US"), createServer(exitCountry = "JP", features = SERVER_FEATURE_TOR)),
+            null,
             null
         )
         viewModel.localeFlow.value = localePl
@@ -250,7 +251,8 @@ class CountriesViewModelTests {
         currentUserProvider.vpnUser = TestUser.freeUser.vpnUser
         val viewModel = countriesViewModelInjector.getViewModel()
         serverManager.setServers(
-            listOf(server(exitCountry = "US"), server(exitCountry = "JP")),
+            listOf(createServer(exitCountry = "US"), createServer(exitCountry = "JP")),
+            null,
             null
         )
         viewModel.localeFlow.value = localePl
@@ -266,15 +268,16 @@ class CountriesViewModelTests {
     @Test
     fun connectedCountryIsMarkedAsConnected() = testScope.runTest {
         var connectRequested = false
-        val usServer = server(exitCountry = "US")
+        val usServer = createServer(exitCountry = "US")
         val connectionParams = ConnectionParams(ConnectIntent.FastestInCountry(CountryId("US"), setOf()), usServer, null, null)
         vpnStateMonitor.updateStatus(VpnStateMonitor.Status(VpnState.Connected, connectionParams))
         val viewModel = countriesViewModelInjector.getViewModel(
             connect = { _, _, _ -> connectRequested = true }
         )
         serverManager.setServers(
-            listOf(usServer, server(exitCountry = "JP")),
-            null
+            listOf(usServer, createServer(exitCountry = "JP")),
+            null,
+            null,
         )
         viewModel.localeFlow.value = localePl
 

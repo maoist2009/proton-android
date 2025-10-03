@@ -31,50 +31,43 @@ import com.protonvpn.android.appconfig.periodicupdates.PeriodicUpdateSpec
 import com.protonvpn.android.appconfig.periodicupdates.UpdateAction
 import com.protonvpn.android.appconfig.periodicupdates.registerAction
 import com.protonvpn.android.appconfig.periodicupdates.registerApiCall
-import com.protonvpn.android.auth.data.VpnUser
+import com.protonvpn.android.appconfig.periodicupdates.toPeriodicActionResult
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.di.WallClock
-import com.protonvpn.android.logging.ApiLogResponse
 import com.protonvpn.android.logging.LogCategory
 import com.protonvpn.android.logging.ProtonLogger
-import com.protonvpn.android.models.vpn.LoadsResponse
-import com.protonvpn.android.models.vpn.Server
-import com.protonvpn.android.models.vpn.ServerList
-import com.protonvpn.android.models.vpn.ServersCountResponse
-import com.protonvpn.android.models.vpn.StreamingServicesResponse
 import com.protonvpn.android.models.vpn.UserLocation
-import com.protonvpn.android.utils.CountryTools
-import com.protonvpn.android.utils.DebugUtils
+import com.protonvpn.android.servers.IsBinaryServerStatusEnabled
+import com.protonvpn.android.servers.Server
+import com.protonvpn.android.servers.UpdateServerListFromApi
+import com.protonvpn.android.servers.api.ServersCountResponse
+import com.protonvpn.android.servers.api.StreamingServicesResponse
 import com.protonvpn.android.utils.ServerManager
 import com.protonvpn.android.utils.Storage
 import com.protonvpn.android.utils.UserPlanManager
 import com.protonvpn.android.utils.mapState
-import com.protonvpn.android.vpn.ProtocolSelection
 import com.protonvpn.android.vpn.VpnState
 import com.protonvpn.android.vpn.VpnStateMonitor
-import com.protonvpn.android.vpn.usecases.GetTruncationMustHaveIDs
-import com.protonvpn.android.vpn.usecases.ServerListTruncationEnabled
 import dagger.Reusable
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import me.proton.core.network.domain.ApiResult
-import retrofit2.Response
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OptIn(ExperimentalForInheritanceCoroutinesApi::class)
 @Reusable
 class ServerListUpdaterRemoteConfig(
     private val flow: StateFlow<Config>
@@ -107,8 +100,8 @@ class ServerListUpdater @Inject constructor(
     @IsInForeground private val inForeground: Flow<Boolean>,
     private val remoteConfig: ServerListUpdaterRemoteConfig,
     @WallClock private val wallClock: () -> Long,
-    private val truncationFeatureFlagEnabled: ServerListTruncationEnabled,
-    private val getTruncationMustHaveIDs: GetTruncationMustHaveIDs,
+    private val updateServerListFromApi: UpdateServerListFromApi,
+    private val binaryServerStatusEnabled: IsBinaryServerStatusEnabled,
 ) {
     val ipAddress = prefs.ipAddressFlow
 
@@ -118,11 +111,7 @@ class ServerListUpdater @Inject constructor(
 
     private val isDisconnected = vpnStateMonitor.status.map { it.state == VpnState.Disabled }
 
-    private val serverListUpdate =
-        UpdateAction(
-            "server_list",
-            { PeriodicApiCallResult(updateServers()) },
-        )
+    private val serverListUpdate = UpdateAction("server_list", ::updateServers)
     private val locationUpdate = periodicUpdateManager.registerAction(
         "location",
         ::updateLocationIfVpnOff,
@@ -136,8 +125,11 @@ class ServerListUpdater @Inject constructor(
 
     @VisibleForTesting
     suspend fun freeOnlyUpdateNeeded() =
-        currentUser.vpnUser()?.isFreeUser == true &&
+        freeOnlyUpdateAllowed() &&
         wallClock() - prefs.lastFullUpdateTimestamp < FULL_SERVER_LIST_CALL_DELAY
+
+    private suspend fun freeOnlyUpdateAllowed() =
+        !binaryServerStatusEnabled() && currentUser.vpnUser()?.isFreeUser == true
 
     suspend fun needsUpdate() = serverManager.needsUpdate() ||
         wallClock() - serverManager.lastUpdateTimestamp >= 4 * remoteConfig.value.foregroundDelayMs
@@ -153,7 +145,7 @@ class ServerListUpdater @Inject constructor(
                 periodicUpdateManager.registerUpdateAction(serverListUpdate, *updateSpec)
         }.launchIn(scope)
 
-        periodicUpdateManager.registerApiCall(
+        periodicUpdateManager.registerAction(
             "server_loads", ::updateLoads, PeriodicUpdateSpec(LOADS_CALL_DELAY, setOf(loggedIn, inForeground))
         )
         periodicUpdateManager.registerApiCall(
@@ -174,8 +166,10 @@ class ServerListUpdater @Inject constructor(
             .launchIn(scope)
         currentUser.eventVpnLogin
             .onEach {
-                if (serverManager.streamingServicesModel == null)
+                if (serverManager.streamingServicesModel == null) {
                     periodicUpdateManager.executeNow(streamingServicesUpdate)
+                }
+
                 updateServerList(forceFreshUpdate = true)
             }
             .launchIn(scope)
@@ -200,13 +194,22 @@ class ServerListUpdater @Inject constructor(
         }
     }
 
-    private suspend fun updateLoads(): ApiResult<LoadsResponse> {
-        val result = api.getLoads(getNetZone(), currentUser.vpnUser()?.isFreeUser == true)
-        if (result is ApiResult.Success) {
-            serverManager.ensureLoaded()
-            serverManager.updateLoads(result.value.loadsList)
-        }
-        return result
+    private suspend fun updateLoads(): PeriodicActionResult<out Any> {
+        serverManager.ensureLoaded()
+        val statusId = serverManager.logicalsStatusId
+        return if (binaryServerStatusEnabled() && statusId != null) {
+            val result = api.getBinaryStatus(statusId)
+            if (result is ApiResult.Success) {
+                serverManager.updateBinaryLoads(statusId, result.value)
+            }
+            result
+        } else {
+            val result = api.getLoads(getNetZone(), freeOnlyUpdateAllowed())
+            if (result is ApiResult.Success) {
+                serverManager.updateLoads(result.value.loadsList)
+            }
+            result
+        }.toPeriodicActionResult()
     }
 
     @VisibleForTesting
@@ -223,7 +226,7 @@ class ServerListUpdater @Inject constructor(
                         locationUpdate.cancel()
                 }.launchIn(this)
             try {
-                PeriodicApiCallResult(locationUpdate.await())
+                locationUpdate.await().toPeriodicActionResult()
             } catch (_: CancellationException) {
                 cancelResult
             } finally {
@@ -238,6 +241,8 @@ class ServerListUpdater @Inject constructor(
             with(result.value) {
                 prefs.lastKnownCountry = country
                 prefs.lastKnownIsp = isp
+                prefs.lastKnownIpLatitude = latitude
+                prefs.lastKnownIpLongitude = longitude
                 ProtonLogger.logCustom(LogCategory.APP, "location: $country, isp: $isp (as seen by API)")
             }
 
@@ -250,7 +255,7 @@ class ServerListUpdater @Inject constructor(
         return result
     }
 
-    suspend fun updateServerList(forceFreshUpdate: Boolean = false): ApiResult<ServerList?> {
+    suspend fun updateServerList(forceFreshUpdate: Boolean = false): UpdateServerListFromApi.Result {
         if (forceFreshUpdate) {
             // Force update regardless of the timestamp.
             prefs.serverListLastModified = 0
@@ -258,55 +263,6 @@ class ServerListUpdater @Inject constructor(
         }
         return periodicUpdateManager.executeNow(serverListUpdate)
     }
-
-    data class ServerListResult(
-        val apiResult: ApiResult<ServerList?>,
-        val freeOnly: Boolean,
-        val lastModified: Date?,
-        val usedMustHaveIDs: Set<String>,
-    )
-    private suspend fun updateServerListInternal(netzone: String?, lang: String): ServerListResult {
-        val realProtocolsNames = ProtocolSelection.REAL_PROTOCOLS.map {
-            it.apiName
-        }
-        val freeOnly = freeOnlyUpdateNeeded()
-        val enableTruncation = truncationFeatureFlagEnabled()
-        val mustHaveIDs = if (enableTruncation) getTruncationMustHaveIDs() else emptySet()
-        return api.getServerList(
-            netzone,
-            lang,
-            realProtocolsNames,
-            freeOnly,
-            enableTruncation = enableTruncation,
-            lastModified = prefs.serverListLastModified,
-            mustHaveIDs = mustHaveIDs,
-        ).toServerListResult(freeOnly, mustHaveIDs)
-    }
-
-    private fun ApiResult<Response<ServerList>>.toServerListResult(freeOnly: Boolean, usedMustHaveIDs: Set<String>): ServerListResult {
-        var lastModified: Date? = null
-        val apiResult = when(this) {
-            is ApiResult.Error.Http ->
-                if (httpCode == HTTP_NOT_MODIFIED_304) ApiResult.Success(null) else this
-            is ApiResult.Error ->
-                this
-            is ApiResult.Success -> with(value) {
-                if (value.isSuccessful) {
-                    lastModified = value.headers().getDate("Last-Modified")
-                    ApiResult.Success(value.body())
-                } else {
-                    ProtonLogger.log(ApiLogResponse, "HTTP ${code()} ${message()} ${raw().request.method} ${raw().request.url} (took ${raw().durationMs}ms)")
-                    if (code() == HTTP_NOT_MODIFIED_304)
-                        ApiResult.Success(null)
-                    else
-                        ApiResult.Error.Http(code(), message())
-                }
-            }
-        }
-        return ServerListResult(apiResult, freeOnly, lastModified, usedMustHaveIDs)
-    }
-
-    private val okhttp3.Response.durationMs get() = receivedResponseAtMillis - sentRequestAtMillis
 
     private suspend fun updateStreamingServices(): ApiResult<StreamingServicesResponse> =
         api.getStreamingServices().apply {
@@ -322,49 +278,15 @@ class ServerListUpdater @Inject constructor(
         }
 
     @VisibleForTesting
-    suspend fun updateServers(): ApiResult<ServerList?> {
-        val lang = Locale.getDefault().language
-        val netzone = getNetZone()
-
-        val serverListResult = coroutineScope {
-            guestHole.runWithGuestHoleFallback {
-                updateServerListInternal(netzone = netzone, lang = lang)
-            }
+    suspend fun updateServers(): PeriodicActionResult<UpdateServerListFromApi.Result> = coroutineScope {
+        guestHole.runWithGuestHoleFallback {
+            updateServerListFromApi(
+                netzone = getNetZone(),
+                lang = Locale.getDefault().language,
+                freeOnly = freeOnlyUpdateNeeded(),
+                serverListLastModified = prefs.serverListLastModified
+            )
         }
-
-        if (serverListResult.apiResult is ApiResult.Success) {
-            prefs.lastNetzoneForLogicals = netzone
-            val result = serverListResult.apiResult.value
-            if (result != null) {
-                serverManager.ensureLoaded()
-                val retainIDs = if (result.metadata?.listIsTruncated == true) {
-                    // retain only those ID that were not in must-haves for this call
-                    getTruncationMustHaveIDs() - serverListResult.usedMustHaveIDs
-                } else {
-                    emptySet()
-                }
-                val newList = if (serverListResult.freeOnly)
-                    serverManager.allServers.updateTier(result.serverList, VpnUser.FREE_TIER, retainIDs)
-                else
-                    result.serverList
-
-                DebugUtils.debugAssert("Country with no continent") {
-                    val countriesWithNoContinent = newList
-                        .flatMapTo(HashSet()) { listOf(it.entryCountry, it.exitCountry) }
-                        .filter { CountryTools.oldMapLocations[it]?.continent == null }
-                    countriesWithNoContinent.isEmpty()
-                }
-
-                serverManager.setServers(newList, lang, retainIDs = retainIDs)
-            } else {
-                serverManager.updateTimestamp()
-            }
-            if (!serverListResult.freeOnly)
-                prefs.lastFullUpdateTimestamp = wallClock()
-            if (serverListResult.lastModified != null)
-                prefs.serverListLastModified = serverListResult.lastModified.time
-        }
-        return serverListResult.apiResult
     }
 
     private fun migrateIpAddress() {

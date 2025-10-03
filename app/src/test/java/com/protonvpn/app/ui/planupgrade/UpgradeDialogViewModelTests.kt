@@ -75,8 +75,6 @@ class UpgradeDialogViewModelTests {
     private lateinit var viewModel: UpgradeDialogViewModel
 
     private var isInAppAllowed = true
-    private var oneClickPaymentsEnabled = true
-    private var oneClickUnlimitedEnabled = true
     private var giapPlans: List<GiapPlanInfo> = emptyList()
 
     private val dummyPrices = mapOf(
@@ -103,7 +101,6 @@ class UpgradeDialogViewModelTests {
         Dispatchers.setMain(testDispatcher)
 
         isInAppAllowed = true
-        oneClickPaymentsEnabled = true
         giapPlans = listOf(testPlan)
         performGiapPurchase = mockk()
         viewModel = UpgradeDialogViewModel(
@@ -113,12 +110,9 @@ class UpgradeDialogViewModelTests {
             isInAppUpgradeAllowed = { isInAppAllowed },
             upgradeTelemetry = mockk(relaxed = true),
             loadGoogleSubscriptionPlans = { giapPlans },
-            oneClickPaymentsEnabled = { oneClickPaymentsEnabled },
-            oneClickUnlimitedEnabled = { oneClickUnlimitedEnabled },
             performGiapPurchase = performGiapPurchase,
             userPlanManager = mockk(relaxed = true),
             waitForSubscription = mockk(relaxed = true),
-            { true }
         )
     }
 
@@ -134,7 +128,7 @@ class UpgradeDialogViewModelTests {
             purchaseResult.first()
         }
 
-        viewModel.loadPlans(listOf(testPlanName))
+        viewModel.loadPlans(listOf(testPlanName), null, null)
 
         Assert.assertEquals(PlanCycle.MONTHLY, viewModel.selectedCycle.value)
 
@@ -169,21 +163,14 @@ class UpgradeDialogViewModelTests {
     @Test
     fun `in-app payments disabled`() = testScope.runTest {
         isInAppAllowed = false
-        viewModel.loadPlans(listOf(testPlanName))
+        viewModel.loadPlans(listOf(testPlanName), null, null)
         Assert.assertTrue(viewModel.state.value is State.UpgradeDisabled)
-    }
-
-    @Test
-    fun `enter fallback when 1-click payments disabled`() = testScope.runTest {
-        oneClickPaymentsEnabled = false
-        viewModel.loadPlans(listOf(testPlanName))
-        Assert.assertTrue(viewModel.state.value is State.PlansFallback)
     }
 
     @Test
     fun `show error on plan load fail`() = testScope.runTest {
         giapPlans = emptyList()
-        viewModel.loadPlans(listOf(testPlanName))
+        viewModel.loadPlans(listOf(testPlanName), null, null)
         val state = viewModel.state.first()
         assertIs<State.LoadError>(state)
         assertEquals(state.messageRes, R.string.error_fetching_prices)
@@ -191,7 +178,7 @@ class UpgradeDialogViewModelTests {
 
     @Test
     fun `show error when first plan is missing`() = testScope.runTest {
-        viewModel.loadPlans(listOf("missing plan", testPlanName))
+        viewModel.loadPlans(listOf("missing plan", testPlanName), null, null)
         val state = viewModel.state.first()
         assertIs<State.LoadError>(state)
         assertEquals(state.messageRes, R.string.error_fetching_prices)
@@ -199,7 +186,7 @@ class UpgradeDialogViewModelTests {
 
     @Test
     fun `ignore subsequent plans if missing`() = testScope.runTest {
-        viewModel.loadPlans(listOf(testPlanName, "missing plan"))
+        viewModel.loadPlans(listOf(testPlanName, "missing plan"), null, null)
         val state = viewModel.state.first()
         assertIs<State.PurchaseReady>(state)
         assertEquals(listOf(testPlanName), state.allPlans.map { it.planName })
@@ -267,7 +254,7 @@ class UpgradeDialogViewModelTests {
             prices = mapOf(PlanCycle.MONTHLY to emptyMap())
         )
         giapPlans = listOf(plan1, plan2).toGiapPlans()
-        viewModel.loadPlans(listOf("plan with prices", "plan with missing prices"))
+        viewModel.loadPlans(listOf("plan with prices", "plan with missing prices"), null, null)
         assertIs<State.LoadError>(viewModel.state.first())
     }
 
@@ -275,7 +262,7 @@ class UpgradeDialogViewModelTests {
     fun `plan order matches the order of plan names to loadPlans`() = testScope.runTest {
         giapPlans = createDummyPlans("plan1", "plan2")
 
-        viewModel.loadPlans(listOf("plan2", "plan1"))
+        viewModel.loadPlans(listOf("plan2", "plan1"), null, null)
         assertPlanNames(listOf("plan2", "plan1"), viewModel.state.first())
     }
 
@@ -292,15 +279,6 @@ class UpgradeDialogViewModelTests {
         giapPlans = createDummyPlans(Constants.CURRENT_PLUS_PLAN, Constants.CURRENT_BUNDLE_PLAN)
         viewModel.loadPlans(allowMultiplePlans = false)
 
-        assertPlanNames(listOf(Constants.CURRENT_PLUS_PLAN), viewModel.state.first())
-    }
-
-    @Test
-    fun `when oneClickUnlimitedEnabled is false then only the first plan is used`() = testScope.runTest {
-        giapPlans = createDummyPlans(Constants.CURRENT_PLUS_PLAN, Constants.CURRENT_BUNDLE_PLAN)
-        oneClickUnlimitedEnabled = false
-
-        viewModel.loadPlans(allowMultiplePlans = true)
         assertPlanNames(listOf(Constants.CURRENT_PLUS_PLAN), viewModel.state.first())
     }
 

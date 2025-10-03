@@ -29,8 +29,6 @@ import com.protonvpn.android.telemetry.UpgradeTelemetry
 import com.protonvpn.android.ui.planupgrade.usecase.CycleInfo
 import com.protonvpn.android.ui.planupgrade.usecase.GiapPlanInfo
 import com.protonvpn.android.ui.planupgrade.usecase.LoadGoogleSubscriptionPlans
-import com.protonvpn.android.ui.planupgrade.usecase.OneClickPaymentsEnabled
-import com.protonvpn.android.ui.planupgrade.usecase.PaymentDisplayRenewPriceKillSwitch
 import com.protonvpn.android.ui.planupgrade.usecase.WaitForSubscription
 import com.protonvpn.android.utils.Constants
 import com.protonvpn.android.utils.UserPlanManager
@@ -66,12 +64,9 @@ class UpgradeDialogViewModel(
     isInAppUpgradeAllowed: suspend () -> Boolean,
     upgradeTelemetry: UpgradeTelemetry,
     private val loadGoogleSubscriptionPlans: suspend (planNames: List<String>) -> List<GiapPlanInfo>,
-    private val oneClickPaymentsEnabled: suspend () -> Boolean,
-    private val oneClickUnlimitedEnabled: suspend () -> Boolean,
     private val performGiapPurchase: PerformGiapPurchase<Activity>,
     userPlanManager: UserPlanManager,
     waitForSubscription: WaitForSubscription,
-    private val paymentDisplayRenewPriceKillSwitch: suspend () -> Boolean,
 ) : CommonUpgradeDialogViewModel(
     userId,
     authOrchestrator,
@@ -90,12 +85,9 @@ class UpgradeDialogViewModel(
         isInAppUpgradeAllowed: IsInAppUpgradeAllowedUseCase,
         upgradeTelemetry: UpgradeTelemetry,
         loadGoogleSubscriptionPlans: LoadGoogleSubscriptionPlans,
-        oneClickPaymentsEnabled: OneClickPaymentsEnabled,
-        oneClickUnlimitedEnabled: OneClickUnlimitedPlanEnabled,
         performGiapPurchase: PerformGiapPurchase<Activity>,
         userPlanManager: UserPlanManager,
         waitForSubscription: WaitForSubscription,
-        paymentDisplayRenewPriceKillSwitch: PaymentDisplayRenewPriceKillSwitch,
     ) : this(
         currentUser.userFlow.map { it?.userId },
         authOrchestrator,
@@ -103,18 +95,19 @@ class UpgradeDialogViewModel(
         isInAppUpgradeAllowed::invoke,
         upgradeTelemetry,
         loadGoogleSubscriptionPlans::invoke,
-        oneClickPaymentsEnabled::invoke,
-        oneClickUnlimitedEnabled::invoke,
         performGiapPurchase,
         userPlanManager,
         waitForSubscription,
-        paymentDisplayRenewPriceKillSwitch::invoke,
     )
 
-    private var loadPlanNames: List<String>? = null
+    private class ReloadState(
+        val plans: List<String>,
+        val cycles: List<PlanCycle>?,
+        val buttonLabelOverride: String? = null
+    )
+    private var plansForReload: ReloadState? = null
 
     private lateinit var loadedPlans: List<GiapPlanModel>
-    private var showRenewPrice = true // Initialized in loadPlans()
     val selectedCycle = MutableStateFlow<PlanCycle?>(null)
 
     data class GiapPlanModel(
@@ -123,45 +116,45 @@ class UpgradeDialogViewModel(
     ) : PlanModel(displayName = giapPlanInfo.displayName, planName = giapPlanInfo.name, cycles = giapPlanInfo.cycles)
 
     fun reloadPlans() {
-        loadPlanNames?.let { loadPlans(it) }
+        plansForReload?.let { loadPlans(it.plans, it.cycles, it.buttonLabelOverride) }
     }
 
     fun loadPlans(allowMultiplePlans: Boolean) {
         viewModelScope.launch {
-            val unlimitedPlanEnabled = oneClickUnlimitedEnabled()
             val plans = when {
-                allowMultiplePlans && unlimitedPlanEnabled ->
+                allowMultiplePlans ->
                     listOf(Constants.CURRENT_PLUS_PLAN, Constants.CURRENT_BUNDLE_PLAN)
 
                 else ->
                     listOf(Constants.CURRENT_PLUS_PLAN)
             }
-            loadPlans(plans)
+            loadPlans(plans, cycles = null, buttonLabelOverride = null)
         }
     }
 
-    @VisibleForTesting
-    fun loadPlans(planNames: List<String>) {
-        loadPlanNames = planNames
+    fun loadPlans(planNames: List<String>, cycles: List<PlanCycle>?, buttonLabelOverride: String?) {
+        plansForReload = ReloadState(planNames, cycles)
         viewModelScope.launch {
-            if (!isInAppUpgradeAllowed())
+            if (!isInAppUpgradeAllowed()) {
                 state.value = State.UpgradeDisabled
-            else {
-                if (!oneClickPaymentsEnabled()) {
-                    state.value = State.PlansFallback
-                } else {
-                    showRenewPrice = !paymentDisplayRenewPriceKillSwitch()
-                    loadGiapPlans(planNames)
-                }
+            } else {
+                loadGiapPlans(planNames, cycles, buttonLabelOverride)
             }
         }
     }
 
     // The plan first on the list is mandatory and will be preselected.
-    private suspend fun loadGiapPlans(planNames: List<String>) {
-        state.value = State.LoadingPlans
+    private suspend fun loadGiapPlans(planNames: List<String>, cycleFilter: List<PlanCycle>?, buttonLabelOverride: String?) {
+        state.value = State.LoadingPlans(cycleFilter?.size ?: 2, buttonLabelOverride)
         suspend {
-            val unorderedPlans = loadGoogleSubscriptionPlans(planNames).map { planInfo ->
+            val unorderedPlans = loadGoogleSubscriptionPlans(planNames).map { inputPlanInfo ->
+                val planInfo = if (cycleFilter != null) {
+                    val filteredCycles = inputPlanInfo.cycles.filter { cycleFilter.contains(it.cycle) }
+                    val selectedCycle = (filteredCycles.find { it.cycle == inputPlanInfo.preselectedCycle } ?: filteredCycles.first()).cycle
+                    inputPlanInfo.copy(cycles = filteredCycles, preselectedCycle = selectedCycle)
+                } else {
+                    inputPlanInfo
+                }
                 GiapPlanModel(planInfo, calculatePriceInfos(planInfo.cycles, planInfo.dynamicPlan))
             }
             // Plans order should match order of planNames.
@@ -178,7 +171,7 @@ class UpgradeDialogViewModel(
                     error = IllegalArgumentException("Missing prices: $errorInfo")
                 )
             } else {
-                selectPlan(preselectedPlan)
+                selectPlan(preselectedPlan, buttonLabelOverride)
             }
         }.runCatchingCheckedExceptions { e ->
             // loadGoogleSubscriptionPlans throws errors.
@@ -201,13 +194,17 @@ class UpgradeDialogViewModel(
     }
 
     fun selectPlan(plan: PlanModel) {
+        selectPlan(plan, plansForReload?.buttonLabelOverride)
+    }
+
+    private fun selectPlan(plan: PlanModel, buttonLabelOverride: String?) {
         val giapPlan = plan as GiapPlanModel
         state.value = State.PurchaseReady(
             allPlans = loadedPlans,
             selectedPlan = plan,
             selectedPlanPriceInfo = giapPlan.prices,
-            showRenewPrice = showRenewPrice,
-            inProgress = false
+            inProgress = false,
+            buttonLabelOverride = buttonLabelOverride
         )
         if (plan.cycles.none { it.cycle == selectedCycle.value }) {
             selectedCycle.value = giapPlan.giapPlanInfo.preselectedCycle
@@ -275,17 +272,7 @@ class UpgradeDialogViewModel(
             cycles: List<CycleInfo>,
             dynamicPlan: DynamicPlan,
         ): Map<PlanCycle, PriceInfo> {
-            val currencies = dynamicPlan.instances
-                .flatMap { (_, instance) -> instance.price.map { it.value.currency } }
-                .toSet()
-
-            // Temporary workaround for issue in core returning wrong prices if there was an issue
-            // fetching prices from google billing library.
-            if (currencies.isEmpty() || currencies.size > 1)
-                return emptyMap()
-
-            // The prices coming from Google Play will have a single currency:
-            val currency = currencies.first()
+            val currency = dynamicPlan.getSingleCurrency() ?: return emptyMap()
 
             val perMonthPrices = cycles.associate { cycleInfo ->
                 val months = cycleInfo.cycle.cycleDurationMonths

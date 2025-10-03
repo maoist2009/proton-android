@@ -45,7 +45,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.proton.core.network.domain.ApiResult
-import me.proton.core.network.domain.HttpResponseCodes
 import me.proton.core.network.domain.NetworkManager
 import me.proton.core.network.domain.NetworkStatus
 import me.proton.core.util.kotlin.DispatcherProvider
@@ -54,8 +53,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 
 @VisibleForTesting const val MAX_JITTER_RATIO = .2f
 @VisibleForTesting val MAX_JITTER_DELAY_MS = TimeUnit.HOURS.toMillis(1)
@@ -63,7 +60,6 @@ private val RUNAWAY_DETECT_INTERVAL_MS = TimeUnit.MINUTES.toMillis(10)
 private const val RUNAWAY_EXECUTION_THRESHOLD = 5
 private val RUNAWAY_ACTION_DELAY_MS = TimeUnit.HOURS.toMillis(1)
 private val MAX_DELAY_OVERRIDE_MS = TimeUnit.DAYS.toMillis(7)
-private val MIN_RETRY_AFTER = 15.minutes
 
 data class UpdateCondition(private val flow: Flow<Boolean>) {
     fun getFlow(): Flow<UpdateCondition?> = flow.map { if (it) this else null }.distinctUntilChanged()
@@ -96,11 +92,6 @@ open class PeriodicActionResult<R>(
     val isSuccess: Boolean,
     val nextCallDelayOverride: Long? = null
 )
-
-class PeriodicApiCallResult<R>(
-    apiResult: ApiResult<R>,
-    nextCallDelayOverride: Long? = apiResult.retryAfterIfApplicable(MIN_RETRY_AFTER)?.inWholeMilliseconds
-) : PeriodicActionResult<ApiResult<R>>(apiResult, apiResult is ApiResult.Success, nextCallDelayOverride)
 
 /**
  * Executes actions periodically when certain conditions are met.
@@ -239,7 +230,7 @@ class PeriodicUpdateManager @Inject constructor(
      * @see registerAction
      * @see registerApiCall
      */
-    fun <T, R : Any> registerUpdateAction(action: UpdateAction<T, R>, vararg updateSpec: PeriodicUpdateSpec) {
+    fun <T, R> registerUpdateAction(action: UpdateAction<T, R>, vararg updateSpec: PeriodicUpdateSpec) {
         updateActions[action.id] = Action(updateSpec.asList(), action)
         onActionsChanged()
     }
@@ -261,7 +252,7 @@ class PeriodicUpdateManager @Inject constructor(
      *
      * @return API result with the response or error.
      */
-    suspend fun <T, R : Any> executeNow(action: UpdateAction<T, R>): R =
+    suspend fun <T, R> executeNow(action: UpdateAction<T, R>): R =
         executeNow(action, action.defaultInput())
 
     /**
@@ -275,7 +266,7 @@ class PeriodicUpdateManager @Inject constructor(
      *
      *     val result: BarResult = periodicUpdateManager.executeNow(updateBarAction, "custom ID")
      */
-    suspend fun <T, R : Any> executeNow(action: UpdateAction<T, R>, input: T): R =
+    suspend fun <T, R> executeNow(action: UpdateAction<T, R>, input: T): R =
         // Explicitly execute on main thread. It's a workaround for LoginTestRule that executes login on a test thread.
         withContext(dispatcherProvider.Main) {
             // If this action is executing wait for it to finish.
@@ -340,7 +331,7 @@ class PeriodicUpdateManager @Inject constructor(
                 action.firstMatchingPeriodicTrigger(currentConditions)?.nextTimestamp(lastCall)
             }.minOrNull()
 
-    private suspend fun <R : Any> executeAction(action: UpdateAction<*, R>): PeriodicActionResult<out R> {
+    private suspend fun <R> executeAction(action: UpdateAction<*, R>): PeriodicActionResult<out R> {
         tasksInProgressFlow.value += action.id
         try {
             ProtonLogger.logCustom(LogCategory.APP_PERIODIC, "executing action ${action.id}")
@@ -352,7 +343,7 @@ class PeriodicUpdateManager @Inject constructor(
         }
     }
 
-    private suspend fun <T, R : Any> executeAction(action: UpdateAction<T, R>, input: T): PeriodicActionResult<out R> {
+    private suspend fun <T, R> executeAction(action: UpdateAction<T, R>, input: T): PeriodicActionResult<out R> {
         tasksInProgressFlow.value += action.id
         try {
             ProtonLogger.logCustom(LogCategory.APP_PERIODIC, "executing action ${action.id}")
@@ -490,8 +481,3 @@ fun <T, R : Any> PeriodicUpdateManager.registerApiCall(
     UpdateAction(actionId, { input -> PeriodicApiCallResult(actionFunction(input)) }, defaultInput).also {
         registerUpdateAction(it, *updateSpec)
     }
-
-fun <T> ApiResult<T>.retryAfterIfApplicable(minimalDuration: Duration): Duration? =
-    (this as? ApiResult.Error.Http)?.retryAfter?.takeIf {
-        httpCode in arrayOf(HttpResponseCodes.HTTP_TOO_MANY_REQUESTS, HttpResponseCodes.HTTP_SERVICE_UNAVAILABLE)
-    }?.coerceAtLeast(minimalDuration)

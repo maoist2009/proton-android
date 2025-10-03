@@ -33,19 +33,21 @@ import com.protonvpn.android.models.login.SessionListResponse
 import com.protonvpn.android.models.login.VpnInfoResponse
 import com.protonvpn.android.models.vpn.CertificateRequestBody
 import com.protonvpn.android.models.vpn.CertificateResponse
-import com.protonvpn.android.models.vpn.ConnectingDomainResponse
-import com.protonvpn.android.models.vpn.LoadsResponse
+import com.protonvpn.android.servers.api.ConnectingDomainResponse
+import com.protonvpn.android.servers.api.LoadsResponse
 import com.protonvpn.android.models.vpn.PromoCodesBody
-import com.protonvpn.android.models.vpn.ServerList
+import com.protonvpn.android.servers.api.ServerListV1
 import com.protonvpn.android.models.vpn.ServerSearchResponse
-import com.protonvpn.android.models.vpn.ServersCountResponse
-import com.protonvpn.android.models.vpn.StreamingServicesResponse
+import com.protonvpn.android.servers.api.ServersCountResponse
+import com.protonvpn.android.servers.api.StreamingServicesResponse
 import com.protonvpn.android.models.vpn.UserLocation
+import com.protonvpn.android.servers.api.LogicalsResponse
 import com.protonvpn.android.telemetry.StatsBody
 import com.protonvpn.android.ui.promooffers.usecase.PostNps
 import me.proton.core.network.data.protonApi.BaseRetrofitApi
 import me.proton.core.network.domain.TimeoutOverride
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -61,7 +63,7 @@ import retrofit2.http.Tag
 interface ProtonVPNRetrofit : BaseRetrofitApi {
 
     @GET("vpn/v1/logicals")
-    suspend fun getServers(
+    suspend fun getServersV1(
         @Tag timeoutOverride: TimeoutOverride,
         @HeaderMap headers: Map<String, String>,
         @Query("WithTranslations") language: String,
@@ -69,7 +71,17 @@ interface ProtonVPNRetrofit : BaseRetrofitApi {
         @Query("WithState") withState: Boolean,
         @Query("Tier") userTier: Int?,
         @Query("IncludeID") includeIDs: Set<String>?,
-    ): Response<ServerList>
+    ): Response<ServerListV1>
+
+    @GET("vpn/v2/logicals")
+    suspend fun getServers(
+        @Tag timeoutOverride: TimeoutOverride,
+        @HeaderMap headers: Map<String, String>,
+        @Query("WithTranslations") language: String,
+        @Query("WithEntriesForProtocols") protocols: String,
+        @Query("WithState") withState: Boolean,
+        @Query("IncludeID") includeIDs: Set<String>?,
+    ): Response<LogicalsResponse>
 
     @GET("vpn/v1/logicals/lookup/{nameQuery}")
     suspend fun getServerByName(
@@ -81,6 +93,9 @@ interface ProtonVPNRetrofit : BaseRetrofitApi {
         @HeaderMap headers: Map<String, String>,
         @Query("Tier") userTier: Int?
     ): LoadsResponse
+
+    @GET("vpn/v2/status/{id}/binary")
+    suspend fun getBinaryStatus(@Path(value = "id", encoded = true) id: String): ByteArray
 
     @GET("vpn/v1/streamingservices")
     suspend fun getStreamingServices(): StreamingServicesResponse

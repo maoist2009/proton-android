@@ -29,7 +29,7 @@ import com.protonvpn.android.appconfig.GetFeatureFlags
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.models.config.VpnProtocol
 import com.protonvpn.android.models.vpn.ConnectionParams
-import com.protonvpn.android.models.vpn.Server
+import com.protonvpn.android.servers.Server
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
 import com.protonvpn.android.redesign.vpn.AnyConnectIntent
 import com.protonvpn.android.redesign.vpn.ConnectIntent
@@ -265,7 +265,7 @@ class VpnConnectionManagerTests {
     @Test
     fun `when fallback finishes wake lock is released`() = testScope.runTest {
         // No servers triggers fallback connections
-        serverManager.setServers(emptyList(), null)
+        serverManager.setServers(emptyList(), null, null)
         coEvery { mockVpnErrorHandler.onServerNotAvailable(any()) } returns null
 
         vpnConnectionManager.connect(fakeVpnUiDelegate, ConnectIntent.Default, trigger)

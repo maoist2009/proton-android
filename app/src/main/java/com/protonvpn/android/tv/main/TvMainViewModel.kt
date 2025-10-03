@@ -32,7 +32,6 @@ import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.auth.usecase.Logout
 import com.protonvpn.android.components.BaseTvActivity
 import com.protonvpn.android.models.profiles.Profile
-import com.protonvpn.android.models.profiles.ServerWrapper
 import com.protonvpn.android.redesign.CountryId
 import com.protonvpn.android.redesign.vpn.ConnectIntent
 import com.protonvpn.android.settings.data.EffectiveCurrentUserSettingsCached
@@ -42,8 +41,13 @@ import com.protonvpn.android.tv.models.CountryCard
 import com.protonvpn.android.tv.models.DrawableImage
 import com.protonvpn.android.tv.models.QuickConnectCard
 import com.protonvpn.android.tv.models.Title
+import com.protonvpn.android.tv.settings.IsTvAutoConnectFeatureFlagEnabled
+import com.protonvpn.android.tv.settings.IsTvCustomDnsSettingFeatureFlagEnabled
+import com.protonvpn.android.tv.settings.IsTvNetShieldSettingFeatureFlagEnabled
 import com.protonvpn.android.tv.usecases.GetCountryCard
 import com.protonvpn.android.tv.usecases.TvUiConnectDisconnectHelper
+import com.protonvpn.android.tv.vpn.createIntentForDefaultProfile
+import com.protonvpn.android.tv.vpn.getConnectCountry
 import com.protonvpn.android.ui.home.ServerListUpdater
 import com.protonvpn.android.userstorage.ProfileManager
 import com.protonvpn.android.utils.AndroidUtils.toInt
@@ -56,16 +60,19 @@ import com.protonvpn.android.vpn.RecentsManager
 import com.protonvpn.android.vpn.VpnState
 import com.protonvpn.android.vpn.VpnStateMonitor
 import com.protonvpn.android.vpn.VpnStatusProviderUI
+import com.protonvpn.android.vpn.autoconnect.AutoConnectVpn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import me.proton.core.util.kotlin.takeIfNotBlank
 import javax.inject.Inject
 import me.proton.core.presentation.R as CoreR
 
@@ -85,6 +92,10 @@ class TvMainViewModel @Inject constructor(
     private val logoutUseCase: Logout,
     private val effectiveCurrentUserSettingsCached: EffectiveCurrentUserSettingsCached,
     val purchaseEnabled: CachedPurchaseEnabled,
+    isTvAutoConnectFeatureFlagEnabled: IsTvAutoConnectFeatureFlagEnabled,
+    isTvNetShieldSettingFeatureFlagEnabled: IsTvNetShieldSettingFeatureFlagEnabled,
+    isTvCustomDnsSettingFeatureFlagEnabled: IsTvCustomDnsSettingFeatureFlagEnabled,
+    autoConnectVpn: AutoConnectVpn,
 ) : ViewModel() {
 
     data class VpnViewState(val vpnStatus: VpnStateMonitor.Status, val ipToDisplay: String?)
@@ -132,22 +143,39 @@ class TvMainViewModel @Inject constructor(
 
     // serverListVersion and userTier are only included to trigger UI refresh when they change.
     // The UI pulls all data by calling various functions on the viewmodel, it doesn't use any kind of view state.
-    data class MainViewState(val showSettings: Boolean, val serverListVersion: Int, val userTier: Int)
+    data class MainViewState(
+        val isFreeUser: Boolean,
+        val serverListVersion: Int,
+        val userTier: Int,
+        val showAutoConnectSetting: Boolean,
+        val showNetShieldSetting: Boolean,
+        val showCustomDnsSetting: Boolean,
+    )
 
     val mainViewState = combine(
         serverManager.serverListVersion,
-        currentUser.vpnUserFlow
-    ) { serverListVersion, vpnUser ->
+        currentUser.vpnUserFlow,
+        isTvAutoConnectFeatureFlagEnabled.observe(),
+        isTvNetShieldSettingFeatureFlagEnabled.observe(),
+        isTvCustomDnsSettingFeatureFlagEnabled.observe(),
+    ) { serverListVersion, vpnUser, isAutoConnectAvailable, isNetShieldAvailable, isCustomDnsAvailable ->
         MainViewState(
-            showSettings = vpnUser?.isFreeUser == false,
+            isFreeUser = vpnUser?.isFreeUser != false,
             serverListVersion = serverListVersion,
-            userTier = vpnUser?.userTier ?: VpnUser.FREE_TIER
+            userTier = vpnUser?.userTier ?: VpnUser.FREE_TIER,
+            showAutoConnectSetting = isAutoConnectAvailable,
+            showNetShieldSetting = isNetShieldAvailable,
+            showCustomDnsSetting = isCustomDnsAvailable,
         )
     }.onStart {
         // The main TV UI is synchronous and assumes all servers are loaded - changing this is tricky.
         // Therefore let's delay the main state until servers are loaded.
         serverManager.ensureLoaded()
-    }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Lazily,
+        null
+    ).filterNotNull()
 
     fun setSelectedCountry(flag: String?) {
         selectedCountryFlag.value = flag
@@ -254,7 +282,7 @@ class TvMainViewModel @Inject constructor(
             ),
             backgroundImage = DrawableImage(
                 resId = quickConnectBackground(context),
-                tint = if (isConnected() || isEstablishingConnection())
+                tintRes = if (isConnected() || isEstablishingConnection())
                     R.color.tvDisconnectButtonTint else CoreR.color.transparent
             )
         )
@@ -308,21 +336,12 @@ class TvMainViewModel @Inject constructor(
         showVersion.value = selected
     }
 
-    private fun getConnectCountry(profile: Profile): String {
-        DebugUtils.debugAssert("Random profile not supported in TV") {
-            profile.wrapper.type != ServerWrapper.ProfileType.RANDOM
-        }
-        return profile.country.takeIfNotBlank()
-            ?: serverManager.getServerForProfile(profile, currentUser.vpnUserCached(), settingsProtocol)?.exitCountry
-            ?: ""
-    }
+    private fun getConnectCountry(profile: Profile): String =
+        getConnectCountry(serverManager, currentUser, settingsProtocol, profile)
+
+    private fun createIntentForDefaultProfile(profile: Profile): ConnectIntent =
+        createIntentForDefaultProfile(serverManager, currentUser, settingsProtocol, profile)
 
     private fun createIntentForCountry(countryCode: String): ConnectIntent =
         ConnectIntent.FastestInCountry(CountryId(countryCode), emptySet())
-
-    private fun createIntentForDefaultProfile(profile: Profile): ConnectIntent {
-        val countryCode = getConnectCountry(profile)
-        val countryId = if (countryCode.isNotEmpty()) CountryId(countryCode) else CountryId.fastest
-        return ConnectIntent.FastestInCountry(countryId, emptySet())
-    }
 }

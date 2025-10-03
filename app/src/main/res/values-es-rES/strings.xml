@@ -94,6 +94,9 @@
     <string name="something_went_wrong">Se ha producido un error.</string>
     <string name="try_again">Inténtalo de nuevo</string>
     <string name="delete">Eliminar</string>
+    <string name="menu_option_move_to_top" comment="command used to move an item to the top of the list">Mover al inicio</string>
+    <string name="menu_option_move_up" comment="command used to move an item one position up in the list">Subir</string>
+    <string name="menu_option_move_down" comment="command used to move an item one position down in the list">Bajar</string>
     <string name="remove">Eliminar</string>
     <string name="saveButton">Guardar</string>
     <string name="ipWithPlaceholder">IP: %1$s</string>
@@ -217,6 +220,13 @@
     <string name="settingsTelemetryScreenTitle">Estadísticas de uso</string>
     <string name="settingsTelemetryScreenInfo"><![CDATA[Estas estadísticas no contienen tu dirección IP y no pueden ser utilizadas para identificarte. Nosotros nunca las compartiremos con terceros. <a href="%1$s">Más información</a>]]></string>
     <string name="netshield_settings_description_not_html">Protégete de los anuncios, malware y rastreadores en sitios web y aplicaciones. %1$s</string>
+    <string name="netshield_settings_description_tv">Te protege de anuncios de terceros, rastreadores y malware. NetShield no bloquea los anuncios integrados en servicios de streaming como YouTube y Netflix.</string>
+    <string name="netshield_settings_more_info_title_tv">Cómo funciona NetShield</string>
+    <string-array name="netshield_settings_more_info_paragraphs_tv">
+        <item>NetShield bloquea las solicitudes de DNS a dominios de terceros conocidos por introducir anuncios, rastreadores y malware.</item>
+        <item>Esto significa que no recibirás anuncios de tu navegador ni de aplicaciones gratuitas que utilicen servicios de publicidad de terceros.</item>
+        <item>Sin embargo, no puede bloquear anuncios de plataformas de transmisión como YouTube y Netflix, porque sus anuncios provienen de sus propios servidores.</item>
+    </string-array>
     <string name="settings_icon_change_description">Personaliza Proton VPN con un icono más discreto. Las notificaciones seguirán mostrando el nombre Proton VPN y el icono predeterminado. %1$s</string>
     <string name="settings_icon_change_learn_more">Más información</string>
     <string name="learn_more">Más información</string>
@@ -267,8 +277,10 @@
     <string name="nameAfricaAndMiddleEast">África &amp; Oriente Medio</string>
     <string name="nameOceania">Oceanía</string>
     <string name="tv_row_settings">Ajustes</string>
+    <string name="tv_card_lan_connections_label">LAN</string>
     <string name="tv_card_split_tunneling_label">Túnel dividido</string>
     <string name="tv_card_protocol_label">Protocolo</string>
+    <string name="tv_dialog_delete_server_title">¿Eliminar servidor %1$s?</string>
     <string name="tv_detail_default_connection_checkbox_short">Favorito</string>
     <string name="tv_detail_connect_streaming">Aprovéchate del streaming con Plus</string>
     <string name="tv_detail_connect">Conectar</string>
@@ -515,6 +527,15 @@
     <string name="upsell_card_streaming_description">Ve tus películas y programas favoritos</string>
     <string name="upsell_card_tor_title">Tor a través de VPN</string>
     <string name="upsell_card_tor_description">Usa la red Tor a través de tu conexión VPN para más privacidad</string>
+    <string name="upsell_tv_all_countries_title">Accede a todos los países con Plus</string>
+    <string name="upsell_tv_all_countries_description" comment="the first 2 placeholders will be replaced by the amount of servers and countries">Desbloquea %1$s servidores seguros en %2$s países. %3$s</string>
+    <string name="upsell_tv_netshield_title">Disfruta de una navegación sin anuncios con Plus</string>
+    <string name="upsell_tv_netshield_description"><![CDATA[Bloquea anuncios, rastreadores y malware con <b>NetShield</b>. %1$s]]></string>
+    <string name="upsell_tv_split_tunneling_title">Obtén lo mejor de ambos mundos con Plus</string>
+    <string name="upsell_tv_split_tunneling_description"><![CDATA[Divide tu tráfico en túneles VPN y no VPN con <b>túneles divididos</b>. %1$s]]></string>
+    <string name="upsell_tv_customization_title">Obtén una personalización VPN avanzada con Plus</string>
+    <string name="upsell_tv_customization_description"><![CDATA[Desbloquea <b>conexiones LAN</b>, <b>DNS personalizado</b>, y más funciones VPN avanzadas. %1$s]]></string>
+    <string name="upsell_tv_description_placeholder">Ve al sitio web de Proton VPN para mejorar tu plan.</string>
     <!-- Format for price per period of time.
         %1$s - replaced with price and currency (e.g. "$100")
         %2$s - replaced with time period, one of payment_price_per_ (e.g. "month", "2 years")
@@ -543,8 +564,6 @@
     <string name="payment_welcome_price_message_annual">Oferta de bienvenida. Renovación automática por %1$s/año</string>
     <string name="payment_auto_renew_message_monthly">La suscripción se renueva automáticamente por %1$s/mes.</string>
     <string name="payment_auto_renew_message_annual">La suscripción se renueva automáticamente por %1$s/año.</string>
-    <string name="payment_welcome_price_message_monthly_fallback">La suscripción se renueva automáticamente cada mes</string>
-    <string name="payment_welcome_price_message_annual_fallback">La suscripción se renueva automáticamente cada año</string>
     <string name="smart_routing_title">Smart Routing</string>
     <string name="smart_routing_description">Esta tecnología permite a Proton VPN proporcionar mayor velocidad y seguridad en países difíciles de servir.</string>
     <string name="tor_title">Tor</string>
@@ -998,6 +1017,8 @@
     <string name="gateways_title">Puertas de enlace</string>
     <string name="countries_title">Países</string>
     <string name="profiles_title">Perfiles</string>
+    <string name="settings_autoconnect_title">Conexión automática</string>
+    <string name="settings_autoconnect_boot_description">Conecta automáticamente la VPN mediante conexión rápida una vez que tu dispositivo se haya iniciado.</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_category_features">Características</string>
     <!-- tag(Redesign_2023) -->
@@ -1064,13 +1085,13 @@
     <string name="country_filter_countries_list_header">Países (%1$d)</string>
     <string name="country_filter_cities_list_header">Ciudades (%1$d)</string>
     <string name="country_filter_states_list_header">Estados (%1$d)</string>
-    <string name="country_filter_servers_list_header">Servidores (%1$d)</string>
+    <string name="country_filter_servers_list_header">Servidores</string>
     <string name="country_filter_secure_core_list_header">Países Secure Core (%1$d)</string>
     <string name="country_filter_p2p_list_header">Países P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_cities">Ciudades P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_states">Estados P2P (%1$d)</string>
     <string name="country_filter_tor_list_header">Países Tor (%1$d)</string>
-    <string name="country_filter_tor_servers_list_header">Servidores Tor (%1$d)</string>
+    <string name="country_filter_tor_servers_list_header">Servidores Tor</string>
     <string name="country_filter_info_label">Información</string>
     <!-- Content description for server load indicator. Used by accessibility services only.
          Note: the trailing \'%\' sign needs to be doubled
@@ -1322,6 +1343,7 @@
     <string name="settings_account_button_my_account">Mi cuenta</string>
     <string name="settings_account_button_delete_account">Eliminar la cuenta</string>
     <string name="settings_custom_dns_title">DNS personalizado</string>
+    <string name="settings_custom_dns_description_tv">Conéctate a la VPN con un sistema de nombres de dominio (DNS) autoalojado o de terceros.</string>
     <string name="settings_add_dns_placeholder">192.0.2.0</string>
     <string name="settings_add_dns_title">Añadir un nuevo servidor DNS</string>
     <string name="settings_add_dns_new_entry_button">Añadir</string>
@@ -1337,10 +1359,13 @@
     <string name="settings_changes_apply_on_reconnect_toast">Los cambios se aplicarán cuando te conectes de nuevo.</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_title">NetShield no estará disponible.</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_message">NetShield no puede filtrar anuncios, rastreadores y malware cuando se usa DNS personalizados. Más información</string>
+    <string name="settings_custom_dns_netshield_conflict_dialog_message_tv">NetShield no puede filtrar anuncios, rastreadores y malware cuando se usan DNS personalizados.</string>
     <string name="settings_advanced_alternative_routing_title">Enrutamiento alternativo</string>
     <string name="settings_advanced_alternative_routing_description">Si los servicios de Proton están bloqueados debido a restricciones de red, intentaremos usar enrutamiento de red alternativo para conectarte a nuestros sitios.</string>
     <string name="settings_advanced_allow_lan_title">Conexiones LAN</string>
     <string name="settings_advanced_allow_lan_description">Te permite conectarte a impresoras, altavoces y otros dispositivos en tu red local.</string>
+    <string name="settings_advanced_allow_lan_description_tv">Connect to speakers, computers, and other devices on your local network</string>
+    <string name="settings_advanced_allow_lan_title_tv">Allow LAN connections</string>
     <string name="settings_advanced_nat_type_title">Tipo de NAT</string>
     <!-- %1$s - will have translated learn_more value -->
     <string name="settings_advanced_nat_type_description">Selecciona un tipo de traducción de dirección de red para tu conexión. %1$s</string>
@@ -1390,11 +1415,14 @@
     <string name="settings_needs_reconnect_banner">La nueva configuración se aplicará la próxima vez que te conectes.</string>
     <string name="private_dns_conflict_banner_custom_dns_title">El DNS personalizado no está disponible.</string>
     <string name="private_dns_conflict_banner_custom_dns_description">Tu dispositivo está usando un DNS de terceros que impide el funcionamiento de los DNS personalizados de Proton VPN. Más información</string>
+    <string name="private_dns_conflict_banner_custom_dns_description_tv">Tu dispositivo está usando un DNS de terceros que impide el funcionamiento de los DNS personalizados de Proton VPN.</string>
     <string name="private_dns_conflict_banner_netshield_title">NetShield no está disponible.</string>
     <string name="private_dns_conflict_banner_netshield_description">Tu dispositivo está usando un DNS de terceros que impide el funcionamiento de NetShield. Más información</string>
     <string name="private_dns_conflict_banner_network_settings_button">Ajustes de red</string>
     <string name="custom_dns_conflict_banner_netshield_title">NetShield no está disponible.</string>
     <string name="custom_dns_conflict_banner_netshield_description">El DNS personalizado está activo, lo que impide el funcionamiento de NetShield. Más información</string>
+    <string name="custom_dns_conflict_banner_netshield_title_tv">Desactiva el DNS personalizado para usar NetShield</string>
+    <string name="custom_dns_conflict_banner_netshield_description_tv">El DNS personalizado está activo, lo que impide el funcionamiento de NetShield.</string>
     <string name="custom_dns_conflict_banner_disable_custom_dns_button">Desactivar el DNS personalizado</string>
     <string name="info_secure_core_standard_high_privacy">Privacidad alta</string>
     <string name="info_secure_core_standard_lower_latency">Latencia baja</string>
@@ -1488,11 +1516,17 @@
     <!-- Displayed as a badge next to create_profile_auto_open_label ("Auto-launch website [NEW]") -->
     <string name="create_profile_auto_open_label_badge">Nuevo</string>
     <string name="create_profile_auto_open_url_input_label">URL del sitio web</string>
+    <string name="create_profile_auto_open_url_private_mode_label">Usar modo de navegación privada</string>
     <!-- Label for disabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_off">Desactivado</string>
+    <string name="profile_auto_open_app_failed_to_launch">Conectar y listo: aplicación no encontrada</string>
     <!-- Label for enabled "Auto-launch website" setting in profile creation -->
-    <string name="profile_auto_open_on">Activado</string>
+    <string name="profile_auto_open_website">Abrir un sitio web</string>
+    <string name="profile_auto_open_app">Abrir una aplicación</string>
     <string name="create_profile_auto_open_description">Abre automáticamente un sitio web de tu elección cuando te conectes a este perfil.</string>
+    <string name="create_profile_auto_open_app_input_hint">Selecciona una aplicación</string>
+    <string name="create_profile_auto_open_app_input_label">Aplicación</string>
+    <string name="create_profile_auto_open_app_no_apps">No se han encontrado aplicaciones.</string>
     <string name="profile_auto_open_error_invalid_url">Ingresa una URL válida</string>
     <string name="nps_how_likely_question">¿Qué tan probable es que recomiendes Proton VPN a un amigo o a un compañero de trabajo?</string>
     <string name="nps_additional_comment_title">Cuéntanos por qué has dado esa calificación.</string>
@@ -1525,4 +1559,12 @@
     <string name="info_dialog_ipv6_traffic_benefits_title">Beneficios</string>
     <string name="settings_lan_allow_direct_connection_title">Permitir conexiones directas de dispositivos</string>
     <string name="settings_lan_allow_direct_connection_description">Conéctate a Smart TV, Android Auto y otros dispositivos que crean su propia red. Para una seguridad máxima, actívalo solo al conectarte a estos dispositivos.</string>
+    <!-- No VPN connections -->
+    <string name="no_connections_title">No hay conexiones VPN disponibles</string>
+    <string name="no_connections_description_loading_error">No hemos podido cargar la lista de servidores.</string>
+    <string name="no_connections_description_no_servers">Pide a tu administrador que active el acceso a la VPN para tu cuenta.</string>
+    <string name="no_connections_action_refresh">Actualizar</string>
+    <string name="no_connections_action_sign_out">Cerrar sesión</string>
+    <string name="no_connections_help_contact_us"><![CDATA[¿Necesitas ayuda? <a href="">Contáctanos</a>]]></string>
+    <string name="no_connections_help_follow_instructions"><![CDATA[Si tu administrador necesita ayuda para activar el acceso a la VPN, envíale <a href="">estas instrucciones</a>.]]></string>
 </resources>

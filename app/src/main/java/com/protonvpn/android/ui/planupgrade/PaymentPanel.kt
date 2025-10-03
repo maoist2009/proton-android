@@ -50,7 +50,7 @@ import com.protonvpn.android.R
 import com.protonvpn.android.base.ui.PlaceholderRect
 import com.protonvpn.android.base.ui.ProtonSolidButton
 import com.protonvpn.android.base.ui.ProtonVpnPreview
-import com.protonvpn.android.redesign.base.ui.vpnGreen
+import com.protonvpn.android.base.ui.vpnGreen
 import com.protonvpn.android.utils.Constants
 import me.proton.core.compose.theme.ProtonDimens
 import me.proton.core.compose.theme.ProtonTheme
@@ -64,7 +64,10 @@ import me.proton.core.plan.presentation.entity.PlanCycle
 sealed class ViewState(val inProgress: Boolean) {
     object Initializing : ViewState(false)
     object UpgradeDisabled : ViewState(false)
-    object LoadingPlans : ViewState(true)
+    data class LoadingPlans(
+        val expectedCycleCount: Int,
+        val buttonLabelOverride: String?,
+    ) : ViewState(true)
     data class CycleViewInfo(
         val cycle: PlanCycle,
         @StringRes val perCycleResId: Int,
@@ -75,8 +78,8 @@ sealed class ViewState(val inProgress: Boolean) {
         val displayName: String,
         val planName: String,
         val cycles: List<CycleViewInfo>,
-        val showRenewPrice: Boolean,
-        inProgress: Boolean
+        inProgress: Boolean,
+        val buttonLabelOverride: String?,
     ) : ViewState(inProgress)
     object FallbackFlowReady : ViewState(false)
     object Error : ViewState(false)
@@ -119,7 +122,7 @@ fun PaymentPanel(
                 is ViewState.LoadingPlans -> {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         selectPlanText()
-                        repeat(2) { CycleSelectionPlaceholderRow() }
+                        repeat(viewState.expectedCycleCount) { CycleSelectionPlaceholderRow() }
                     }
                 }
                 is ViewState.PlanReady -> {
@@ -134,9 +137,10 @@ fun PaymentPanel(
                         val selectedCycleInfo = viewState.cycles.firstOrNull { it.cycle == selectedCycle }
                         if (selectedCycleInfo != null) {
                             RenewInfo(
-                                viewState.showRenewPrice,
                                 selectedCycleInfo = selectedCycleInfo,
-                                Modifier.padding(top = 4.dp).align(Alignment.CenterHorizontally)
+                                Modifier
+                                    .padding(top = 4.dp)
+                                    .align(Alignment.CenterHorizontally)
                             )
                         }
                     }
@@ -148,7 +152,7 @@ fun PaymentPanel(
         }
 
         val onClick: () -> Unit = when(viewState) {
-            ViewState.Initializing, ViewState.LoadingPlans -> { {} }
+            ViewState.Initializing, is ViewState.LoadingPlans -> { {} }
             is ViewState.PlanReady -> onPayClicked
             ViewState.FallbackFlowReady -> onStartFallback
             ViewState.Error -> onErrorButtonClicked
@@ -164,12 +168,21 @@ fun PaymentPanel(
             onClick = onClick
         ) {
             when (viewState) {
-                is ViewState.Initializing,
-                is ViewState.LoadingPlans,
+                is ViewState.Initializing, -> {
+                    /* empty button */
+                }
                 is ViewState.FallbackFlowReady ->
                     Text(stringResource(R.string.payment_button_get_plan, Constants.CURRENT_PLUS_PLAN_LABEL))
-                is ViewState.PlanReady ->
-                    Text(stringResource(R.string.payment_button_get_plan, viewState.displayName))
+                is ViewState.LoadingPlans -> {
+                    val buttonText = viewState.buttonLabelOverride
+                        ?: stringResource(R.string.payment_button_get_plan, Constants.CURRENT_PLUS_PLAN_LABEL)
+                    Text(buttonText)
+                }
+                is ViewState.PlanReady -> {
+                    val buttonText = viewState.buttonLabelOverride
+                        ?: stringResource(R.string.payment_button_get_plan, viewState.displayName)
+                    Text(buttonText)
+                }
                 is ViewState.Error ->
                     Text(stringResource(R.string.try_again))
                 is ViewState.UpgradeDisabled ->
@@ -182,7 +195,6 @@ fun PaymentPanel(
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 @Composable
 fun RenewInfo(
-    showRenewPrice: Boolean,
     selectedCycleInfo: ViewState. CycleViewInfo,
     modifier: Modifier = Modifier
 ) {
@@ -190,16 +202,12 @@ fun RenewInfo(
     val renewPrice = selectedCycleInfo.priceInfo.formattedRenewPrice
     val renewInfoText = when (selectedCycleInfo.cycle) {
         PlanCycle.MONTHLY -> when {
-            !showRenewPrice ->
-                stringResource(R.string.payment_welcome_price_message_monthly_fallback)
             renewPrice != null ->
                 stringResource(R.string.payment_welcome_price_message_monthly, renewPrice)
             else ->
                 stringResource(R.string.payment_auto_renew_message_monthly, price)
         }
         PlanCycle.YEARLY -> when {
-            !showRenewPrice ->
-                stringResource(R.string.payment_welcome_price_message_annual_fallback)
             renewPrice != null ->
                 stringResource(R.string.payment_welcome_price_message_annual, renewPrice)
             else ->
@@ -368,8 +376,8 @@ private fun PreviewPlan() {
                         CommonUpgradeDialogViewModel.PriceInfo("$15.99")
                     ),
                 ),
-                showRenewPrice = true,
-                inProgress = false
+                inProgress = false,
+                buttonLabelOverride = null,
             ),
             selectedCycle = PlanCycle.YEARLY,
             {}, {}, {}, {}, {}
@@ -381,6 +389,6 @@ private fun PreviewPlan() {
 @Composable
 private fun PreviewLoadingPlans() {
     ProtonVpnPreview {
-        PaymentPanel(viewState = ViewState.LoadingPlans, null, {}, {}, {}, {}, {})
+        PaymentPanel(viewState = ViewState.LoadingPlans(2, null), null, {}, {}, {}, {}, {})
     }
 }

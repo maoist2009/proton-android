@@ -24,10 +24,10 @@ import com.protonvpn.android.netshield.NetShieldProtocol
 import com.protonvpn.android.settings.data.ApplyEffectiveUserSettings
 import com.protonvpn.android.settings.data.EffectiveCurrentUserSettingsFlow
 import com.protonvpn.android.settings.data.LocalUserSettings
+import com.protonvpn.android.settings.data.SettingsFeatureFlagsFlow
 import com.protonvpn.android.settings.data.SplitTunnelingMode
 import com.protonvpn.android.settings.data.SplitTunnelingSettings
 import com.protonvpn.android.tv.IsTvCheck
-import com.protonvpn.mocks.FakeSettingsFeatureFlagsFlow
 import com.protonvpn.test.shared.TestCurrentUserProvider
 import com.protonvpn.test.shared.TestUser
 import io.mockk.MockKAnnotations
@@ -53,6 +53,7 @@ class EffectiveCurrentUserSettingsFlowTests {
     @MockK
     private lateinit var mockIsTv: IsTvCheck
 
+    private lateinit var featureFlagsFlow: MutableStateFlow<SettingsFeatureFlagsFlow.Flags>
     private lateinit var rawSettingsFlow: MutableStateFlow<LocalUserSettings>
     private lateinit var testScope: TestScope
     private lateinit var testUserProvider: TestCurrentUserProvider
@@ -67,6 +68,15 @@ class EffectiveCurrentUserSettingsFlowTests {
         MockKAnnotations.init(this)
         testScope = TestScope(UnconfinedTestDispatcher())
 
+        featureFlagsFlow = MutableStateFlow(
+            value = SettingsFeatureFlagsFlow.Flags(
+                isIPv6Enabled = true,
+                isDirectLanConnectionsEnabled = true,
+                isTvNetShieldSettingEnabled = true,
+                isTvCustomDnsSettingEnabled = true,
+                isTvAutoConnectEnabled = true,
+            )
+        )
         testUserProvider = TestCurrentUserProvider(plusUser)
         rawSettingsFlow = MutableStateFlow(LocalUserSettings.Default)
 
@@ -79,20 +89,18 @@ class EffectiveCurrentUserSettingsFlowTests {
                 mainScope = testScope.backgroundScope,
                 currentUser = currentUser,
                 isTv = mockIsTv,
-                flags = FakeSettingsFeatureFlagsFlow()
+                flags = featureFlagsFlow,
             )
         )
     }
 
     @Test
-    fun `LAN connection is always enabled on TV`() = testScope.runTest {
+    fun `LAN connections is disabled on TV when restricted`() = testScope.runTest {
         every { mockIsTv.invoke() } returns true
-        rawSettingsFlow.update { it.copy(lanConnections = false) }
+        rawSettingsFlow.update { it.copy(lanConnections = true) }
         assertTrue(effectiveSettings().lanConnections)
-
-        // Even when restricted
         testUserProvider.vpnUser = freeUser
-        assertTrue(effectiveSettings().lanConnections)
+        assertFalse(effectiveSettings().lanConnections)
     }
 
     @Test
@@ -112,22 +120,33 @@ class EffectiveCurrentUserSettingsFlowTests {
     }
 
     @Test
-    fun `NetShield only available to paying users`() = testScope.runTest {
-        testUserProvider.vpnUser = freeUser
-        rawSettingsFlow.update { it.copy(netShield = NetShieldProtocol.ENABLED) }
-        assertEquals(NetShieldProtocol.DISABLED, effectiveSettings().netShield)
-
-        testUserProvider.vpnUser = plusUser
-        assertEquals(NetShieldProtocol.ENABLED, effectiveSettings().netShield)
+    fun `LAN connections matches raw setting on TV`() = testScope.runTest {
+        every { mockIsTv.invoke() } returns true
+        rawSettingsFlow.update { it.copy(lanConnections = false) }
+        assertFalse(effectiveSettings().lanConnections)
+        rawSettingsFlow.update { it.copy(lanConnections = true) }
+        assertTrue(effectiveSettings().lanConnections)
     }
 
     @Test
-    fun `NetShield on TV returns F1`() = testScope.runTest {
+    fun `NetShield only available to paying users`() = testScope.runTest {
+        testUserProvider.vpnUser = freeUser
         rawSettingsFlow.update { it.copy(netShield = NetShieldProtocol.ENABLED_EXTENDED) }
-        assertEquals(effectiveSettings().netShield, NetShieldProtocol.ENABLED_EXTENDED)
+        assertEquals(NetShieldProtocol.DISABLED, effectiveSettings().netShield)
 
+        testUserProvider.vpnUser = plusUser
+        assertEquals(NetShieldProtocol.ENABLED_EXTENDED, effectiveSettings().netShield)
+    }
+
+    @Test
+    fun `NetShield can be disabled on TV only if FF is disabled`() = testScope.runTest {
         every { mockIsTv.invoke() } returns true
-        assertEquals(effectiveSettings().netShield, NetShieldProtocol.ENABLED)
+        featureFlagsFlow.update { it.copy(isTvNetShieldSettingEnabled = false ) }
+        rawSettingsFlow.update { it.copy(netShield = NetShieldProtocol.DISABLED) }
+        assertEquals(NetShieldProtocol.ENABLED, effectiveSettings().netShield)
+
+        featureFlagsFlow.update { it.copy(isTvNetShieldSettingEnabled = true ) }
+        assertEquals(NetShieldProtocol.DISABLED, effectiveSettings().netShield)
     }
 
     @Test

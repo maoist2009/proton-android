@@ -22,8 +22,8 @@ package com.protonvpn.mocks
 import com.protonvpn.android.appconfig.ApiNotificationsResponse
 import com.protonvpn.android.models.config.bugreport.DynamicReportModel
 import com.protonvpn.android.models.vpn.CertificateResponse
-import com.protonvpn.android.models.vpn.ServerList
-import com.protonvpn.android.models.vpn.ServersCountResponse
+import com.protonvpn.android.servers.api.ServerListV1
+import com.protonvpn.android.servers.api.ServersCountResponse
 import com.protonvpn.test.shared.MockedServers
 import com.protonvpn.test.shared.TestUser
 import me.proton.core.featureflag.data.remote.response.GetUnleashTogglesResponse
@@ -69,12 +69,12 @@ sealed class TestApiConfig {
 
                 rule(get, path eq "/vpn/v1/logicals") { request ->
                     val tier = request.requestUrl?.queryParameter("Tier")?.toInt()
-                    respond(ServerList(
-                        if (tier != null)
-                            MockedServers.serverList.filter { it.tier == tier }
-                        else
-                            MockedServers.serverList)
-                    )
+                    val servers = if (tier != null) {
+                        MockedServers.logicalsList.filter { it.tier == tier }
+                    } else {
+                        MockedServers.logicalsList
+                    }
+                    respond(ServerListV1(servers))
                 }
 
                 rule(post, path eq "/vpn/v1/certificate") {

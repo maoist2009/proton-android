@@ -54,16 +54,24 @@ import com.protonvpn.android.concurrency.DefaultDispatcherProvider
 import com.protonvpn.android.concurrency.VpnDispatcherProvider
 import com.protonvpn.android.managed.usecase.AutoLogin
 import com.protonvpn.android.managed.usecase.AutoLoginImpl
-import com.protonvpn.android.models.vpn.ServersStore
+import com.protonvpn.android.servers.ServersStore
 import com.protonvpn.android.models.vpn.usecase.ProvideLocalNetworks
 import com.protonvpn.android.models.vpn.usecase.ProvideLocalNetworksImpl
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
 import com.protonvpn.android.profiles.usecases.GetProfileById
 import com.protonvpn.android.profiles.usecases.GetProfileByIdImpl
+import com.protonvpn.android.profiles.usecases.GetPrivateBrowsingAvailability
+import com.protonvpn.android.profiles.usecases.GetPrivateBrowsingAvailabilityImpl
+import com.protonvpn.android.profiles.usecases.IsProfileAutoOpenPrivateBrowsingFeatureFlagEnabled
+import com.protonvpn.android.profiles.usecases.IsProfileAutoOpenPrivateBrowsingFeatureFlagEnabledImpl
 import com.protonvpn.android.redesign.countries.ui.ServerListViewModelDataAdapter
 import com.protonvpn.android.redesign.countries.ui.ServerListViewModelDataAdapterLegacy
 import com.protonvpn.android.redesign.search.ui.SearchViewModelDataAdapter
 import com.protonvpn.android.redesign.search.ui.SearchViewModelDataAdapterLegacy
+import com.protonvpn.android.servers.IsBinaryServerStatusFeatureFlagEnabled
+import com.protonvpn.android.servers.IsBinaryServerStatusFeatureFlagEnabledImpl
+import com.protonvpn.android.servers.UpdateServersWithBinaryStatus
+import com.protonvpn.android.servers.UpdateServersWithBinaryStatusImpl
 import com.protonvpn.android.telemetry.CommonDimensions
 import com.protonvpn.android.telemetry.DefaultCommonDimensions
 import com.protonvpn.android.telemetry.DefaultTelemetryReporter
@@ -74,6 +82,14 @@ import com.protonvpn.android.telemetry.TelemetryUploadScheduler
 import com.protonvpn.android.telemetry.TelemetryUploadWorkerScheduler
 import com.protonvpn.android.tv.login.TvLoginPollDelayMs
 import com.protonvpn.android.tv.login.TvLoginViewModel
+import com.protonvpn.android.tv.settings.IsTvAutoConnectFeatureFlagEnabled
+import com.protonvpn.android.tv.settings.IsTvAutoConnectFeatureFlagEnabledImpl
+import com.protonvpn.android.tv.settings.IsTvCustomDnsSettingFeatureFlagEnabled
+import com.protonvpn.android.tv.settings.IsTvCustomDnsSettingFeatureFlagEnabledImpl
+import com.protonvpn.android.tv.settings.IsTvNetShieldSettingFeatureFlagEnabled
+import com.protonvpn.android.tv.settings.IsTvNetShieldSettingFeatureFlagEnabledImpl
+import com.protonvpn.android.ui.promooffers.usecase.IsIapClientSidePromoFeatureFlagEnabled
+import com.protonvpn.android.ui.promooffers.usecase.IsIapClientSidePromoFeatureFlagEnabledImpl
 import com.protonvpn.android.ui.settings.AppIconManager
 import com.protonvpn.android.ui.settings.AppIconManagerImpl
 import com.protonvpn.android.ui.snackbar.DelegatedSnackManager
@@ -81,7 +97,11 @@ import com.protonvpn.android.userstorage.DefaultLocalDataStoreFactory
 import com.protonvpn.android.userstorage.LocalDataStoreFactory
 import com.protonvpn.android.utils.AndroidSharedPreferencesProvider
 import com.protonvpn.android.utils.BuildConfigUtils
+import com.protonvpn.android.utils.DefaultLocaleProvider
+import com.protonvpn.android.utils.DefaultLocaleProviderImpl
 import com.protonvpn.android.utils.SharedPreferencesProvider
+import com.protonvpn.android.vpn.CertStorageCrypto
+import com.protonvpn.android.vpn.CertStorageCryptoImpl
 import com.protonvpn.android.vpn.ProtonVpnBackendProvider
 import com.protonvpn.android.vpn.VpnBackendProvider
 import com.protonvpn.android.vpn.VpnConnect
@@ -217,6 +237,9 @@ object AppModuleProd {
     @Module
     @InstallIn(SingletonComponent::class)
     interface Bindings {
+
+        @Binds
+        fun bindUpdateServersWithBinaryStatus(usecase: UpdateServersWithBinaryStatusImpl): UpdateServersWithBinaryStatus
 
         @Binds
         fun bindGlobalSettingsUpdateScheduler(
@@ -359,10 +382,16 @@ object AppModule {
         fun bindAutoLogin(autoLogin: AutoLoginImpl): AutoLogin
 
         @Binds
+        fun bindCertStorageCrypto(impl: CertStorageCryptoImpl): CertStorageCrypto
+
+        @Binds
         fun bindChangeServerConfigFlow(impl: DefaultChangeServerConfigFlow): ChangeServerConfigFlow
 
         @Binds
         fun bindCommonDimensions(provider: DefaultCommonDimensions): CommonDimensions
+
+        @Binds
+        fun bindDefaultLocaleProvider(impl: DefaultLocaleProviderImpl): DefaultLocaleProvider
 
         @Binds
         fun bindFeatureFlagContextProvider(provider: VpnFeatureFlagContextProvider): FeatureFlagContextProvider
@@ -382,12 +411,45 @@ object AppModule {
         fun bindImagePrefetcher(glide: GlideImagePrefetcher): ImagePrefetcher
 
         @Binds
+        fun bindIsProfileAutoOpenPrivateBrowsingFeatureFlagEnabled(
+            impl: IsProfileAutoOpenPrivateBrowsingFeatureFlagEnabledImpl
+        ): IsProfileAutoOpenPrivateBrowsingFeatureFlagEnabled
+
+        @Binds
+        fun bindIsBinaryServerStatusFeatureFlagEnabled(
+            impl: IsBinaryServerStatusFeatureFlagEnabledImpl
+        ): IsBinaryServerStatusFeatureFlagEnabled
+
+        @Binds
         fun bindIsDirectLanConnectionsFeatureFlagEnabled(
             impl: IsDirectLanConnectionsFeatureFlagEnabledImpl
         ): IsDirectLanConnectionsFeatureFlagEnabled
 
         @Binds
+        fun bindIsIapClientSidePromoFeatureFlagEnabled(
+            impl: IsIapClientSidePromoFeatureFlagEnabledImpl
+        ): IsIapClientSidePromoFeatureFlagEnabled
+
+        @Binds
         fun bindIsIPv6FeatureFlagEnabled(impl: IsIPv6FeatureFlagEnabledImpl): IsIPv6FeatureFlagEnabled
+
+        @Binds
+        fun bindsIsPrivateBrowsingAvailable(impl: GetPrivateBrowsingAvailabilityImpl): GetPrivateBrowsingAvailability
+
+        @Binds
+        fun bindIsTvAutoConnectFeatureFlagEnabled(
+            impl: IsTvAutoConnectFeatureFlagEnabledImpl
+        ): IsTvAutoConnectFeatureFlagEnabled
+
+        @Binds
+        fun bindIsTvCustomDnsSettingFeatureFlagEnabled(
+            impl: IsTvCustomDnsSettingFeatureFlagEnabledImpl
+        ): IsTvCustomDnsSettingFeatureFlagEnabled
+
+        @Binds
+        fun bindIsTvNetShieldSettingFeatureFlagEnabled(
+            impl: IsTvNetShieldSettingFeatureFlagEnabledImpl
+        ): IsTvNetShieldSettingFeatureFlagEnabled
 
         @Binds
         fun bindProvideLocalNetworks(impl: ProvideLocalNetworksImpl): ProvideLocalNetworks

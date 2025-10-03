@@ -94,6 +94,9 @@
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="try_again">Попробовать снова</string>
     <string name="delete">Удалить</string>
+    <string name="menu_option_move_to_top" comment="command used to move an item to the top of the list">Move to top</string>
+    <string name="menu_option_move_up" comment="command used to move an item one position up in the list">Move up</string>
+    <string name="menu_option_move_down" comment="command used to move an item one position down in the list">Move down</string>
     <string name="remove">Удалить</string>
     <string name="saveButton">Сохранить</string>
     <string name="ipWithPlaceholder">IP: %1$s</string>
@@ -217,6 +220,13 @@
     <string name="settingsTelemetryScreenTitle">Статистика использования</string>
     <string name="settingsTelemetryScreenInfo"><![CDATA[Эта статистика не содержит ваш IP-адрес и не может быть использована для вашей идентификации. Мы никогда не передаем её третьим лицам. <a href="%1$s">Подробнее</a>]]></string>
     <string name="netshield_settings_description_not_html">Защитите себя от рекламы, вредоносных программ и трекеров на веб-сайтах и в приложениях. %1$s</string>
+    <string name="netshield_settings_description_tv">Protects you from third-party ads, trackers, and malware. NetShield doesn\'t block ads that are built into streaming services like YouTube and Netflix.</string>
+    <string name="netshield_settings_more_info_title_tv">How NetShield works</string>
+    <string-array name="netshield_settings_more_info_paragraphs_tv">
+        <item>NetShield blocks DNS requests to third-party domains known for ads, trackers, and malware.</item>
+        <item>This means you won\'t receive ads from your browser or free apps that use third-party ad services.</item>
+        <item>However, it can\'t block ads from streaming platforms like YouTube and Netflix, because their ads come from their own servers.</item>
+    </string-array>
     <string name="settings_icon_change_description">Замаскируйте приложение Proton VPN с помощью незаметного значка. В уведомлениях по-прежнему будут отображаться название и значок Proton VPN по умолчанию. %1$s</string>
     <string name="settings_icon_change_learn_more">Подробнее</string>
     <string name="learn_more">Подробнее</string>
@@ -231,8 +241,8 @@
     <string name="lan_state_off" comment="Describes state, not action">Выключено</string>
     <string name="alt_routing_state_on" comment="Describes state, not action">Включён</string>
     <string name="alt_routing_state_off" comment="Describes state, not action">Выключено</string>
-    <string name="custom_dns_state_on" comment="Describes state, not action">Включен</string>
-    <string name="custom_dns_state_off" comment="Describes state, not action">Выключен</string>
+    <string name="custom_dns_state_on" comment="Describes state, not action">Вкл.</string>
+    <string name="custom_dns_state_off" comment="Describes state, not action">Выкл.</string>
     <string name="custom_dns_state_unavailable" comment="Describes state, not action">Недоступна</string>
     <string name="custom_dns_item_removed_snackbar">Элемент удалён</string>
     <string name="netshield_free_description">Блокирует рекламу, трекеры и вредоносные программы на веб-сайтах и в приложениях</string>
@@ -271,8 +281,10 @@
     <string name="nameAfricaAndMiddleEast">Африка и Ближний и Средний Восток</string>
     <string name="nameOceania">Океания</string>
     <string name="tv_row_settings">Настройки</string>
+    <string name="tv_card_lan_connections_label">LAN</string>
     <string name="tv_card_split_tunneling_label">Раздельное туннелирование</string>
     <string name="tv_card_protocol_label">Протокол</string>
+    <string name="tv_dialog_delete_server_title">Delete server %1$s?</string>
     <string name="tv_detail_default_connection_checkbox_short">Избранная</string>
     <string name="tv_detail_connect_streaming">Стримить с Plus</string>
     <string name="tv_detail_connect">Подключиться</string>
@@ -547,6 +559,15 @@
     <string name="upsell_card_streaming_description">Смотрите свои любимые фильмы и телепрограммы</string>
     <string name="upsell_card_tor_title">Tor через VPN</string>
     <string name="upsell_card_tor_description">Используйте сеть Tor через VPN-подключение для дополнительной приватности</string>
+    <string name="upsell_tv_all_countries_title">Access all countries with Plus</string>
+    <string name="upsell_tv_all_countries_description" comment="the first 2 placeholders will be replaced by the amount of servers and countries">Unlock %1$s secure servers in %2$s countries. %3$s</string>
+    <string name="upsell_tv_netshield_title">Enjoy ad-free browsing with Plus</string>
+    <string name="upsell_tv_netshield_description"><![CDATA[Block ads, trackers, and malware with <b>NetShield</b>. %1$s]]></string>
+    <string name="upsell_tv_split_tunneling_title">Get the best of both worlds with Plus</string>
+    <string name="upsell_tv_split_tunneling_description"><![CDATA[Divide your traffic into VPN and non-VPN tunnels with <b>split tunneling</b>. %1$s]]></string>
+    <string name="upsell_tv_customization_title">Get advanced VPN customization with Plus</string>
+    <string name="upsell_tv_customization_description"><![CDATA[Unlock <b>LAN connections</b>, <b>Custom DNS</b>, and more advanced VPN features. %1$s]]></string>
+    <string name="upsell_tv_description_placeholder">Go to the Proton VPN website to upgrade your plan.</string>
     <!-- Format for price per period of time.
         %1$s - replaced with price and currency (e.g. "$100")
         %2$s - replaced with time period, one of payment_price_per_ (e.g. "month", "2 years")
@@ -575,8 +596,6 @@
     <string name="payment_welcome_price_message_annual">Приветственное предложение. Автоматическое продление по цене %1$s/в год</string>
     <string name="payment_auto_renew_message_monthly">Подписка автоматически продлевается за %1$s в месяц</string>
     <string name="payment_auto_renew_message_annual">Подписка автоматически продлевается за %1$s в год</string>
-    <string name="payment_welcome_price_message_monthly_fallback">Подписка автоматически обновляется каждый месяц</string>
-    <string name="payment_welcome_price_message_annual_fallback">Подписка автоматически продлевается ежегодно</string>
     <string name="smart_routing_title">Smart Routing</string>
     <string name="smart_routing_description">Эта технология позволяет Proton VPN обеспечивать более высокую скорость и безопасность в трудных для обслуживания странах.</string>
     <string name="tor_title">Tor</string>
@@ -1048,6 +1067,8 @@
     <string name="gateways_title">Шлюзы</string>
     <string name="countries_title">Страны</string>
     <string name="profiles_title">Профили</string>
+    <string name="settings_autoconnect_title">Auto-connect</string>
+    <string name="settings_autoconnect_boot_description">Automatically connects you to VPN using quick-connect once your device has launched.</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_category_features">Функции</string>
     <!-- tag(Redesign_2023) -->
@@ -1114,13 +1135,13 @@
     <string name="country_filter_countries_list_header">Страны (%1$d)</string>
     <string name="country_filter_cities_list_header">Городов (%1$d)</string>
     <string name="country_filter_states_list_header">Штаты (%1$d)</string>
-    <string name="country_filter_servers_list_header">Серверы (%1$d)</string>
+    <string name="country_filter_servers_list_header">Servers</string>
     <string name="country_filter_secure_core_list_header">Страны с серверами Secure Core (%1$d)</string>
     <string name="country_filter_p2p_list_header">Страны P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_cities">Города P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_states">Страны P2P (%1$d)</string>
     <string name="country_filter_tor_list_header">Страны Tor (%1$d)</string>
-    <string name="country_filter_tor_servers_list_header">Серверы Tor (%1$d)</string>
+    <string name="country_filter_tor_servers_list_header">Tor servers</string>
     <string name="country_filter_info_label">Информация</string>
     <!-- Content description for server load indicator. Used by accessibility services only.
          Note: the trailing \'%\' sign needs to be doubled
@@ -1394,6 +1415,7 @@
     <string name="settings_account_button_my_account">Мой аккаунт</string>
     <string name="settings_account_button_delete_account">Удалить аккаунт</string>
     <string name="settings_custom_dns_title">Пользовательская DNS</string>
+    <string name="settings_custom_dns_description_tv">Connect to VPN with a self-hosted or third-party domain name system (DNS).</string>
     <string name="settings_add_dns_placeholder">192.0.2.0</string>
     <string name="settings_add_dns_title">Добавить новый сервер DNS</string>
     <string name="settings_add_dns_new_entry_button">Добавить</string>
@@ -1409,10 +1431,13 @@
     <string name="settings_changes_apply_on_reconnect_toast">Изменения вступают в силу при повторном подключении</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_title">NetShield будет недоступен</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_message">NetShield не может отфильтровывать рекламу, трекеры и вредоносные программы при использовании пользовательской DNS. Подробнее</string>
+    <string name="settings_custom_dns_netshield_conflict_dialog_message_tv">NetShield can not filter out ads, trackers and malware when custom DNS is used.</string>
     <string name="settings_advanced_alternative_routing_title">Альтернативная маршрутизация</string>
     <string name="settings_advanced_alternative_routing_description">Если сервисы Proton заблокированы из-за сетевых ограничений, мы попробуем использовать альтернативные маршруты для подключения к нашим сайтам.</string>
     <string name="settings_advanced_allow_lan_title">Подключения по LAN</string>
     <string name="settings_advanced_allow_lan_description">Позволяет подключаться к принтерам, динамикам и другим устройствам в локальной сети вашего устройства.</string>
+    <string name="settings_advanced_allow_lan_description_tv">Connect to speakers, computers, and other devices on your local network</string>
+    <string name="settings_advanced_allow_lan_title_tv">Allow LAN connections</string>
     <string name="settings_advanced_nat_type_title">Тип NAT</string>
     <!-- %1$s - will have translated learn_more value -->
     <string name="settings_advanced_nat_type_description">Выберите тип преобразования сетевых адресов для вашего подключения. %1$s</string>
@@ -1462,11 +1487,14 @@
     <string name="settings_needs_reconnect_banner">Новые настройки будут применены при следующем подключении.</string>
     <string name="private_dns_conflict_banner_custom_dns_title">Пользовательская DNS недоступна</string>
     <string name="private_dns_conflict_banner_custom_dns_description">Ваше устройство использует стороннюю DNS, которая препятствует работе пользовательской DNS в Proton VPN. Подробнее</string>
+    <string name="private_dns_conflict_banner_custom_dns_description_tv">Your device is using a third-party DNS which prevents Proton VPN’s Custom DNS from working.</string>
     <string name="private_dns_conflict_banner_netshield_title">NetShield недоступен</string>
     <string name="private_dns_conflict_banner_netshield_description">Ваше устройство использует стороннюю DNS, что препятствует работе NetShield. Подробнее</string>
     <string name="private_dns_conflict_banner_network_settings_button">Настройки сети</string>
     <string name="custom_dns_conflict_banner_netshield_title">NetShield недоступен</string>
     <string name="custom_dns_conflict_banner_netshield_description">Включена пользовательская DNS, которая препятствует работе NetShield. Подробнее</string>
+    <string name="custom_dns_conflict_banner_netshield_title_tv">Turn off custom DNS to use NetShield</string>
+    <string name="custom_dns_conflict_banner_netshield_description_tv">Custom DNS is enabled which prevents NetShield from working.</string>
     <string name="custom_dns_conflict_banner_disable_custom_dns_button">Выключить пользовательскую DNS</string>
     <string name="info_secure_core_standard_high_privacy">Высокая степень приватности</string>
     <string name="info_secure_core_standard_lower_latency">Меньшая задержка</string>
@@ -1561,11 +1589,17 @@
     <!-- Displayed as a badge next to create_profile_auto_open_label ("Auto-launch website [NEW]") -->
     <string name="create_profile_auto_open_label_badge">Новая</string>
     <string name="create_profile_auto_open_url_input_label">URL веб-сайта</string>
+    <string name="create_profile_auto_open_url_private_mode_label">Use private browsing mode</string>
     <!-- Label for disabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_off">Выключено</string>
+    <string name="profile_auto_open_app_failed_to_launch">Connect and Go: application not found</string>
     <!-- Label for enabled "Auto-launch website" setting in profile creation -->
-    <string name="profile_auto_open_on">Включён</string>
+    <string name="profile_auto_open_website">Open a website</string>
+    <string name="profile_auto_open_app">Open an app</string>
     <string name="create_profile_auto_open_description">Автоматическое открытие выбранного вами веб-сайта при подключении к этому профилю.</string>
+    <string name="create_profile_auto_open_app_input_hint">Select an app</string>
+    <string name="create_profile_auto_open_app_input_label">App</string>
+    <string name="create_profile_auto_open_app_no_apps">No apps found.</string>
     <string name="profile_auto_open_error_invalid_url">Введите действительный URL</string>
     <string name="nps_how_likely_question">Насколько вероятно, что вы порекомендуете Proton VPN другу или коллеге?</string>
     <string name="nps_additional_comment_title">Дайте нам знать, почему вы поставили такую оценку</string>
@@ -1598,4 +1632,12 @@
     <string name="info_dialog_ipv6_traffic_benefits_title">Преимущества</string>
     <string name="settings_lan_allow_direct_connection_title">Разрешить прямые подключения устройств</string>
     <string name="settings_lan_allow_direct_connection_description">Подключайтесь к Smart TV, Android Auto и другим устройствам, создающим собственную сеть. Для обеспечения максимальной защищенности всегда включайте эту функцию при подключении к этим устройствам.</string>
+    <!-- No VPN connections -->
+    <string name="no_connections_title">No VPN connections available</string>
+    <string name="no_connections_description_loading_error">We couldn’t load the server list.</string>
+    <string name="no_connections_description_no_servers">Ask your administrator to enable VPN access for your account.</string>
+    <string name="no_connections_action_refresh">Refresh</string>
+    <string name="no_connections_action_sign_out">Sign out</string>
+    <string name="no_connections_help_contact_us"><![CDATA[Need help? <a href="">Contact us</a>]]></string>
+    <string name="no_connections_help_follow_instructions"><![CDATA[If your administrator needs help enabling VPN access, send them <a href="">these instructions</a>.]]></string>
 </resources>

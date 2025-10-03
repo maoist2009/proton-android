@@ -23,14 +23,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.protonvpn.android.auth.data.VpnUser
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.models.config.VpnProtocol
-import com.protonvpn.android.models.vpn.ConnectingDomain
-import com.protonvpn.android.models.vpn.LoadUpdate
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_P2P
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_RESTRICTED
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_SECURE_CORE
-import com.protonvpn.android.models.vpn.SERVER_FEATURE_TOR
-import com.protonvpn.android.models.vpn.Server
-import com.protonvpn.android.models.vpn.ServerEntryInfo
+import com.protonvpn.android.servers.api.ConnectingDomain
+import com.protonvpn.android.servers.api.LoadUpdate
+import com.protonvpn.android.servers.api.SERVER_FEATURE_P2P
+import com.protonvpn.android.servers.api.SERVER_FEATURE_RESTRICTED
+import com.protonvpn.android.servers.api.SERVER_FEATURE_SECURE_CORE
+import com.protonvpn.android.servers.api.SERVER_FEATURE_TOR
+import com.protonvpn.android.servers.Server
+import com.protonvpn.android.servers.api.ServerEntryInfo
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
 import com.protonvpn.android.redesign.CountryId
 import com.protonvpn.android.redesign.vpn.ConnectIntent
@@ -184,7 +184,7 @@ class ServerManagerTests {
             createSeattleServer("SC", score = .1, features = SERVER_FEATURE_SECURE_CORE, entryCountry = "CH")
         )
         createServerManagers()
-        manager.setServers(servers, null)
+        manager.setServers(servers, statusId = null, language = null)
 
         testIntent("2", ConnectIntent.FastestInCountry(CountryId.fastest, EnumSet.of(ServerFeature.P2P)))
         testIntent(
@@ -220,7 +220,7 @@ class ServerManagerTests {
             createServer("US SC plus online", score = 3.0, exitCountry = "US", tier = 2, isSecureCore = true),
         )
         createServerManagers()
-        manager.setServers(servers, null)
+        manager.setServers(servers, null, null)
 
         val fastestPl = ConnectIntent.FastestInCountry(CountryId("PL"), emptySet())
         val fastestCh = ConnectIntent.FastestInCountry(CountryId("CH"), emptySet())

@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -197,6 +196,7 @@ object MainScreen : ScreenNoArg<RootNav>("main") {
         val bottomTarget = mainNav.currentBottomBarTargetAsState()
         val activity = LocalActivity.current as ComponentActivity
         val activityViewModel: MainActivityViewModel = hiltViewModel(viewModelStoreOwner = activity)
+        val showCountries = activityViewModel.showCountriesFlow.collectAsStateWithLifecycle().value ?: false
         val showGateways = activityViewModel.showGatewaysFlow.collectAsStateWithLifecycle().value ?: false
         val showProfilesDot by activityViewModel.autoShowInfoSheet.collectAsStateWithLifecycle(false)
         val notificationDots = when {
@@ -207,6 +207,7 @@ object MainScreen : ScreenNoArg<RootNav>("main") {
             bottomBar = {
                 BottomBarView(
                     selectedTarget = bottomTarget,
+                    showCountries = showCountries,
                     showGateways = showGateways,
                     notificationDots = notificationDots,
                     navigateTo = mainNav::navigate,

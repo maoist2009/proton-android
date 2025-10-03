@@ -76,8 +76,8 @@ class PaymentPanelFragment : Fragment() {
                                     priceInfo
                                 )
                             },
-                            showRenewPrice = state.showRenewPrice,
                             inProgress = state.inProgress,
+                            buttonLabelOverride = state.buttonLabelOverride,
                         )
                 }
                 is CommonUpgradeDialogViewModel.State.LoadError -> {
@@ -89,8 +89,8 @@ class PaymentPanelFragment : Fragment() {
                 CommonUpgradeDialogViewModel.State.Initializing -> {
                     currentViewState.value = ViewState.Initializing
                 }
-                CommonUpgradeDialogViewModel.State.LoadingPlans -> {
-                    currentViewState.value = ViewState.LoadingPlans
+                is CommonUpgradeDialogViewModel.State.LoadingPlans -> {
+                    currentViewState.value = ViewState.LoadingPlans(state.expectedCycleCount, state.buttonLabelOverride)
                 }
                 CommonUpgradeDialogViewModel.State.UpgradeDisabled ->
                     currentViewState.value = ViewState.UpgradeDisabled

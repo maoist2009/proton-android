@@ -29,10 +29,10 @@ import com.protonvpn.android.redesign.main_screen.ui.ShouldShowcaseRecents
 import com.protonvpn.android.redesign.search.FetchServerByName
 import com.protonvpn.android.redesign.search.FetchServerResult
 import com.protonvpn.android.redesign.search.SearchServerRemote
+import com.protonvpn.android.redesign.search.TextMatch
 import com.protonvpn.android.redesign.search.ui.SearchViewModel
 import com.protonvpn.android.redesign.search.ui.SearchViewModelDataAdapter
 import com.protonvpn.android.redesign.search.ui.SearchViewState
-import com.protonvpn.android.redesign.search.TextMatch
 import com.protonvpn.android.servers.ServerManager2
 import com.protonvpn.android.utils.ServerManager
 import com.protonvpn.android.vpn.VpnConnect
@@ -41,10 +41,10 @@ import com.protonvpn.android.vpn.usecases.FakeServerListTruncationEnabled
 import com.protonvpn.android.vpn.usecases.GetTruncationMustHaveIDs
 import com.protonvpn.android.vpn.usecases.ServerListTruncationEnabled
 import com.protonvpn.android.vpn.usecases.TransientMustHaves
-import com.protonvpn.app.redesign.countries.server
 import com.protonvpn.app.testRules.RobolectricHiltAndroidRule
 import com.protonvpn.test.shared.TestCurrentUserProvider
 import com.protonvpn.test.shared.TestUser
+import com.protonvpn.test.shared.createServer
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -100,11 +100,12 @@ class SearchViewModelTests {
     fun `search with multiple category matches`() = runTest {
         serverManager.setServers(
             listOf(
-                server(exitCountry = "US", city = "Portland", serverName = "US#1"),
-                server(exitCountry = "PT", city = "Porto", serverName = "PO#1"),
-                server(exitCountry = "PL", city = "Warsaw", serverName = "PL#1"),
+                createServer(exitCountry = "US", city = "Portland", serverName = "US#1"),
+                createServer(exitCountry = "PT", city = "Porto", serverName = "PO#1"),
+                createServer(exitCountry = "PL", city = "Warsaw", serverName = "PL#1"),
             ),
-            null
+            null,
+            null,
         )
         viewModel.localeFlow.value = Locale.US
         viewModel.setQuery("po")
@@ -121,10 +122,11 @@ class SearchViewModelTests {
     fun `first word match takes precedence over alphabetical order`() = runTest {
         serverManager.setServers(
             listOf(
-                server(exitCountry = "EN", city = "York"),
-                server(exitCountry = "US", city = "New York"),
+                createServer(exitCountry = "EN", city = "York"),
+                createServer(exitCountry = "US", city = "New York"),
             ),
-            null
+            null,
+            null,
         )
         viewModel.localeFlow.value = Locale.US
         viewModel.setQuery("yor")
@@ -146,8 +148,9 @@ class SearchViewModelTests {
         }
 
         serverManager.setServers(
-            listOf(server(exitCountry = "US", city = "Portland", serverName = "US-CA#10")),
-            null
+            listOf(createServer(exitCountry = "US", city = "Portland", serverName = "US-CA#10")),
+            null,
+            null,
         )
         viewModel.localeFlow.value = Locale.US
 
@@ -182,7 +185,7 @@ class SearchViewModelTests {
 
     @Test
     fun `remote server search - fetch server`() = runTest {
-        val ch2 = server(serverId = "id2", exitCountry = "CH", serverName = "CH#2")
+        val ch2 = createServer(serverId = "id2", exitCountry = "CH", serverName = "CH#2")
         val fetchServerByName: FetchServerByName = mockk()
         coEvery { fetchServerByName.invoke("CH#2") } returns FetchServerResult.Success(ch2)
 
@@ -192,8 +195,9 @@ class SearchViewModelTests {
         )
 
         serverManager.setServers(
-            listOf(server(serverId = "id1", exitCountry = "CH", serverName = "CH#1")),
-            null
+            listOf(createServer(serverId = "id1", exitCountry = "CH", serverName = "CH#1")),
+            null,
+            null,
         )
         viewModel.localeFlow.value = Locale.US
 
@@ -217,11 +221,11 @@ class SearchViewModelTests {
 
     @Test
     fun `remote server search - don't search when available locally`() = runTest {
-        val ch2 = server(serverId = "2", exitCountry = "CH", serverName = "CH#2", city = "Zurich")
+        val ch2 = createServer(serverId = "2", exitCountry = "CH", serverName = "CH#2", city = "Zurich")
         val fetchServerByName: FetchServerByName = mockk()
         coEvery { fetchServerByName.invoke("CH#2") } returns FetchServerResult.Success(ch2)
         viewModel.localeFlow.value = Locale.US
-        serverManager.setServers(listOf(ch2), null)
+        serverManager.setServers(listOf(ch2), null, null)
 
         viewModel.stateFlow.test {
             viewModel.setQuery("CH#2")
@@ -237,7 +241,7 @@ class SearchViewModelTests {
 
     @Test
     fun `remote server search - don't search for regular queries`() = runTest {
-        val ch2 = server(serverId = "2", exitCountry = "CH", serverName = "CH#2", city = "Zurich")
+        val ch2 = createServer(serverId = "2", exitCountry = "CH", serverName = "CH#2", city = "Zurich")
         val fetchServerByName: FetchServerByName = mockk()
         coEvery { fetchServerByName.invoke("CH#2") } returns FetchServerResult.Success(ch2)
         viewModel.localeFlow.value = Locale.US

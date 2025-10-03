@@ -94,6 +94,9 @@
     <string name="something_went_wrong">Bir şeyler ters gitti</string>
     <string name="try_again">Yeniden dene</string>
     <string name="delete">Sil</string>
+    <string name="menu_option_move_to_top" comment="command used to move an item to the top of the list">En üste taşı</string>
+    <string name="menu_option_move_up" comment="command used to move an item one position up in the list">Yukarı taşı</string>
+    <string name="menu_option_move_down" comment="command used to move an item one position down in the list">Aşağı taşı</string>
     <string name="remove">Kaldır</string>
     <string name="saveButton">Kaydet</string>
     <string name="ipWithPlaceholder">IP: %1$s</string>
@@ -217,6 +220,13 @@
     <string name="settingsTelemetryScreenTitle">Kullanım istatistikleri</string>
     <string name="settingsTelemetryScreenInfo"><![CDATA[Bu istatistikler IP adresinizi içermez ve kim olduğunuzu belirlemek için kullanılamaz. Bu verileri asla üçüncü taraflar ile paylaşmayız. <a href="%1$s">Ayrıntılı bilgi alın</a>]]></string>
     <string name="netshield_settings_description_not_html">Sizi siteler ve uygulamalardaki reklamlardan, kötü amaçlı yazılımlardan ve izleyicilerden korur. %1$s</string>
+    <string name="netshield_settings_description_tv">Sizi üçüncü taraf reklamlardan, izleyicilerden ve kötü amaçlı yazılımdan korur. NetShield, YouTube ve Netflix gibi yayın akışı izleme hizmetleri ile bütünleştirilmiş reklamları engellemez.</string>
+    <string name="netshield_settings_more_info_title_tv">NetShield nasıl çalışır?</string>
+    <string-array name="netshield_settings_more_info_paragraphs_tv">
+        <item>NetShield, reklamlar, izleyiciler ve kötü amaçlı yazılımlarla bilinen üçüncü taraf etki alanlarına gönderilen DNS isteklerini engeller.</item>
+        <item>Böylece, tarayıcınızdaki veya üçüncü taraf reklam hizmetlerini kullanan ücretsiz uygulamalardaki reklamları almazsınız.</item>
+        <item>Bununla birlikte, YouTube ve Netflix gibi yayın akışı izleme hizmetlerindeki reklamları engelleyemez, çünkü bu reklamlar onların sunucularından gelir.</item>
+    </string-array>
     <string name="settings_icon_change_description">Proton VPN uygulamasını farklı bir simge ile gizleyin. Bildirimlerde hala varsayılan Proton VPN adı ve simgesi görüntülenir. %1$s</string>
     <string name="settings_icon_change_learn_more">Ayrıntılı bilgi alın</string>
     <string name="learn_more">Ayrıntılı bilgi alın</string>
@@ -267,8 +277,10 @@
     <string name="nameAfricaAndMiddleEast">Afrika ve Orta Doğu</string>
     <string name="nameOceania">Okyanusya</string>
     <string name="tv_row_settings">Ayarlar</string>
+    <string name="tv_card_lan_connections_label">Yerel ağ</string>
     <string name="tv_card_split_tunneling_label">Ayrılmış tünelleme</string>
     <string name="tv_card_protocol_label">İletişim kuralı</string>
+    <string name="tv_dialog_delete_server_title">%1$s sunucusu silinsin mi?</string>
     <string name="tv_detail_default_connection_checkbox_short">Yeğlenen</string>
     <string name="tv_detail_connect_streaming">Plus ile yayın akışı</string>
     <string name="tv_detail_connect">Bağlan</string>
@@ -515,6 +527,15 @@
     <string name="upsell_card_streaming_description">Beğendiğiniz film ve TV dizilerini izleyin</string>
     <string name="upsell_card_tor_title">VPN üzerinden Tor</string>
     <string name="upsell_card_tor_description">Ek gizlilik sağlamak için VPN bağlantınızı Tor ağından geçirin</string>
+    <string name="upsell_tv_all_countries_title">Plus tarifesiyle tüm ülkelere erişin</string>
+    <string name="upsell_tv_all_countries_description" comment="the first 2 placeholders will be replaced by the amount of servers and countries">%2$s ülkedeki %1$s güvenli sunucuya erişin. %3$s</string>
+    <string name="upsell_tv_netshield_title">NetShield ile reklamsız gezinmenin tadını çıkarın</string>
+    <string name="upsell_tv_netshield_description"><![CDATA[<b>NetShield</b> ile reklamları, izleyicileri ve kötü amaçlı yazılımları engelleyin. %1$s]]></string>
+    <string name="upsell_tv_split_tunneling_title">Plus tarifesi ile iki dünyanın da en iyisini elde edin</string>
+    <string name="upsell_tv_split_tunneling_description"><![CDATA[<b>Ayrılmış tünelleme</b> ile VPN kullanan ve VPN kullanmayan trafiğinizi ayırın. %1$s]]></string>
+    <string name="upsell_tv_customization_title">Plus tarifesi ile gelişmiş VPN özelleştirmeleri edinin</string>
+    <string name="upsell_tv_customization_description"><![CDATA[<b>Yerel ağ bağlantıları</b>, <b>Özel DNS</b> ve diğer gelişmiş VPN özelliklerine erişin. %1$s]]></string>
+    <string name="upsell_tv_description_placeholder">Tarifenizi yükseltmek için Proton VPN sitesine gidin.</string>
     <!-- Format for price per period of time.
         %1$s - replaced with price and currency (e.g. "$100")
         %2$s - replaced with time period, one of payment_price_per_ (e.g. "month", "2 years")
@@ -543,8 +564,6 @@
     <string name="payment_welcome_price_message_annual">Karşılama teklifi. %1$s/yıl tutar ile otomatik olarak yenilenir</string>
     <string name="payment_auto_renew_message_monthly">Abonelik %1$s/ay tutar ile otomatik olarak yenilenir</string>
     <string name="payment_auto_renew_message_annual">Abonelik %1$s/yıl tutar ile otomatik yenilenir</string>
-    <string name="payment_welcome_price_message_monthly_fallback">Abonelik her ay otomatik olarak yenilenir</string>
-    <string name="payment_welcome_price_message_annual_fallback">Abonelik her yıl otomatik olarak yenilenir</string>
     <string name="smart_routing_title">Smart Routing</string>
     <string name="smart_routing_description">Bu teknoloji, hizmet verilmesi zor ülkelerde Proton VPN için daha yüksek hız ve güvenlik sağlar.</string>
     <string name="tor_title">Tor</string>
@@ -998,6 +1017,8 @@
     <string name="gateways_title">Ağ geçitleri</string>
     <string name="countries_title">Ülkeler</string>
     <string name="profiles_title">Profiller</string>
+    <string name="settings_autoconnect_title">Otomatik bağlantı</string>
+    <string name="settings_autoconnect_boot_description">Automatically connects you to VPN using quick-connect once your device has launched.</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_category_features">Özellikler</string>
     <!-- tag(Redesign_2023) -->
@@ -1064,13 +1085,13 @@
     <string name="country_filter_countries_list_header">Ülkeler (%1$d)</string>
     <string name="country_filter_cities_list_header">İller (%1$d)</string>
     <string name="country_filter_states_list_header">Eyaletler (%1$d)</string>
-    <string name="country_filter_servers_list_header">Sunucular (%1$d)</string>
+    <string name="country_filter_servers_list_header">Sunucular</string>
     <string name="country_filter_secure_core_list_header">Secure Core ülkeleri (%1$d)</string>
     <string name="country_filter_p2p_list_header">P2P ülkeleri (%1$d)</string>
     <string name="country_filter_p2p_list_header_cities">P2P illeri (%1$d)</string>
     <string name="country_filter_p2p_list_header_states">P2P eyaletleri (%1$d)</string>
     <string name="country_filter_tor_list_header">Tor ülkeleri (%1$d)</string>
-    <string name="country_filter_tor_servers_list_header">Tor sunucuları (%1$d)</string>
+    <string name="country_filter_tor_servers_list_header">Tor sunucuları</string>
     <string name="country_filter_info_label">Bilgiler</string>
     <!-- Content description for server load indicator. Used by accessibility services only.
          Note: the trailing \'%\' sign needs to be doubled
@@ -1322,6 +1343,7 @@
     <string name="settings_account_button_my_account">Hesabım</string>
     <string name="settings_account_button_delete_account">Hesabı sil</string>
     <string name="settings_custom_dns_title">Özel DNS</string>
+    <string name="settings_custom_dns_description_tv">Kendi barındırdığınız veya üçüncü taraf bir etki alanı adı sistemi (DNS) ile VPN bağlantısı kurun.</string>
     <string name="settings_add_dns_placeholder">192.0.2.0</string>
     <string name="settings_add_dns_title">Yeni DNS sunucusu ekle</string>
     <string name="settings_add_dns_new_entry_button">Ekle</string>
@@ -1337,10 +1359,13 @@
     <string name="settings_changes_apply_on_reconnect_toast">Değişiklikler yeniden bağlandığınızda uygulanır</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_title">NetShield kullanılamayacak</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_message">Özel DNS kullanıldığında NetShield reklamları, izleyicileri ve kötü amaçlı yazılımları süzemez. Ayrıntılı bilgi alın</string>
+    <string name="settings_custom_dns_netshield_conflict_dialog_message_tv">Özel DNS kullanıldığında NetShield reklamları, izleyicileri ve kötü amaçlı yazılımları süzemez.</string>
     <string name="settings_advanced_alternative_routing_title">Alternatif yöneltme</string>
     <string name="settings_advanced_alternative_routing_description">Proton hizmetlerine erişim ağ üzerinden engelleniyorsa, sitelerimizle bağlantınızı kurmak için alternatif ağ yöneltmesi kullanmayı deneyeceğiz.</string>
     <string name="settings_advanced_allow_lan_title">Yerel ağ bağlantıları</string>
     <string name="settings_advanced_allow_lan_description">Aygıtınızın aynı yerel ağda bulunan yazıcı, hoparlör gibi diğer aygıtlara bağlanmasını sağlar.</string>
+    <string name="settings_advanced_allow_lan_description_tv">Yerel ağınızdaki hoparlörlere, bilgisayarlara ve diğer aygıtlara bağlanın</string>
+    <string name="settings_advanced_allow_lan_title_tv">Yerel ağ bağlantılarına izin verilsin</string>
     <string name="settings_advanced_nat_type_title">NAT Type</string>
     <!-- %1$s - will have translated learn_more value -->
     <string name="settings_advanced_nat_type_description">Bağlantınız için bir ağ adresi dönüştürme (NAT) türü seçin. %1$s</string>
@@ -1390,11 +1415,14 @@
     <string name="settings_needs_reconnect_banner">Yeni ayarlar kurulacak bir sonraki bağlantıya uygulanacak.</string>
     <string name="private_dns_conflict_banner_custom_dns_title">Özel DNS kullanılamıyor</string>
     <string name="private_dns_conflict_banner_custom_dns_description">Aygıtınız Proton VPN hizmetinin Özel DNS ayarının çalışmasını engelleyen bir üçüncü taraf DNS hizmeti kullanıyor. Ayrıntılı bilgi alın</string>
+    <string name="private_dns_conflict_banner_custom_dns_description_tv">Aygıtınız Proton VPN hizmetinin özel DNS ayarının çalışmasını engelleyen bir üçüncü taraf DNS hizmeti kullanıyor.</string>
     <string name="private_dns_conflict_banner_netshield_title">NetShield kullanılamıyor</string>
     <string name="private_dns_conflict_banner_netshield_description">Aygıtınız NetShield hizmetinin çalışmasını engelleyen bir üçüncü taraf DNS hizmeti kullanıyor. Ayrıntılı bilgi alın</string>
     <string name="private_dns_conflict_banner_network_settings_button">Ağ ayarları</string>
     <string name="custom_dns_conflict_banner_netshield_title">NetShield kullanılamıyor</string>
     <string name="custom_dns_conflict_banner_netshield_description">NetShield hizmetinin çalışmasını engelleyen özel DNS özelliği kullanılıyor. Ayrıntılı bilgi alın</string>
+    <string name="custom_dns_conflict_banner_netshield_title_tv">NetShield kullanmak için özel DNS özelliğini kapatın.</string>
+    <string name="custom_dns_conflict_banner_netshield_description_tv">NetShield hizmetinin çalışmasını engelleyen özel DNS özelliği açık.</string>
     <string name="custom_dns_conflict_banner_disable_custom_dns_button">Özel DNS özelliğini kapat</string>
     <string name="info_secure_core_standard_high_privacy">Yüksek gizlilik</string>
     <string name="info_secure_core_standard_lower_latency">Düşük gecikme</string>
@@ -1488,11 +1516,17 @@
     <!-- Displayed as a badge next to create_profile_auto_open_label ("Auto-launch website [NEW]") -->
     <string name="create_profile_auto_open_label_badge">Yeni</string>
     <string name="create_profile_auto_open_url_input_label">Site adresi</string>
+    <string name="create_profile_auto_open_url_private_mode_label">Use private browsing mode</string>
     <!-- Label for disabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_off">Kapalı</string>
+    <string name="profile_auto_open_app_failed_to_launch">Connect and Go: application not found</string>
     <!-- Label for enabled "Auto-launch website" setting in profile creation -->
-    <string name="profile_auto_open_on">Açık</string>
+    <string name="profile_auto_open_website">Open a website</string>
+    <string name="profile_auto_open_app">Open an app</string>
     <string name="create_profile_auto_open_description">Bu profil ile bağlantı kurduğunuzda istediğiniz bir siteyi otomatik olarak açın.</string>
+    <string name="create_profile_auto_open_app_input_hint">Select an app</string>
+    <string name="create_profile_auto_open_app_input_label">App</string>
+    <string name="create_profile_auto_open_app_no_apps">No apps found.</string>
     <string name="profile_auto_open_error_invalid_url">Geçerli bir adres yazın</string>
     <string name="nps_how_likely_question">Proton VPN hizmetini bir arkadaşınıza veya meslektaşınıza önerme olasılığınız nedir?</string>
     <string name="nps_additional_comment_title">Lütfen neden bu puanı verdiğinizi bize anlatın</string>
@@ -1525,4 +1559,12 @@
     <string name="info_dialog_ipv6_traffic_benefits_title">İyi yanları</string>
     <string name="settings_lan_allow_direct_connection_title">Doğrudan aygıt bağlantılarına izin verilsin</string>
     <string name="settings_lan_allow_direct_connection_description">Akıllı TV, Android Auto ve kendi ağınızdaki diğer aygıtlara bağlanın. En yüksek güvenlik için, yalnızca bu aygıtlara bağlanırken etkinleştirin.</string>
+    <!-- No VPN connections -->
+    <string name="no_connections_title">Kullanılabilecek bir VPN bağlantısı yok</string>
+    <string name="no_connections_description_loading_error">Sunucu listesi yüklenemedi.</string>
+    <string name="no_connections_description_no_servers">Yöneticiniz ile görüşerek hesabınız için VPN özelliğini açmasını isteyin.</string>
+    <string name="no_connections_action_refresh">Yenile</string>
+    <string name="no_connections_action_sign_out">Oturumu kapat</string>
+    <string name="no_connections_help_contact_us"><![CDATA[Yardım mı gerekiyor? <a href="">Bize ulaşın</a>]]></string>
+    <string name="no_connections_help_follow_instructions"><![CDATA[Yöneticiniz VPN özelliğini açmak için yardıma gerek duyarsa, ona <a href="">bu yönergeyi</a> gönderin.]]></string>
 </resources>

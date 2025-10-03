@@ -29,11 +29,11 @@ import com.protonvpn.android.di.WallClock
 import com.protonvpn.android.logging.ProtonLogger
 import com.protonvpn.android.models.profiles.Profile
 import com.protonvpn.android.models.profiles.ServerWrapper.ProfileType
-import com.protonvpn.android.models.vpn.ConnectingDomain
+import com.protonvpn.android.servers.api.ConnectingDomain
 import com.protonvpn.android.models.vpn.GatewayGroup
-import com.protonvpn.android.models.vpn.LoadUpdate
-import com.protonvpn.android.models.vpn.Server
-import com.protonvpn.android.models.vpn.StreamingServicesResponse
+import com.protonvpn.android.servers.api.LoadUpdate
+import com.protonvpn.android.servers.Server
+import com.protonvpn.android.servers.api.StreamingServicesResponse
 import com.protonvpn.android.models.vpn.VpnCountry
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
 import com.protonvpn.android.redesign.CountryId
@@ -42,6 +42,7 @@ import com.protonvpn.android.redesign.vpn.ConnectIntent
 import com.protonvpn.android.redesign.vpn.ServerFeature
 import com.protonvpn.android.redesign.vpn.satisfiesFeatures
 import com.protonvpn.android.servers.ServersDataManager
+import com.protonvpn.android.servers.api.LogicalsStatusId
 import com.protonvpn.android.vpn.ProtocolSelection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -91,12 +92,16 @@ class ServerManager @Inject constructor(
 
     /** Can be checked even before servers are loaded from storage */
     private var hasGateways: Boolean = false
+    private var hasCountries: Boolean = false
 
     /** Can be checked even before servers are loaded from storage */
     val isDownloadedAtLeastOnce get() = lastUpdateTimestamp > 0 && hasDownloadedServers
 
     @Transient
     val isDownloadedAtLeastOnceFlow = serverListVersion.map { isDownloadedAtLeastOnce }.distinctUntilChanged()
+
+    @Transient
+    val hasCountriesFlow = serverListVersion.map { hasCountries }.distinctUntilChanged()
 
     @Transient
     val hasGatewaysFlow = serverListVersion.map { hasGateways }.distinctUntilChanged()
@@ -108,6 +113,7 @@ class ServerManager @Inject constructor(
             translationsLang != Locale.getDefault().language
     }
 
+    val logicalsStatusId get() = serversData.statusId
     val allServers get() = serversData.allServers
     val allServersByScore get() = serversData.allServersByScore
 
@@ -124,6 +130,7 @@ class ServerManager @Inject constructor(
             serverListAppVersionCode = oldManager.serverListAppVersionCode
             translationsLang = oldManager.translationsLang
             hasDownloadedServers = oldManager.hasDownloadedServers
+            hasCountries = oldManager.hasCountries
             hasGateways = oldManager.hasGateways
 
             serverListVersion.value = 1
@@ -148,6 +155,7 @@ class ServerManager @Inject constructor(
 
     private fun updateInternal() {
         hasGateways = serversData.gateways.isNotEmpty()
+        hasCountries = serversData.vpnCountries.isNotEmpty()
         hasDownloadedServers = true
     }
 
@@ -170,7 +178,10 @@ class ServerManager @Inject constructor(
     }
 
     suspend fun setGuestHoleServers(serverList: List<Server>) {
-        setServers(serverList, null)
+        DebugUtils.debugAssert("Guest hole servers can only be set when regular servers are not available") {
+            !isDownloadedAtLeastOnce
+        }
+        setServers(serverList, null, null)
         lastUpdateTimestamp = 0L
     }
 
@@ -186,9 +197,14 @@ class ServerManager @Inject constructor(
             }.takeRandomStable(serverCount).shuffled()
             ).distinct().take(serverCount)
 
-    suspend fun setServers(serverList: List<Server>, language: String?, retainIDs: Set<String> = emptySet()) {
+    suspend fun setServers(
+        serverList: List<Server>,
+        statusId: LogicalsStatusId?,
+        language: String?,
+        retainIDs: Set<String> = emptySet()
+    ) {
         ensureLoaded()
-        serversData.replaceServers(serverList, retainIDs)
+        serversData.replaceServers(serverList, statusId, retainIDs)
 
         lastUpdateTimestamp = wallClock()
         serverListAppVersionCode = BuildConfig.VERSION_CODE
@@ -215,6 +231,14 @@ class ServerManager @Inject constructor(
     suspend fun updateLoads(loadsList: List<LoadUpdate>) {
         ensureLoaded()
         serversData.updateLoads(loadsList)
+
+        Storage.save(this, ServerManager::class.java)
+        onServersUpdate()
+    }
+
+    suspend fun updateBinaryLoads(statusId: LogicalsStatusId, loads: ByteArray) {
+        ensureLoaded()
+        serversData.updateBinaryLoads(statusId, loads)
 
         Storage.save(this, ServerManager::class.java)
         onServersUpdate()
