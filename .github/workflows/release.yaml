@@ -133,7 +133,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          body_path: ./release-notes/${{ github.ref_name }}.md
+          body_path: ./metadata/version_fdroid.txt
           files: ${{ env.APK_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
