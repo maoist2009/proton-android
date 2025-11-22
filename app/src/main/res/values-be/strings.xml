@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s%%</string>
     <string name="cancel">Скасаваць</string>
     <string name="close">Закрыць</string>
+    <string name="dialogContinue">Працягнуць</string>
     <string name="drawerReportProblem">Паведаміць аб праблеме</string>
+    <string name="action_done">Гатова</string>
     <string name="action_share">Абагуліць</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">На тэхнічным абслугоўванні</string>
@@ -322,10 +324,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">Загружанасць сервера %1$s%%</string>
-    <string name="tv_recently_used_servers">Серверы, якімі вы нядаўна карысталіся (%1$d)</string>
-    <string name="tv_available_servers">Даступныя серверы (%1$d)</string>
-    <string name="tv_locked_servers">Заблакіраваныя серверы (%1$d)</string>
-    <string name="tv_other_servers">Іншыя серверы (%1$d)</string>
+    <string name="tv_recently_used_servers">Серверы, якімі вы нядаўна карысталіся</string>
+    <string name="tv_available_servers">Даступныя серверы</string>
+    <string name="tv_locked_servers">Заблакіраваныя серверы</string>
+    <string name="tv_other_servers">Іншыя серверы</string>
     <string name="tv_server_list">Спіс сервераў</string>
     <string name="tv_server_list_action_unavailable">Недаступна</string>
     <string name="notification_subscription_expired_title">Ваша падпіска на тарыфны план Proton VPN пратэрмінавана</string>
@@ -441,8 +443,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[Разблакіруйце %1$s у %2$s з дапамогай <b>VPN Plus</b>.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">Усе прэміяльныя сэрвісы Proton. Адна простая падпіска.</string>
-    <string name="upgrade_unlimited_all_apps_description">Атрымайце ўсёабдымную прыватнасць з Proton Unlimited.</string>
+    <string name="upgrade_unlimited_all_apps_title">Атрымайце ўсёабдымную прыватнасць з Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Разблакіруйце ўсе прэміяльныя функцыі ад Proton VPN, Пошты, Каляндара, Дыска і Pass.</string>
     <string name="upgrade_unlimited_more">І іншыя функцыі</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Разблакіруйце ўсе краіны</string>
     <string name="upgrade_unlimited_vpn_all_features">Усе іншыя функцыі VPN Plus</string>
@@ -626,6 +628,9 @@
     <string name="dynamic_report_your_issue_headline">У чым ваша праблема?</string>
     <string name="update_screen_title">Абнавіць Proton VPN</string>
     <string name="update_screen_description">Хутчэй за ўсё ў вас з\'явяцца праблемы са старымі версіямі Proton VPN.</string>
+    <string name="update_banner_description_settings">Даступна новая версія праграмы</string>
+    <string name="update_banner_warning_vpn_connected_title">VPN ненадоўга адключыцца</string>
+    <string name="update_banner_warning_vpn_connected_message">Праграме патрабуе перазапуску, каб завяршыць абнаўленне. Пасля гэтага вы будзеце аўтаматычна перападключаны.</string>
     <string name="dialog_create_account_title">Стварыце ўліковы запіс, каб працягнуць</string>
     <string name="dialog_create_account_action_create">Стварыць уліковы запіс</string>
     <string name="dialog_create_account_action_signin">Увайсці</string>
@@ -741,7 +746,7 @@
     <string name="welcome_plus_description">Атрымлівайце асалоду ад дадатковых функцый прыватнасці, палепшанай прадукцыйнасці і больш гнуткага наладжвання вашага падключэння да VPN.</string>
     <string name="welcome_plus_feature_security">Пашыраныя функцыі бяспекі</string>
     <string name="welcome_unlimited_title">Вітаем вас у Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Віншуем! Вы разблакіравалі прэміяльныя функцыі бяспекі і прадукцыйнасці ва ўсіх сэрвісах Proton, а таксама <b>%1$d&#160;ГБ</b> дыскавай прасторы ў сховішчы.<br><br>Атрымлівайце асалоду ад палепшанай прыватнасці Proton.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[Вы разблакіравалі ўсе прэміяльныя функцыі праграм Proton VPN, Mail, Calendar, Drive, Pass і Wallet. Таксама цяпер вам даступна <b>%1$d&#160;ГБ</b> агульнага сховішча.]]></string>
     <string name="welcome_generic_title">Віншуем</string>
     <string name="welcome_generic_description">Вы палепшылі сваю падпіску. Атрымлівайце асалоду ад пашыраных функцый прыватнасці і новага ўзроўню прадукцыйнасці.</string>
     <!-- Example: Up to 10 devices at once
@@ -1068,7 +1073,7 @@
     <string name="countries_title">Краіны</string>
     <string name="profiles_title">Профілі</string>
     <string name="settings_autoconnect_title">Аўтаматычнае падключэнне</string>
-    <string name="settings_autoconnect_boot_description">Аўтаматычна падключае вас да VPN, выкарыстоўваючы хуткае падключэнне, як толькі ваша прылада запусціцца.</string>
+    <string name="settings_autoconnect_boot_description">Адразу пасля запуску вашай прылады аўтаматычна падключае вас да VPN пры выкарыстанні хуткага падключэння.</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_category_features">Функцыі</string>
     <!-- tag(Redesign_2023) -->
@@ -1466,8 +1471,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">Рэкамендавана</string>
     <string name="settings_split_tunneling_mode_title">Рэжым</string>
-    <string name="settings_split_tunneling_mode_standard">Стандартны</string>
-    <string name="settings_split_tunneling_mode_inverse">Зваротны</string>
+    <string name="settings_split_tunneling_mode_standard">Выключыць</string>
+    <string name="settings_split_tunneling_mode_inverse">Уключыць</string>
     <string name="settings_split_tunneling_mode_description_standard">Выбраныя праграмы і IP-адрасы выключаны з падключэння па VPN.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Толькі выбраныя праграмы і IP-адрасы будуць падключаны праз VPN. Увесь астатні трафік застанецца неабароненым.</string>
     <string name="settings_split_tunneling_excluded_apps">Выключаныя праграмы</string>
@@ -1591,7 +1596,7 @@
     <string name="create_profile_auto_open_url_private_mode_label">Выкарыстоўваць рэжым прыватнага прагляду</string>
     <!-- Label for disabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_off">Выключана</string>
-    <string name="profile_auto_open_app_failed_to_launch">Connect and Go: праграма не знойдзена</string>
+    <string name="profile_auto_open_app_failed_to_launch">Падключыць і перайсці: праграма не знойдзена</string>
     <!-- Label for enabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_website">Адкрыць вэб-сайт</string>
     <string name="profile_auto_open_app">Адкрыць праграму</string>
@@ -1617,7 +1622,7 @@
     <string name="widget_status_connecting">Падключэнне</string>
     <string name="widget_sign_in">Увайсці</string>
     <string name="widget_toast_added_message">Віджэт дададзены на галоўны экран</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">Падтрымка IPv6</string>
     <string name="settings_advanced_ipv6_description">Адпраўляе ў тунэль трафік IPv6 праз VPN. Можа палепшыць сумяшчальнасць з сеткамі IPv6.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">Вам неабходна дазволіць падключэнні па IPv6 праз тунэль VPN, каб выкарыстоўваць гэты адрас.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">Уключыць IPv6</string>
@@ -1639,4 +1644,9 @@
     <string name="no_connections_action_sign_out">Выйсці з уліковага запісу</string>
     <string name="no_connections_help_contact_us"><![CDATA[Патрэбна дапамога? <a href="">Звяжыцеся з намі</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Адпраўце свайму адміністратару <a href="">гэтыя інструкцыі</a>, калі яму патрэбна дапамога з уключэннем доступу па VPN.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Уключыць OpenVPN?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Гэты пратакол неўзабаве будзе выдалены, бо ў цяперашні час аддаецца перавага больш хуткім і бяспечным тэхналогіям. Рэкамендуецца пераключыцца на Smart Protocol. <a href="proton.me">Даведацца больш</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Гэты пратакол неўзабаве будзе выдалены, бо ў цяперашні час аддаецца перавага больш хуткім і бяспечным тэхналогіям. Рэкамендуецца пераключыцца на Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Працягнуць з OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Уключыць пратакол Smart</string>
 </resources>

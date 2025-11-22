@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s %%</string>
     <string name="cancel">Annuler</string>
     <string name="close">Fermer</string>
+    <string name="dialogContinue">Continuer</string>
     <string name="drawerReportProblem">Signaler un problème</string>
+    <string name="action_done">Terminé</string>
     <string name="action_share">Partager</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">En maintenance</string>
@@ -318,10 +320,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">%1$s %% de charge serveur</string>
-    <string name="tv_recently_used_servers">Serveurs récemment utilisés (%1$d)</string>
-    <string name="tv_available_servers">Serveurs disponibles (%1$d)</string>
-    <string name="tv_locked_servers">Serveurs verrouillés (%1$d)</string>
-    <string name="tv_other_servers">Autres serveurs (%1$d)</string>
+    <string name="tv_recently_used_servers">Serveurs récemment utilisés</string>
+    <string name="tv_available_servers">Serveurs disponibles</string>
+    <string name="tv_locked_servers">Serveurs verrouillés</string>
+    <string name="tv_other_servers">Autres serveurs</string>
     <string name="tv_server_list">Liste de serveurs</string>
     <string name="tv_server_list_action_unavailable">Indisponible</string>
     <string name="notification_subscription_expired_title">Votre abonnement Proton VPN a expiré.</string>
@@ -425,8 +427,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[Accédez à %1$s dans %2$s en passant à <b>VPN Plus</b>.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">Tous les services premium de Proton avec un seul abonnement.</string>
-    <string name="upgrade_unlimited_all_apps_description">Profitez d\'une protection totale de votre vie privée avec Proton Unlimited.</string>
+    <string name="upgrade_unlimited_all_apps_title">Profitez d\'une protection totale de votre vie privée avec Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Débloquez toutes les fonctionnalités premium de Proton VPN, Mail, Calendrier, Drive et Pass.</string>
     <string name="upgrade_unlimited_more">Et bien plus encore</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Accès à tous les pays</string>
     <string name="upgrade_unlimited_vpn_all_features">Toutes les autres fonctionnalités de Proton VPN Plus</string>
@@ -594,6 +596,9 @@
     <string name="dynamic_report_your_issue_headline">Quel est le problème ?</string>
     <string name="update_screen_title">Mettre à jour Proton VPN</string>
     <string name="update_screen_description">Il est possible de rencontrer des problèmes avec les anciennes versions de Proton VPN.</string>
+    <string name="update_banner_description_settings">Une nouvelle version de l\'application est disponible</string>
+    <string name="update_banner_warning_vpn_connected_title">Le VPN va se déconnecter brièvement</string>
+    <string name="update_banner_warning_vpn_connected_message">L\'application doit redémarrer pour finaliser la mise à jour. Vous serez reconnecté automatiquement par la suite.</string>
     <string name="dialog_create_account_title">Créez un compte pour continuer</string>
     <string name="dialog_create_account_action_create">Créer un compte</string>
     <string name="dialog_create_account_action_signin">Se connecter</string>
@@ -699,7 +704,7 @@
     <string name="welcome_plus_description">Profitez de fonctionnalités supplémentaires de protection de la vie privée, de meilleures performances et d\'une personnalisation poussée de votre VPN.</string>
     <string name="welcome_plus_feature_security">Fonctionnalités de sécurité avancées</string>
     <string name="welcome_unlimited_title">Bienvenue dans Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Félicitations ! Vous disposez maintenant de fonctionnalités de sécurité et de performance premium pour tous les services Proton, avec un espace de stockage total de <b>%1$d&#160; Go</b>.<br><br>Profitez de ce que Proton a de mieux à offrir en matière de protection de la vie privée.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[Vous avez déverrouillé toutes les fonctionnalités premium de Proton VPN, Mail, Calendrier, Drive, Pass et Portefeuille + <b>%1$d&#160;Go</b> d\'espace de stockage total.]]></string>
     <string name="welcome_generic_title">Félicitations</string>
     <string name="welcome_generic_description">Vous avez modifié votre abonnement. Profitez de fonctionnalités avancées pour protéger votre vie privée et de meilleures performances.</string>
     <!-- Example: Up to 10 devices at once
@@ -1364,7 +1369,7 @@
     <string name="settings_advanced_alternative_routing_description">Si les services Proton sont bloqués en raison de restrictions du réseau, nous essaierons d\'utiliser un routage alternatif du réseau pour vous connecter à nos sites.</string>
     <string name="settings_advanced_allow_lan_title">Connexions LAN</string>
     <string name="settings_advanced_allow_lan_description">Vous permet de vous connecter à des imprimantes, des enceintes et d\'autres appareils du réseau local de votre appareil.</string>
-    <string name="settings_advanced_allow_lan_description_tv">Se connecter à des enceintes, des ordinateurs et d’autres appareils sur votre réseau local</string>
+    <string name="settings_advanced_allow_lan_description_tv">Connecter à des enceintes, des ordinateurs et d’autres appareils sur votre réseau local</string>
     <string name="settings_advanced_allow_lan_title_tv">Autoriser les connexions LAN</string>
     <string name="settings_advanced_nat_type_title">Type de NAT</string>
     <!-- %1$s - will have translated learn_more value -->
@@ -1394,8 +1399,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">Recommandé</string>
     <string name="settings_split_tunneling_mode_title">Mode</string>
-    <string name="settings_split_tunneling_mode_standard">Standard</string>
-    <string name="settings_split_tunneling_mode_inverse">Inverse</string>
+    <string name="settings_split_tunneling_mode_standard">Exclure</string>
+    <string name="settings_split_tunneling_mode_inverse">Inclure</string>
     <string name="settings_split_tunneling_mode_description_standard">Les applications et adresses IP sélectionnées sont exclues de la connexion VPN.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Seules les applications et adresses IP sélectionnées se connectent par VPN. Tout le reste du trafic n\'est pas protégé.</string>
     <string name="settings_split_tunneling_excluded_apps">Applications exclues</string>
@@ -1545,11 +1550,11 @@
     <string name="widget_status_connecting">Connexion en cours</string>
     <string name="widget_sign_in">Se connecter</string>
     <string name="widget_toast_added_message">Le widget a été ajouté à l\'écran d\'accueil.</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">Support IPv6</string>
     <string name="settings_advanced_ipv6_description">Le trafic IPv6 passe par le VPN, ce qui peut améliorer la compatibilité avec les réseaux IPv6.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">Pour utiliser cette adresse, vous devez autoriser les connexions IPv6 via le tunnel VPN.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">Activer IPv6</string>
-    <string name="settings_split_tunneling_ipv6_disabled_dialog_title">IPv6 est désactivé</string>
+    <string name="settings_split_tunneling_ipv6_disabled_dialog_title">L\'IPv6 a été désactivé</string>
     <string name="settings_ipv6_enabled_toast">IPv6 activé</string>
     <string name="info_dialog_ipv6_traffic_benefits1">Garantit l\'accès aux sites internet et services uniquement compatibles avec IPv6.</string>
     <string name="info_dialog_ipv6_traffic_benefits2">Prévient les problèmes sur les réseaux qui dépendent de l\'IPv6.</string>
@@ -1561,10 +1566,15 @@
     <string name="settings_lan_allow_direct_connection_description">Connectez-vous aux Smart TV, à Android Auto et à d\'autres appareils qui créent leur propre réseau. Pour une sécurité maximale, activez uniquement cette fonction lorsque vous vous connectez à ces appareils.</string>
     <!-- No VPN connections -->
     <string name="no_connections_title">Aucune connexion VPN disponible</string>
-    <string name="no_connections_description_loading_error">Échec du chargement de la liste des serveurs</string>
-    <string name="no_connections_description_no_servers">Demandez l\'accès de votre compte VPN à votre administrateur.</string>
+    <string name="no_connections_description_loading_error">Nous n\'avons pas pu charger la liste des serveurs.</string>
+    <string name="no_connections_description_no_servers">Demandez à votre administrateur d\'activer l\'accès VPN pour votre compte.</string>
     <string name="no_connections_action_refresh">Actualiser</string>
     <string name="no_connections_action_sign_out">Se déconnecter</string>
     <string name="no_connections_help_contact_us"><![CDATA[Besoin d\'aide ? <a href=""> Contactez-nous</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Si votre administrateur a besoin d\'aide pour activer l\'accès VPN, veuillez lui transmettre <a href="">ces instructions</a>]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Activer OpenVPN ?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Ce protocole sera retiré bientôt car nous nous concentrons sur des technologies plus rapides et plus sécurisées. Nous vous recommandons de passer au Smart Protocol. <a href="proton.me">En savoir plus</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Ce protocole sera bientôt retiré car nous nous concentrons sur des technologies plus rapides et plus sécurisées. Nous vous recommandons de passer à Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Continuer avec OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Activer Smart Protocol</string>
 </resources>

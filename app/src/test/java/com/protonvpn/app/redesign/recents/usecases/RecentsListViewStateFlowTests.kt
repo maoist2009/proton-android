@@ -36,7 +36,9 @@ import com.protonvpn.android.redesign.CountryId
 import com.protonvpn.android.redesign.countries.Translator
 import com.protonvpn.android.redesign.recents.data.DefaultConnection
 import com.protonvpn.android.redesign.recents.data.RecentConnection
+import com.protonvpn.android.redesign.recents.usecases.GetDefaultConnectIntent
 import com.protonvpn.android.redesign.recents.usecases.GetIntentAvailability
+import com.protonvpn.android.redesign.recents.usecases.ObserveDefaultConnection
 import com.protonvpn.android.redesign.recents.usecases.RecentsListViewStateFlow
 import com.protonvpn.android.redesign.recents.usecases.RecentsManager
 import com.protonvpn.android.redesign.vpn.ChangeServerManager
@@ -66,6 +68,7 @@ import com.protonvpn.test.shared.MockSharedPreference
 import com.protonvpn.test.shared.TestCurrentUserProvider
 import com.protonvpn.test.shared.TestDispatcherProvider
 import com.protonvpn.test.shared.TestUser
+import com.protonvpn.test.shared.createConnectIntentFastest
 import com.protonvpn.test.shared.createGetSmartProtocols
 import com.protonvpn.test.shared.createServer
 import io.mockk.MockKAnnotations
@@ -107,7 +110,14 @@ class RecentsListViewStateFlowTests {
     var rule = InstantTaskExecutorRule()
 
     @MockK
+    private lateinit var mockGetDefaultConnectIntent: GetDefaultConnectIntent
+
+    @MockK
+    private lateinit var mockObserveDefaultConnection: ObserveDefaultConnection
+
+    @MockK
     private lateinit var mockRecentsManager: RecentsManager
+
     @MockK
     private lateinit var mockChangeServerManager: ChangeServerManager
 
@@ -143,10 +153,11 @@ class RecentsListViewStateFlowTests {
         vpnStateMonitor = VpnStateMonitor()
         val vpnStatusProviderUI = VpnStatusProviderUI(bgScope, vpnStateMonitor)
 
+        coEvery { mockGetDefaultConnectIntent(any(), any()) } returns createConnectIntentFastest()
         coEvery { mockRecentsManager.getRecentsList() } returns flowOf(emptyList())
         coEvery { mockRecentsManager.getMostRecentConnection() } returns flowOf(null)
         coEvery { mockRecentsManager.getRecentById(any()) } returns null
-        coEvery { mockRecentsManager.getDefaultConnectionFlow() } returns flowOf(DefaultConnection.LastConnection)
+        coEvery { mockObserveDefaultConnection() } returns flowOf(DefaultConnection.LastConnection)
         every { mockChangeServerManager.isChangingServer } returns MutableStateFlow(false)
 
         profiles = FakeGetProfileById()
@@ -171,22 +182,27 @@ class RecentsListViewStateFlowTests {
             testScope,
             TestDispatcherProvider(testDispatcher),
             supportsProtocol,
-            currentUser,
             listOf(serverCh, serverIs, serverSe, serverSecureCore)
         )
         val serverManager2 = ServerManager2(serverManager, supportsProtocol)
         val getIntentAvailability = GetIntentAvailability(serverManager2, supportsProtocol)
         val translator = Translator(testScope.backgroundScope, serverManager)
         viewStateFlow = RecentsListViewStateFlow(
-            mockRecentsManager,
-            GetConnectIntentViewState(serverManager2, translator, getProfileById = profiles),
-            serverManager2,
-            effectiveUserSettings,
-            settingsForConnection,
-            getIntentAvailability,
-            vpnStatusProviderUI,
-            mockChangeServerManager,
-            currentUser
+            recentsManager = mockRecentsManager,
+            getConnectIntentViewState = GetConnectIntentViewState(
+                serverManager = serverManager2,
+                translator = translator,
+                getProfileById = profiles
+            ),
+            serverManager = serverManager2,
+            userSettings = effectiveUserSettings,
+            settingsForConnection = settingsForConnection,
+            getIntentAvailability = getIntentAvailability,
+            observeDefaultConnection = mockObserveDefaultConnection,
+            currentUser = currentUser,
+            getDefaultConnectIntent = mockGetDefaultConnectIntent,
+            vpnStatusProvider = vpnStatusProviderUI,
+            changeServerManager = mockChangeServerManager
         )
     }
 
@@ -302,7 +318,12 @@ class RecentsListViewStateFlowTests {
 
     @Test
     fun offlineServersAreMarkedOffline() = testScope.runTest {
-        coEvery { mockRecentsManager.getRecentsList() } returns flowOf(DefaultRecents)
+        val fastestP2P = ConnectIntent.FastestInCountry(CountryId.fastest, setOf(ServerFeature.P2P))
+        val recents =
+            DefaultRecents + listOf(
+                RecentConnection.UnnamedRecent(100, false, fastestP2P)
+            )
+        coEvery { mockRecentsManager.getRecentsList() } returns flowOf(recents)
         val servers = listOf(
             serverSecureCore,
             serverCh,
@@ -317,6 +338,7 @@ class RecentsListViewStateFlowTests {
             ConnectIntentAvailability.ONLINE,
             ConnectIntentAvailability.AVAILABLE_OFFLINE,
             ConnectIntentAvailability.AVAILABLE_OFFLINE,
+            ConnectIntentAvailability.NO_SERVERS, // No P2P servers in ServerManager.
         )
         assertEquals(expected, viewState.recents.map { it.availability })
     }
@@ -388,7 +410,7 @@ class RecentsListViewStateFlowTests {
 
     companion object {
         val ConnectIntentSecureCore = ConnectIntent.SecureCore(CountryId("PL"), CountryId.switzerland)
-        val ConnectIntentFastest = ConnectIntent.FastestInCountry(CountryId.fastest, setOf(ServerFeature.P2P))
+        val ConnectIntentFastest = ConnectIntent.FastestInCountry(CountryId.fastest, emptySet())
         val ConnectIntentSweden = ConnectIntent.FastestInCountry(CountryId.sweden, emptySet())
         val ConnectIntentIceland = ConnectIntent.FastestInCountry(CountryId.iceland, emptySet())
         val ConnectIntentSwitzerland = ConnectIntent.FastestInCountry(CountryId.switzerland, emptySet())
@@ -408,7 +430,7 @@ class RecentsListViewStateFlowTests {
         val ConnectIntentViewSwitzerland = createViewStateForFastestInCountry(ConnectIntentSwitzerland)
 
         val RecentSecureCore = RecentConnection.UnnamedRecent(1, true, ConnectIntentSecureCore)
-        val RecentFastest = RecentConnection.UnnamedRecent(2, false, ConnectIntentFastest)
+        val RecentFastest = RecentConnection.UnnamedRecent(2, true, ConnectIntentFastest)
         val RecentSweden = RecentConnection.UnnamedRecent(3, false, ConnectIntentSweden)
         val RecentIceland = RecentConnection.UnnamedRecent(4, false, ConnectIntentIceland)
 

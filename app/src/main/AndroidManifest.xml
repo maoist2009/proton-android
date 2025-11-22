@@ -94,11 +94,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".tv.reports.TvBugReportActivity" />
+        <activity
             android:name=".tv.settings.autoconnect.TvSettingsAutoConnectActivity" />
         <activity
             android:name=".tv.settings.customdns.TvSettingsCustomDnsActivity" />
         <activity
             android:name=".tv.settings.customdns.add.TvSettingsAddCustomDnsActivity" />
+        <activity
+            android:name=".tv.settings.ipv6.TvSettingsIPv6Activity" />
         <activity
             android:name=".tv.settings.lanconnections.TvSettingsLanConnectionsActivity" />
         <activity
@@ -409,9 +413,6 @@
             android:name=".ui.login.TroubleshootActivity"
             android:label="@string/activityTroubleshootTitle" />
         <activity
-            android:name=".ui.login.AssignVpnConnectionActivity"
-            android:label="@string/activityTroubleshootTitle" />
-        <activity
             android:name=".ui.settings.SettingsSplitTunnelAppsActivity" />
         <activity
             android:name=".ui.settings.SettingsSplitTunnelIpsActivity" />
@@ -421,6 +422,9 @@
         <activity
             android:name=".ui.drawer.bugreport.DynamicReportActivity"
             android:label="@string/drawerReportProblem"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".redesign.reports.ui.BugReportActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.drawer.bugreport.FullScreenDialog"

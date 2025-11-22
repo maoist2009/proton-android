@@ -130,7 +130,8 @@ class ServerManagerTests {
     fun doNotChooseOfflineServerFromAll() = testScope.runTest {
         createServerManagers()
         val protocol = currentSettings.value.protocol
-        val server = manager.getBestScoreServer(false, serverFeatures = emptySet(), currentUser.vpnUser(), protocol)
+        val countryServers = manager.allServersByScore.filter { !it.isGatewayServer }
+        val server = manager.getBestScoreServer(countryServers, currentUser.vpnUser(), protocol)
         assertNotNull(server)
         assertEquals("DE#1", server.serverName)
     }
@@ -210,6 +211,7 @@ class ServerManagerTests {
         }
 
         val servers = listOf(
+            createServer("US plus offline", score = 1.0, exitCountry = "US", isOnline = false, tier = 2),
             createServer("US plus online", score = 2.0, exitCountry = "US", tier = 2),
             createServer("US plus online second", score = 3.0, exitCountry = "US", tier = 2),
             createServer("US plus offline", score = 3.0, exitCountry = "US", isOnline = false, tier = 2),
@@ -228,20 +230,21 @@ class ServerManagerTests {
         val secureCoreUs = ConnectIntent.SecureCore(CountryId("US"), CountryId.fastest)
         testIntent("US plus online", ConnectIntent.Fastest, plusUser)
         testIntent("CH free online", ConnectIntent.Fastest, freeUser)
-        testIntent(null, fastestPl, plusUser)
-        testIntent(null, fastestPl, freeUser)
         testIntent("CH free online", fastestCh, plusUser)
         testIntent("PL SC plus online", secureCorePl, plusUser)
         testIntent("US SC plus online", secureCoreUs, plusUser)
+        // Offline servers are returned if no other server satisfies the intent.
+        testIntent("PL plus offline", fastestPl, plusUser)
+        testIntent("PL free offline", fastestPl, freeUser)
     }
 
     @Test
     fun updatedLoadsAreReflectedInGroupedServers() = testScope.runTest {
         val server1 = createServer("server1", exitCountry = "PL", loadPercent = 50f, score = 1.5, isOnline = true)
-        val server2 = createServer("server2", exitCountry = "PL", loadPercent = 10f, score = 1.0, isOnline = false)
+        val server2 = createServer("server2", exitCountry = "PL", loadPercent = 10f, score = 1.0, isOnline = true)
         val newLoads = listOf(
             LoadUpdate("server1", load = 100f, score = 0.0, status = 1),
-            LoadUpdate("server2", load = 25f, score = 5.0, status = 1),
+            LoadUpdate("server2", load = 25f, score = 5.0, status = 0),
         )
         createServerManagers(servers = listOf(server1, server2))
         manager.updateLoads(newLoads)
@@ -249,9 +252,21 @@ class ServerManagerTests {
         val country = serverManager2.getVpnExitCountry("PL", secureCoreCountry = false)
         val expectedServers = setOf(
             server1.copy(load = 100f, score = 0.0),
-            server2.copy(load = 25f, score = 5.0, isOnline = true)
+            server2.copy(load = 25f, score = 5.0, isOnline = false)
         )
         assertEquals(expectedServers, country?.serverList?.toSet())
+    }
+
+    @Test
+    fun loadsUpdateDoesntEnableOfflineServers() = testScope.runTest {
+        val server = createServer("server", exitCountry = "PL", isOnline = false)
+        val newLoads = listOf(LoadUpdate("server", load = 50f, score = 0.5, status = 1))
+
+        createServerManagers(servers = listOf(server))
+        manager.updateLoads(newLoads)
+        val country = serverManager2.getVpnExitCountry("PL", secureCoreCountry = false)
+        val expectedServer = server.copy(load = 50f, score = 0.5)
+        assertEquals(listOf(expectedServer), country?.serverList)
     }
 
     @Test
@@ -278,7 +293,6 @@ class ServerManagerTests {
             this,
             testDispatcherProvider,
             supportsProtocol,
-            currentUser,
             servers,
         )
         serverManager2 = ServerManager2(manager, supportsProtocol)

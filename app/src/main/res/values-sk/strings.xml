@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s%%</string>
     <string name="cancel">Zrušiť</string>
     <string name="close">Zavrieť</string>
+    <string name="dialogContinue">Pokračovať</string>
     <string name="drawerReportProblem">Nahlásiť problém</string>
+    <string name="action_done">Hotovo</string>
     <string name="action_share">Zdieľať</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">Prebieha údržba</string>
@@ -322,10 +324,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">Zaťaženie servera %1$s%%</string>
-    <string name="tv_recently_used_servers">Nedávno použité servery (%1$d)</string>
-    <string name="tv_available_servers">Dostupné servery (%1$d)</string>
-    <string name="tv_locked_servers">Zamknuté servery (%1$d)</string>
-    <string name="tv_other_servers">Iné servery (%1$d)</string>
+    <string name="tv_recently_used_servers">Nedávno použité servery</string>
+    <string name="tv_available_servers">Dostupné servery</string>
+    <string name="tv_locked_servers">Zamknuté servery</string>
+    <string name="tv_other_servers">Iné servery</string>
     <string name="tv_server_list">Zoznam serverov</string>
     <string name="tv_server_list_action_unavailable">Nedostupné</string>
     <string name="notification_subscription_expired_title">Vaše predplatné Proton VPN vypršalo</string>
@@ -441,8 +443,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[Odomknite %1$s v %2$s s <b>VPN Plus</b>.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">Všetky prémiové služby Proton. Jedno jednoduché predplatné.</string>
-    <string name="upgrade_unlimited_all_apps_description">Získajte kompletnú ochranu súkromia s Proton Unlimited.</string>
+    <string name="upgrade_unlimited_all_apps_title">Získajte kompletnú ochranu súkromia s Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Odomknite všetky prémiové funkcie služieb Proton VPN, Mail, Calendar, Drive a Pass.</string>
     <string name="upgrade_unlimited_more">A ďalšie</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Prístup ku všetkým krajinám</string>
     <string name="upgrade_unlimited_vpn_all_features">Všetky ďalšie funkcie služby VPN Plus</string>
@@ -626,6 +628,9 @@
     <string name="dynamic_report_your_issue_headline">V čom je problém?</string>
     <string name="update_screen_title">Aktualizovať Proton VPN</string>
     <string name="update_screen_description">Je pravdepodobnejšie, že budete mať problémy so staršími verziami Proton VPN.</string>
+    <string name="update_banner_description_settings">K dispozícii je nová verzia aplikácie.</string>
+    <string name="update_banner_warning_vpn_connected_title">VPN sa nakrátko odpojí</string>
+    <string name="update_banner_warning_vpn_connected_message">Aplikácia sa musí reštartovať, aby sa aktualizácia dokončila. Následne dôjde k automatickému opätovnému pripojeniu.</string>
     <string name="dialog_create_account_title">Pre pokračovanie si vytvorte účet</string>
     <string name="dialog_create_account_action_create">Vytvoriť účet</string>
     <string name="dialog_create_account_action_signin">Prihlásiť sa</string>
@@ -741,7 +746,7 @@
     <string name="welcome_plus_description">Vychutnajte si ďalšie funkcie ochrany súkromia, vyšší výkon a prispôsobenie VPN na novej úrovni.</string>
     <string name="welcome_plus_feature_security">Pokročilé bezpečnostné funkcie</string>
     <string name="welcome_unlimited_title">Vitajte v Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Gratulujeme! Odomkli ste prémiové funkcie zabezpečenia a výkonu všetkých služieb Proton a navyše <b>%1$d&#160;GB</b> celkového úložiska.<br><br>Vychutnajte si to najlepšie s Proton privacy.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[Odomkli ste všetky prémiové funkcie Proton VPN, Mail, Calendar, Drive, Pass a Wallet – a celkovo <b>%1$d&#160;GB</b> úložného priestoru.]]></string>
     <string name="welcome_generic_title">Gratulujeme</string>
     <string name="welcome_generic_description">Aktualizovali ste si predplatné. Užívajte si pokročilé funkcie ochrany osobných údajov a výkon na vyššej úrovni.</string>
     <!-- Example: Up to 10 devices at once
@@ -1068,7 +1073,7 @@
     <string name="countries_title">Krajiny</string>
     <string name="profiles_title">Profily</string>
     <string name="settings_autoconnect_title">Automatické pripojenie</string>
-    <string name="settings_autoconnect_boot_description">Automatically connects you to VPN using quick-connect once your device has launched.</string>
+    <string name="settings_autoconnect_boot_description">Po spustení zariadenia vás automaticky pripojí k VPN pomocou rýchleho pripojenia.</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_category_features">Funkcie</string>
     <!-- tag(Redesign_2023) -->
@@ -1466,8 +1471,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">Odporúčané</string>
     <string name="settings_split_tunneling_mode_title">Režim</string>
-    <string name="settings_split_tunneling_mode_standard">Štandardný</string>
-    <string name="settings_split_tunneling_mode_inverse">Inverzný</string>
+    <string name="settings_split_tunneling_mode_standard">Vylúčiť</string>
+    <string name="settings_split_tunneling_mode_inverse">Zahrnúť</string>
     <string name="settings_split_tunneling_mode_description_standard">Vybrané aplikácie a IP adresy sú vylúčené z pripojenia VPN.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Cez VPN sa pripájajú len vybrané aplikácie a IP adresy, všetka ostatná prevádzka je nechránená.</string>
     <string name="settings_split_tunneling_excluded_apps">Vylúčené aplikácie</string>
@@ -1588,17 +1593,17 @@
     <!-- Displayed as a badge next to create_profile_auto_open_label ("Auto-launch website [NEW]") -->
     <string name="create_profile_auto_open_label_badge">Nové</string>
     <string name="create_profile_auto_open_url_input_label">URL webovej stránky</string>
-    <string name="create_profile_auto_open_url_private_mode_label">Use private browsing mode</string>
+    <string name="create_profile_auto_open_url_private_mode_label">Použiť režim súkromného prehliadania</string>
     <!-- Label for disabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_off">Vyp.</string>
-    <string name="profile_auto_open_app_failed_to_launch">Connect and Go: application not found</string>
+    <string name="profile_auto_open_app_failed_to_launch">Pripojiť a spustiť: aplikácia nenájdená</string>
     <!-- Label for enabled "Auto-launch website" setting in profile creation -->
-    <string name="profile_auto_open_website">Open a website</string>
-    <string name="profile_auto_open_app">Open an app</string>
+    <string name="profile_auto_open_website">Otvoriť webovú stránku</string>
+    <string name="profile_auto_open_app">Otvoriť aplikáciu</string>
     <string name="create_profile_auto_open_description">Po pripojení k tomuto profilu sa automaticky otvorí webová stránka podľa vášho výberu.</string>
-    <string name="create_profile_auto_open_app_input_hint">Select an app</string>
-    <string name="create_profile_auto_open_app_input_label">App</string>
-    <string name="create_profile_auto_open_app_no_apps">No apps found.</string>
+    <string name="create_profile_auto_open_app_input_hint">Vyberte aplikáciu</string>
+    <string name="create_profile_auto_open_app_input_label">Aplikácia</string>
+    <string name="create_profile_auto_open_app_no_apps">Nenašli sa žiadne aplikácie.</string>
     <string name="profile_auto_open_error_invalid_url">Zadajte platnú URL adresu</string>
     <string name="nps_how_likely_question">Aká je pravdepodobnosť, že odporučíte Proton VPN svojmu priateľovi alebo kolegovi?</string>
     <string name="nps_additional_comment_title">Dajte nám, prosím, vedieť, prečo ste udelili toto hodnotenie</string>
@@ -1617,7 +1622,7 @@
     <string name="widget_status_connecting">Pripájanie</string>
     <string name="widget_sign_in">Prihlásiť sa</string>
     <string name="widget_toast_added_message">Widget bol pridaný na domovskú obrazovku</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">Podpora IPv6</string>
     <string name="settings_advanced_ipv6_description">Tuneluje prevádzku IPv6 cez sieť VPN. Môže zvýšiť kompatibilitu so sieťami IPv6.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">Na použitie tejto adresy je potrebné povoliť pripojenie IPv6 cez tunel VPN.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">Povoliť IPv6</string>
@@ -1639,4 +1644,9 @@
     <string name="no_connections_action_sign_out">Odhlásiť sa</string>
     <string name="no_connections_help_contact_us"><![CDATA[Potrebujete pomoc? <a href="">Kontaktujte nás</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Ak váš administrátor potrebuje pomoc s povolením prístupu k VPN, odošlite mu <a href="">tieto pokyny</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Povoliť OpenVPN?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Tento protokol bude čoskoro odstránený, pretože sa zameriavame na rýchlejšie a bezpečnejšie technológie. Odporúčame prejsť na Smart Protocol. <a href="proton.me">Zistiť viac</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Tento protokol bude čoskoro odstránený, pretože sa zameriavame na rýchlejšie a bezpečnejšie technológie. Odporúčame prejsť na Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Pokračovať s OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Povoliť Smart protocol</string>
 </resources>

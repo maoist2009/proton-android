@@ -60,6 +60,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
+import java.util.Optional
 import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -113,6 +114,8 @@ class UpgradeDialogViewModelTests {
             performGiapPurchase = performGiapPurchase,
             userPlanManager = mockk(relaxed = true),
             waitForSubscription = mockk(relaxed = true),
+            convertToObservabilityGiapStatus = Optional.empty(),
+            observabilityManager = mockk(relaxed = true),
         )
     }
 
@@ -128,7 +131,7 @@ class UpgradeDialogViewModelTests {
             purchaseResult.first()
         }
 
-        viewModel.loadPlans(listOf(testPlanName), null, null)
+        viewModel.loadPlans(listOf(testPlanName), null, null, true)
 
         Assert.assertEquals(PlanCycle.MONTHLY, viewModel.selectedCycle.value)
 
@@ -163,14 +166,14 @@ class UpgradeDialogViewModelTests {
     @Test
     fun `in-app payments disabled`() = testScope.runTest {
         isInAppAllowed = false
-        viewModel.loadPlans(listOf(testPlanName), null, null)
+        viewModel.loadPlans(listOf(testPlanName), null, null, true)
         Assert.assertTrue(viewModel.state.value is State.UpgradeDisabled)
     }
 
     @Test
     fun `show error on plan load fail`() = testScope.runTest {
         giapPlans = emptyList()
-        viewModel.loadPlans(listOf(testPlanName), null, null)
+        viewModel.loadPlans(listOf(testPlanName), null, null, true)
         val state = viewModel.state.first()
         assertIs<State.LoadError>(state)
         assertEquals(state.messageRes, R.string.error_fetching_prices)
@@ -178,7 +181,7 @@ class UpgradeDialogViewModelTests {
 
     @Test
     fun `show error when first plan is missing`() = testScope.runTest {
-        viewModel.loadPlans(listOf("missing plan", testPlanName), null, null)
+        viewModel.loadPlans(listOf("missing plan", testPlanName), null, null, true)
         val state = viewModel.state.first()
         assertIs<State.LoadError>(state)
         assertEquals(state.messageRes, R.string.error_fetching_prices)
@@ -186,7 +189,7 @@ class UpgradeDialogViewModelTests {
 
     @Test
     fun `ignore subsequent plans if missing`() = testScope.runTest {
-        viewModel.loadPlans(listOf(testPlanName, "missing plan"), null, null)
+        viewModel.loadPlans(listOf(testPlanName, "missing plan"), null, null, true)
         val state = viewModel.state.first()
         assertIs<State.PurchaseReady>(state)
         assertEquals(listOf(testPlanName), state.allPlans.map { it.planName })
@@ -208,7 +211,9 @@ class UpgradeDialogViewModelTests {
                             cycle = 1,
                             description = "1 month",
                             periodEnd = Instant.MAX,
-                            price = mapOf("USD" to DynamicPlanPrice(id = "id", currency = "USD", current = 10_00))
+                            price = mapOf(
+                                "USD" to DynamicPlanPrice(id = "id", currency = "USD", current = 10_00, default = 15_00)
+                            )
                         )
                     ),
                     Pair(
@@ -221,19 +226,22 @@ class UpgradeDialogViewModelTests {
                         )
                     )
                 )
-            )
+            ),
+            withSavePercent = true
         )
         Assert.assertEquals(
             // Checks also the descending order by the cycle length in the map
             listOf(
                 PlanCycle.YEARLY to CommonUpgradeDialogViewModel.PriceInfo(
                     formattedPrice = formatPrice(100.0, "USD"),
-                    savePercent = -16,
+                    savePercent = -44,
                     formattedPerMonthPrice = formatPrice(8.33, "USD"),
                     formattedRenewPrice = formatPrice(120.0, "USD")
                 ),
                 PlanCycle.MONTHLY to CommonUpgradeDialogViewModel.PriceInfo(
                     formattedPrice = formatPrice(10.0, "USD"),
+                    savePercent = -33,
+                    formattedRenewPrice = formatPrice(15.0, "USD")
                 )
             ),
             priceInfo.toList()
@@ -254,7 +262,7 @@ class UpgradeDialogViewModelTests {
             prices = mapOf(PlanCycle.MONTHLY to emptyMap())
         )
         giapPlans = listOf(plan1, plan2).toGiapPlans()
-        viewModel.loadPlans(listOf("plan with prices", "plan with missing prices"), null, null)
+        viewModel.loadPlans(listOf("plan with prices", "plan with missing prices"), null, null, true)
         assertIs<State.LoadError>(viewModel.state.first())
     }
 
@@ -262,7 +270,7 @@ class UpgradeDialogViewModelTests {
     fun `plan order matches the order of plan names to loadPlans`() = testScope.runTest {
         giapPlans = createDummyPlans("plan1", "plan2")
 
-        viewModel.loadPlans(listOf("plan2", "plan1"), null, null)
+        viewModel.loadPlans(listOf("plan2", "plan1"), null, null, true)
         assertPlanNames(listOf("plan2", "plan1"), viewModel.state.first())
     }
 

@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s%%</string>
     <string name="cancel">لغو</string>
     <string name="close">بستن</string>
+    <string name="dialogContinue">Continue</string>
     <string name="drawerReportProblem">گزارش یک اشکال</string>
+    <string name="action_done">Done</string>
     <string name="action_share">اشتراک گذاری</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">تحت عملیات نگهداری</string>
@@ -89,7 +91,7 @@
     <string name="done">انجام شد</string>
     <string name="add">اضافه کردن</string>
     <string name="copy_to_clipboard">کپی</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copied_to_clipboard">کپی شد</string>
     <string name="got_it">فهمیدم</string>
     <string name="something_went_wrong">مشکلی پیش آمد</string>
     <string name="try_again">تلاش دوباره</string>
@@ -173,8 +175,8 @@
          "Internet Browser, double tap to remove from included apps"
     -->
     <string name="accessibility_action_remove_included_app">Remove from included apps</string>
-    <string name="accessibility_action_copy_to_clipboard">Copy to clipboard</string>
-    <string name="accessibility_action_item_delete">Delete</string>
+    <string name="accessibility_action_copy_to_clipboard">کپی در کلیپ‌بورد</string>
+    <string name="accessibility_action_item_delete">حذف</string>
     <string name="accessibility_action_item_move_up">Move up</string>
     <string name="accessibility_action_item_move_down">Move down</string>
     <string name="tileConnected">متصل: %1$s</string>
@@ -241,8 +243,8 @@
     <string name="lan_state_off" comment="Describes state, not action">خاموش</string>
     <string name="alt_routing_state_on" comment="Describes state, not action">روشن</string>
     <string name="alt_routing_state_off" comment="Describes state, not action">خاموش</string>
-    <string name="custom_dns_state_on" comment="Describes state, not action">On</string>
-    <string name="custom_dns_state_off" comment="Describes state, not action">Off</string>
+    <string name="custom_dns_state_on" comment="Describes state, not action">روشن</string>
+    <string name="custom_dns_state_off" comment="Describes state, not action">خاموش</string>
     <string name="custom_dns_state_unavailable" comment="Describes state, not action">Unavailable</string>
     <string name="custom_dns_item_removed_snackbar">Item removed</string>
     <string name="netshield_free_description">تبلیغات، ردیاب‌ها، و بدافزارها را در وب‌سایت‌ها و برنامه‌ها مسدود می‌کند</string>
@@ -318,10 +320,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">%1$s%% server load</string>
-    <string name="tv_recently_used_servers">سرورهای تازه استفاده شده (%1$d)</string>
-    <string name="tv_available_servers">سرورهای در دسترس (%1$d)</string>
-    <string name="tv_locked_servers">سرورهای قفل شده (%1$d)</string>
-    <string name="tv_other_servers">سرورهای دیگر (%1$d)</string>
+    <string name="tv_recently_used_servers">Recently used servers</string>
+    <string name="tv_available_servers">Available servers</string>
+    <string name="tv_locked_servers">Locked servers</string>
+    <string name="tv_other_servers">Other servers</string>
     <string name="tv_server_list">لیست سرور</string>
     <string name="tv_server_list_action_unavailable">غیرقابل دسترس</string>
     <string name="notification_subscription_expired_title">اشتراک Proton VPN شما به پایان رسیده است</string>
@@ -425,8 +427,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[با <b>VPN Plus</b> %1$s در %2$s را قفل‌گشایی کنید.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">All premium Proton services. One easy subscription.</string>
-    <string name="upgrade_unlimited_all_apps_description">Get complete privacy coverage with Proton Unlimited.</string>
+    <string name="upgrade_unlimited_all_apps_title">Get complete privacy coverage with Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Unlock all premium features from Proton VPN, Mail, Calendar, Drive, and Pass.</string>
     <string name="upgrade_unlimited_more">And more</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Unlock all countries</string>
     <string name="upgrade_unlimited_vpn_all_features">All other VPN Plus features</string>
@@ -594,6 +596,9 @@
     <string name="dynamic_report_your_issue_headline">What’s the issue?</string>
     <string name="update_screen_title">به‌روزرسانی Proton VPN</string>
     <string name="update_screen_description">اگر از نسخه‌های قدیمی‌تر Proton VPN استفاده می‌کنید احتمال برخورد با اشکال برای شما بالاتر است.</string>
+    <string name="update_banner_description_settings">A new version of the app is available</string>
+    <string name="update_banner_warning_vpn_connected_title">VPN will disconnect briefly</string>
+    <string name="update_banner_warning_vpn_connected_message">The app needs to restart to finish the update. You will be reconnected automatically afterward.</string>
     <string name="dialog_create_account_title">یک حساب کاربری بسازید تا ادامه بدهيد</string>
     <string name="dialog_create_account_action_create">ساختن حساب</string>
     <string name="dialog_create_account_action_signin">ورود</string>
@@ -620,7 +625,7 @@
     <string name="fastest_country_description">بهترین سرور بر اساس مکان شما</string>
     <string name="settings_last_connection_title">آخرین اتصال</string>
     <string name="settings_last_connection_description">Your most recently used connection</string>
-    <string name="settings_change_icon_title">App icon</string>
+    <string name="settings_change_icon_title">آیکون برنامه</string>
     <string name="settings_change_icon_details">Customize how the Proton VPN app appears on your device. Why?</string>
     <string name="settings_change_icon_confirmation_title">Change app icon?</string>
     <string name="settings_change_icon_confirmation_details">This will cause the Proton VPN app to close. To restart Proton VPN, just tap your new app icon.</string>
@@ -699,7 +704,7 @@
     <string name="welcome_plus_description">Enjoy extra privacy features, supercharged performance, and next-level VPN customization.</string>
     <string name="welcome_plus_feature_security">Advanced security features</string>
     <string name="welcome_unlimited_title">Welcome to Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Congratulations! You unlocked premium security and performance features on all Proton services, plus <b>%1$d&#160;GB</b> total storage.<br><br>Enjoy the best of Proton privacy.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[You unlocked all premium Proton VPN, Mail, Calendar, Drive, Pass, and Wallet features — and <b>%1$d&#160;GB</b> total storage.]]></string>
     <string name="welcome_generic_title">تبریک می‌گوییم</string>
     <string name="welcome_generic_description">You\'ve upgraded your subscription. Enjoy advanced privacy features and next-level performance.</string>
     <!-- Example: Up to 10 devices at once
@@ -1394,8 +1399,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">توصیه شده</string>
     <string name="settings_split_tunneling_mode_title">Mode</string>
-    <string name="settings_split_tunneling_mode_standard">استاندارد</string>
-    <string name="settings_split_tunneling_mode_inverse">معکوس</string>
+    <string name="settings_split_tunneling_mode_standard">Exclude</string>
+    <string name="settings_split_tunneling_mode_inverse">Include</string>
     <string name="settings_split_tunneling_mode_description_standard">برنامه‌ها و نشانی‌های IP انتخاب شده از اتصال VPN مستثنی می‌شوند.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Only selected apps and IP addresses connect through VPN, all other traffic is unprotected.</string>
     <string name="settings_split_tunneling_excluded_apps">Excluded apps</string>
@@ -1545,7 +1550,7 @@
     <string name="widget_status_connecting">درحال اتصال</string>
     <string name="widget_sign_in">ورود</string>
     <string name="widget_toast_added_message">Widget added to home screen</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">IPv6 support</string>
     <string name="settings_advanced_ipv6_description">Tunnels IPv6 traffic through the VPN. Can enhance compatibility with IPv6 networks.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">To use this address, you need to allow IPv6 connections through the VPN tunnel.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">Enable IPv6</string>
@@ -1567,4 +1572,9 @@
     <string name="no_connections_action_sign_out">Sign out</string>
     <string name="no_connections_help_contact_us"><![CDATA[Need help? <a href="">Contact us</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[If your administrator needs help enabling VPN access, send them <a href="">these instructions</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Enable OpenVPN?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[This protocol will be removed soon as we focus on faster and more secure technologies. We recommend switching to Smart Protocol. <a href="proton.me">Learn more</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">This protocol will be removed soon as we focus on faster and more secure technologies. We recommend switching to Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Continue with OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Enable Smart protocol</string>
 </resources>

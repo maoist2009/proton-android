@@ -52,6 +52,7 @@ import com.protonvpn.android.vpn.RecentsManager
 import com.protonvpn.android.vpn.VpnState
 import com.protonvpn.android.vpn.VpnStateMonitor
 import com.protonvpn.android.vpn.VpnStatusProviderUI
+import com.protonvpn.android.vpn.usecases.FakeIsIPv6FeatureFlagEnabled
 import com.protonvpn.mocks.FakeSettingsFeatureFlagsFlow
 import com.protonvpn.mocks.createInMemoryServerManager
 import com.protonvpn.test.shared.InMemoryDataStoreFactory
@@ -143,7 +144,6 @@ class TvMainViewModelTests {
             testScope,
             TestDispatcherProvider(testDispatcher),
             supportsProtocol,
-            mockCurrentUser,
             MockedServers.serverList,
         )
 
@@ -162,7 +162,7 @@ class TvMainViewModelTests {
             vpnStatusProviderUI = vpnStatusProviderUI,
             vpnStateMonitor = vpnStateMonitor,
             connectHelper = mockk(),
-            recentsManager = RecentsManager(bgScope, vpnStatusProviderUI, mockk(relaxed = true)),
+            recentsManager = RecentsManager(bgScope, vpnStatusProviderUI, serverManager),
             featureFlags = GetFeatureFlags(MutableStateFlow(FeatureFlags())),
             getCountryCard = mockk(),
             currentUser = mockCurrentUser,
@@ -173,6 +173,7 @@ class TvMainViewModelTests {
             isTvAutoConnectFeatureFlagEnabled = FakeIsTvAutoConnectFeatureFlagEnabled(true),
             isTvNetShieldSettingFeatureFlagEnabled = FakeIsTvNetShieldSettingFeatureFlagEnabled(true),
             isTvCustomDnsSettingFeatureFlagEnabled = FakeIsTvCustomDnsSettingFeatureFlagEnabled(true),
+            isIPv6FeatureFlagEnabled = FakeIsIPv6FeatureFlagEnabled(true),
         )
     }
 

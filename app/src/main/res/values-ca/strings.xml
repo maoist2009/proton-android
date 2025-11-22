@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s%%</string>
     <string name="cancel">Cancel·la</string>
     <string name="close">Tanca</string>
+    <string name="dialogContinue">Continueu</string>
     <string name="drawerReportProblem">Informeu d\'un problema</string>
+    <string name="action_done">Fet</string>
     <string name="action_share">Comparteix</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">En manteniment</string>
@@ -318,10 +320,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">Càrrega del servidor %1$s%%</string>
-    <string name="tv_recently_used_servers">Servidors utilitzats recentment (%1$d)</string>
-    <string name="tv_available_servers">Servidors disponibles (%1$d)</string>
-    <string name="tv_locked_servers">Servidors bloquejats (%1$d)</string>
-    <string name="tv_other_servers">Altres servidors (%1$d)</string>
+    <string name="tv_recently_used_servers">Servidors utilitzats recentment</string>
+    <string name="tv_available_servers">Servidors disponibles</string>
+    <string name="tv_locked_servers">Servidors bloquejats</string>
+    <string name="tv_other_servers">Altres servidors</string>
     <string name="tv_server_list">Llista de servidors</string>
     <string name="tv_server_list_action_unavailable">No disponible</string>
     <string name="notification_subscription_expired_title">La vostra subscripció al pla de Proton VPN ha caducat.</string>
@@ -425,8 +427,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[Desbloquegi %1$s a %2$s amb <b>VPN Plus</b>.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">Tots els serveis prèmium del Proton. Una subscripció senzilla.</string>
-    <string name="upgrade_unlimited_all_apps_description">Gaudiu d\'una protecció de privadesa completa amb Proton Unlimited.</string>
+    <string name="upgrade_unlimited_all_apps_title">Gaudiu d\'una protecció de privadesa completa amb Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Desbloquegeu totes les característiques prèmium de Proton VPN, Mail, calendari, drive i Pass.</string>
     <string name="upgrade_unlimited_more">I més</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Desbloqueja tots els països</string>
     <string name="upgrade_unlimited_vpn_all_features">Totes les altres característiques del pla VPN Plus</string>
@@ -529,7 +531,7 @@
     <string name="upsell_card_tor_description">Utilitzeu la xarxa Tor a través de la vostra connexió VPN per a una privacitat addicional</string>
     <string name="upsell_tv_all_countries_title">Accediu a tots els països amb Plus</string>
     <string name="upsell_tv_all_countries_description" comment="the first 2 placeholders will be replaced by the amount of servers and countries">Desbloquegeu %1$s servidors segurs a %2$s països. %3$s</string>
-    <string name="upsell_tv_netshield_title">Gaudiu d\'una navegació sense anuncis amb Plus</string>
+    <string name="upsell_tv_netshield_title">Gaudiu d\'una navegació sense anuncis amb el pla Plus</string>
     <string name="upsell_tv_netshield_description"><![CDATA[Bloquegeu anuncis, rastrejadors i programari maliciós amb <b>NetShield</b>. %1$s]]></string>
     <string name="upsell_tv_split_tunneling_title">Aconseguiu el millor dels dos mons amb Plus</string>
     <string name="upsell_tv_split_tunneling_description"><![CDATA[Dividiu el trànsit en túnels VPN i no VPN amb la <b>tunelització dividida</b>. %1$s]]></string>
@@ -594,6 +596,9 @@
     <string name="dynamic_report_your_issue_headline">Quin és el problema?</string>
     <string name="update_screen_title">Actualitza Proton VPN</string>
     <string name="update_screen_description">És més probable que tingueu problemes amb versions anteriors de Proton VPN.</string>
+    <string name="update_banner_description_settings">Hi ha disponible una nova versió de l\'aplicació</string>
+    <string name="update_banner_warning_vpn_connected_title">La VPN es desconnectarà breument</string>
+    <string name="update_banner_warning_vpn_connected_message">L\'aplicació s\'ha de reiniciar per finalitzar l\'actualització. Se us reconnectarà automàticament després.</string>
     <string name="dialog_create_account_title">Creeu un compte per continuar</string>
     <string name="dialog_create_account_action_create">Crea un compte</string>
     <string name="dialog_create_account_action_signin">Inicia la sessió</string>
@@ -699,7 +704,7 @@
     <string name="welcome_plus_description">Gaudiu de funcions de privadesa addicionals, rendiment excepcional i una personalització de VPN d\'un altre nivell.</string>
     <string name="welcome_plus_feature_security">Característiques de seguretat avançades</string>
     <string name="welcome_unlimited_title">Us donem la benvinguda a Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Enhorabona! Heu desbloquejat funcions de seguretat i rendiment prèmium en tots els serveis de Proton, a més de <b>%1$d&#160; GB</b> d\'emmagatzematge total.<br><br>Gaudiu del millor de la privadesa de Proton.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[Heu desbloquejat totes les característiques prèmium de Proton VPN, Mail, Calendari, Drive, Pass i Cartera — i <b>%1$d&#160;GB</b> d\'emmagatzematge total.]]></string>
     <string name="welcome_generic_title">Felicitats</string>
     <string name="welcome_generic_description">Heu millorat la subscripció. Gaudiu de característiques de privacitat avançades i rendiment d\'alt nivell.</string>
     <!-- Example: Up to 10 devices at once
@@ -1394,8 +1399,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">Recomanat</string>
     <string name="settings_split_tunneling_mode_title">Mode</string>
-    <string name="settings_split_tunneling_mode_standard">Estàndard</string>
-    <string name="settings_split_tunneling_mode_inverse">Invers</string>
+    <string name="settings_split_tunneling_mode_standard">Exclou</string>
+    <string name="settings_split_tunneling_mode_inverse">Inclou</string>
     <string name="settings_split_tunneling_mode_description_standard">Les aplicacions i adreces IP seleccionades s\'exclouen de la connexió VPN.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Només les aplicacions i adreces IP seleccionades es connecten mitjançant VPN, la resta de trànsit no està protegit.</string>
     <string name="settings_split_tunneling_excluded_apps">Aplicacions excloses</string>
@@ -1422,7 +1427,7 @@
     <string name="custom_dns_conflict_banner_netshield_title">NetShield no està disponible.</string>
     <string name="custom_dns_conflict_banner_netshield_description">El DNS personalitzat està activat, cosa que impedeix que NetShield funcioni. Més informació</string>
     <string name="custom_dns_conflict_banner_netshield_title_tv">Desactiveu el DNS personalitzat per a utilitzar NetShield</string>
-    <string name="custom_dns_conflict_banner_netshield_description_tv">El DNS personalitzat està activat, cosa que impedeix que NetShield funcioni.</string>
+    <string name="custom_dns_conflict_banner_netshield_description_tv">El DNS personalitzat està activat, cosa que impedeix que el NetShield funcioni.</string>
     <string name="custom_dns_conflict_banner_disable_custom_dns_button">Desactiva el DNS personalitzat</string>
     <string name="info_secure_core_standard_high_privacy">Alta privacitat</string>
     <string name="info_secure_core_standard_lower_latency">Latència baixa</string>
@@ -1526,7 +1531,7 @@
     <string name="create_profile_auto_open_description">Obriu automàticament el lloc web que trieu quan us connecteu a aquest perfil.</string>
     <string name="create_profile_auto_open_app_input_hint">Seleccioneu una aplicació</string>
     <string name="create_profile_auto_open_app_input_label">Aplicació</string>
-    <string name="create_profile_auto_open_app_no_apps">No s\'ha trobat cap aplicació.</string>
+    <string name="create_profile_auto_open_app_no_apps">No s\'han trobat aplicacions.</string>
     <string name="profile_auto_open_error_invalid_url">Introduïu un URL vàlid</string>
     <string name="nps_how_likely_question">Amb quina probabilitat recomanaríeu Proton VPN a un amic o col·lega?</string>
     <string name="nps_additional_comment_title">Feu-nos saber per què heu donat aquesta puntuació.</string>
@@ -1545,7 +1550,7 @@
     <string name="widget_status_connecting">S\'està connectant</string>
     <string name="widget_sign_in">Inicia la sessió</string>
     <string name="widget_toast_added_message">S\'ha afegit el giny a la pantalla d\'inici</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">Compatible amb IPv6</string>
     <string name="settings_advanced_ipv6_description">El trànsit IPv6 passa per la VPN, cosa que pot millorar la compatibilitat amb les xarxes IPv6.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">To use this address, you need to allow IPv6 connections through the VPN tunnel.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">Activa IPv6</string>
@@ -1567,4 +1572,9 @@
     <string name="no_connections_action_sign_out">Tanca la sessió</string>
     <string name="no_connections_help_contact_us"><![CDATA[Necessiteu ajuda? <a href="">Contacteu amb nosaltres</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Si el vostre administrador necessita ajuda per habilitar l\'accés a la VPN, envieu-li <a href="">aquestes instruccions</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Voleu habilitar OpenVPN?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Aquest protocol s\'eliminarà aviat, ja que ens centrem en tecnologies més ràpides i segures. Us recomanem canviar a Smart Protocol. <a href="proton.me">Saber-ne més</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Aquest protocol s\'eliminarà aviat, ja que ens centrem en tecnologies més ràpides i segures. Us recomanem canviar a Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Continueu amb OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Habiliteu el protocol Smart</string>
 </resources>

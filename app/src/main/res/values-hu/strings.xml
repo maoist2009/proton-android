@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s%%</string>
     <string name="cancel">Mégsem</string>
     <string name="close">Bezárás</string>
+    <string name="dialogContinue">Continue</string>
     <string name="drawerReportProblem">Hibabejelentés</string>
+    <string name="action_done">Done</string>
     <string name="action_share">Megosztás</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">Karbantartás alatt</string>
@@ -318,10 +320,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">%1$s%% szerverterhelés</string>
-    <string name="tv_recently_used_servers">Legutóbbi szerverek (%1$d)</string>
-    <string name="tv_available_servers">Elérhető szerverek (%1$d)</string>
-    <string name="tv_locked_servers">Lezárt szerverek (%1$d)</string>
-    <string name="tv_other_servers">Más szerverek (%1$d)</string>
+    <string name="tv_recently_used_servers">Recently used servers</string>
+    <string name="tv_available_servers">Available servers</string>
+    <string name="tv_locked_servers">Locked servers</string>
+    <string name="tv_other_servers">Other servers</string>
     <string name="tv_server_list">Szerver lista</string>
     <string name="tv_server_list_action_unavailable">Nem elérhető</string>
     <string name="notification_subscription_expired_title">A Proton VPN előfizetési csomagja lejárt</string>
@@ -425,8 +427,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[%1$s feloldása %2$s a <b>VPN Plus</b> segítségével.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">Minden prémium Proton szolgáltatás. Egy egyszerű előfizetés.</string>
-    <string name="upgrade_unlimited_all_apps_description">A Proton Unlimited teljes körű adatvédelmi fedezetet nyújt.</string>
+    <string name="upgrade_unlimited_all_apps_title">Get complete privacy coverage with Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Unlock all premium features from Proton VPN, Mail, Calendar, Drive, and Pass.</string>
     <string name="upgrade_unlimited_more">És még több</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Minden ország feloldása</string>
     <string name="upgrade_unlimited_vpn_all_features">Minden más VPN Plus funkció</string>
@@ -594,6 +596,9 @@
     <string name="dynamic_report_your_issue_headline">Mi a probléma?</string>
     <string name="update_screen_title">Proton VPN frissítése</string>
     <string name="update_screen_description">A Proton VPN régebbi verzióinál nagyobb valószínűséggel jelentkeznek problémák.</string>
+    <string name="update_banner_description_settings">A new version of the app is available</string>
+    <string name="update_banner_warning_vpn_connected_title">VPN will disconnect briefly</string>
+    <string name="update_banner_warning_vpn_connected_message">The app needs to restart to finish the update. You will be reconnected automatically afterward.</string>
     <string name="dialog_create_account_title">Hozzon létre egy fiókot a folytatáshoz</string>
     <string name="dialog_create_account_action_create">Fiók létrehozása</string>
     <string name="dialog_create_account_action_signin">Bejelentkezés</string>
@@ -699,7 +704,7 @@
     <string name="welcome_plus_description">Élvezze az extra adatvédelmi funkciókat, a felturbózott teljesítményt és a magas szintű VPN testreszabást.</string>
     <string name="welcome_plus_feature_security">Fejlett biztonsági funkciók</string>
     <string name="welcome_unlimited_title">Üdvözli a Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Gratulálunk! Ön feloldotta a prémium biztonsági és teljesítményfunkciókat az összes Proton szolgáltatáshoz, valamint <b>%1$d&#160;GB</b> teljes tárhelyet.<br><br>Élvezze a Proton védelmének legjavát.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[You unlocked all premium Proton VPN, Mail, Calendar, Drive, Pass, and Wallet features — and <b>%1$d&#160;GB</b> total storage.]]></string>
     <string name="welcome_generic_title">Gratulálunk</string>
     <string name="welcome_generic_description">Ön frissítette előfizetését. Élvezze a fejlett adatvédelmi funkciókat és a nagyobb teljesítményt.</string>
     <!-- Example: Up to 10 devices at once
@@ -1394,8 +1399,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">Ajánlott</string>
     <string name="settings_split_tunneling_mode_title">Mód</string>
-    <string name="settings_split_tunneling_mode_standard">Alap</string>
-    <string name="settings_split_tunneling_mode_inverse">Fordított</string>
+    <string name="settings_split_tunneling_mode_standard">Exclude</string>
+    <string name="settings_split_tunneling_mode_inverse">Include</string>
     <string name="settings_split_tunneling_mode_description_standard">A kiválasztott alkalmazások és IP-címek nem a VPN-kapcsolatot használják.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Csak a kiválasztott alkalmazások és IP-címek csatlakoznak a VPN-en keresztül, minden más forgalom nincs védve.</string>
     <string name="settings_split_tunneling_excluded_apps">Kihagyott alkalmazások</string>
@@ -1545,7 +1550,7 @@
     <string name="widget_status_connecting">Kapcsolódás</string>
     <string name="widget_sign_in">Bejelentkezés</string>
     <string name="widget_toast_added_message">Widget hozzáadva a kezdőképernyőhöz</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">IPv6 support</string>
     <string name="settings_advanced_ipv6_description">Átvezeti az IPv6-forgalmat a VPN-en. Ez növelheti az IPv6 hálózatokkal való kompatibilitást.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">Ennek a címnek a használatához engedélyeznie kell az IPv6-kapcsolatokat a VPN-alagúton keresztül.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">IPv6 engedélyezése</string>
@@ -1567,4 +1572,9 @@
     <string name="no_connections_action_sign_out">Kijelentkezés</string>
     <string name="no_connections_help_contact_us"><![CDATA[Segítségre van szüksége? <a href="">Lépjen kapcsolatba velünk</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Ha a rendszergazdájának segítségre van szüksége a VPN-hozzáférés engedélyezéséhez, küldje el nekik <a href="">ezeket az utasításokat</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Enable OpenVPN?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[This protocol will be removed soon as we focus on faster and more secure technologies. We recommend switching to Smart Protocol. <a href="proton.me">Learn more</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">This protocol will be removed soon as we focus on faster and more secure technologies. We recommend switching to Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Continue with OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Enable Smart protocol</string>
 </resources>

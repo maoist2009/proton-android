@@ -51,7 +51,9 @@
     <string name="serverLoad">%1$s%%</string>
     <string name="cancel">Anulare</string>
     <string name="close">Închidere</string>
+    <string name="dialogContinue">Continuare</string>
     <string name="drawerReportProblem">Raportare o problemă</string>
+    <string name="action_done">Gata</string>
     <string name="action_share">Partajare</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">În întreținere</string>
@@ -320,10 +322,10 @@
 
          Example: 76% server load -->
     <string name="tv_server_list_load">%1$s %% încărcare server</string>
-    <string name="tv_recently_used_servers">Servere utilizate recent (%1$d)</string>
-    <string name="tv_available_servers">Servere disponibile (%1$d)</string>
-    <string name="tv_locked_servers">Servere blocate (%1$d)</string>
-    <string name="tv_other_servers">Alte servere (%1$d)</string>
+    <string name="tv_recently_used_servers">Servere utilizate recent</string>
+    <string name="tv_available_servers">Servere disponibile</string>
+    <string name="tv_locked_servers">Servere blocate</string>
+    <string name="tv_other_servers">Alte servere</string>
     <string name="tv_server_list">Listă servere</string>
     <string name="tv_server_list_action_unavailable">Indisponibil</string>
     <string name="notification_subscription_expired_title">Abonamentul Proton VPN a expirat</string>
@@ -433,8 +435,8 @@
      -->
     <string name="upgrade_plus_countries_title_new"><![CDATA[Deblocați %1$s în %2$s cu <b>VPN Plus</b>.]]></string>
     <string name="mail_app_name" translateable="false">Proton Mail</string>
-    <string name="upgrade_unlimited_all_apps_title">Toate serviciile premium Proton. Un singur abonament.</string>
-    <string name="upgrade_unlimited_all_apps_description">Obțineți o acoperire completă a confidențialității cu Proton Unlimited.</string>
+    <string name="upgrade_unlimited_all_apps_title">Obțineți o acoperire completă a confidențialității cu Proton Unlimited</string>
+    <string name="upgrade_unlimited_all_apps_description">Deblocați toate funcțiile premium ale Proton VPN, Mail, Calendar, Unitate și Pass.</string>
     <string name="upgrade_unlimited_more">Și altele</string>
     <string name="upgrade_unlimited_vpn_unlimited_countries">Deblocați toate țările</string>
     <string name="upgrade_unlimited_vpn_all_features">Toate celelalte funcții din VPN Plus</string>
@@ -610,6 +612,9 @@
     <string name="dynamic_report_your_issue_headline">Care este problema?</string>
     <string name="update_screen_title">Actualizare Proton VPN</string>
     <string name="update_screen_description">Este mai probabil să aveți probleme cu versiunile mai vechi ale Proton VPN .</string>
+    <string name="update_banner_description_settings">Este disponibilă o versiune nouă</string>
+    <string name="update_banner_warning_vpn_connected_title">VPN-ul se va deconecta pentru scurt timp</string>
+    <string name="update_banner_warning_vpn_connected_message">Aplicația trebuie să repornească pentru a finaliza actualizarea. Conexiunea va fi refăcută automat ulterior.</string>
     <string name="dialog_create_account_title">Creați un cont pentru a continua</string>
     <string name="dialog_create_account_action_create">Creare cont</string>
     <string name="dialog_create_account_action_signin">Conectare</string>
@@ -720,7 +725,7 @@
     <string name="welcome_plus_description">Bucurați-vă de funcții suplimentare de confidențialitate, performanță îmbunătățită și personalizare VPN la nivelul următor.</string>
     <string name="welcome_plus_feature_security">Funcții avansate de securitate</string>
     <string name="welcome_unlimited_title">Bun venit la Proton Unlimited</string>
-    <string name="welcome_unlimited_description"><![CDATA[Felicitări! Ați deblocat funcții premium de securitate și performanță pentru toate serviciile Proton, plus <b>%1$d&#160; GiB</b> spațiu de stocare total.<br><br>Bucurați-vă de cea mai bună confidențialitate de la Proton.]]></string>
+    <string name="welcome_unlimited_description"><![CDATA[Ați deblocat toate funcțiile premium ale Proton VPN, Mail, Calendar, Drive, Pass și Wallet — și <b>%1$d&#160;GiB</b> de stocare totală.]]></string>
     <string name="welcome_generic_title">Felicitări</string>
     <string name="welcome_generic_description">V-ați modificat abonamentul. Bucurați-vă de funcțiile de confidențialitate și performanță de nivel superior.</string>
     <!-- Example: Up to 10 devices at once
@@ -1043,7 +1048,7 @@
     <string name="countries_title">Țări</string>
     <string name="profiles_title">Profiluri</string>
     <string name="settings_autoconnect_title">Conectare automată</string>
-    <string name="settings_autoconnect_boot_description">Automatically connects you to VPN using quick-connect once your device has launched.</string>
+    <string name="settings_autoconnect_boot_description">Vă conectează automat la VPN folosind conectarea rapidă după ce a pornit dispozitivul.</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_category_features">Funcții</string>
     <!-- tag(Redesign_2023) -->
@@ -1430,8 +1435,8 @@
     <!-- Text on a badge displayed next to the "smart" protocol name in settings -->
     <string name="settings_protocol_badge_recommended">Recomandat</string>
     <string name="settings_split_tunneling_mode_title">Mod</string>
-    <string name="settings_split_tunneling_mode_standard">Standard</string>
-    <string name="settings_split_tunneling_mode_inverse">Inversare</string>
+    <string name="settings_split_tunneling_mode_standard">Excludere</string>
+    <string name="settings_split_tunneling_mode_inverse">Includere</string>
     <string name="settings_split_tunneling_mode_description_standard">Aplicațiile selectate și adresele IP sunt excluse din conexiunea VPN.</string>
     <string name="settings_split_tunneling_mode_description_inverse">Doar aplicațiile selectate și adresele IP se conectează prin VPN, orice alt trafic nefiind protejat.</string>
     <string name="settings_split_tunneling_excluded_apps">Aplicații excluse</string>
@@ -1552,17 +1557,17 @@
     <!-- Displayed as a badge next to create_profile_auto_open_label ("Auto-launch website [NEW]") -->
     <string name="create_profile_auto_open_label_badge">Nou</string>
     <string name="create_profile_auto_open_url_input_label">URL Website</string>
-    <string name="create_profile_auto_open_url_private_mode_label">Use private browsing mode</string>
+    <string name="create_profile_auto_open_url_private_mode_label">Utilizare mod privat de navigare</string>
     <!-- Label for disabled "Auto-launch website" setting in profile creation -->
     <string name="profile_auto_open_off">Oprită</string>
-    <string name="profile_auto_open_app_failed_to_launch">Connect and Go: application not found</string>
+    <string name="profile_auto_open_app_failed_to_launch">Conectare și lansare: aplicația nu a fost găsită</string>
     <!-- Label for enabled "Auto-launch website" setting in profile creation -->
-    <string name="profile_auto_open_website">Open a website</string>
-    <string name="profile_auto_open_app">Open an app</string>
+    <string name="profile_auto_open_website">Deschidere un site web</string>
+    <string name="profile_auto_open_app">Deschidere o aplicație</string>
     <string name="create_profile_auto_open_description">Deschidere automată a unei pagini web alese când vă conectați la acest profil.</string>
-    <string name="create_profile_auto_open_app_input_hint">Select an app</string>
-    <string name="create_profile_auto_open_app_input_label">App</string>
-    <string name="create_profile_auto_open_app_no_apps">No apps found.</string>
+    <string name="create_profile_auto_open_app_input_hint">Selectare aplicație</string>
+    <string name="create_profile_auto_open_app_input_label">Aplicație</string>
+    <string name="create_profile_auto_open_app_no_apps">Nu există aplicații.</string>
     <string name="profile_auto_open_error_invalid_url">Introduceți un URL valid</string>
     <string name="nps_how_likely_question">Cât de probabil este să recomandați Proton VPN unui prieten sau coleg?</string>
     <string name="nps_additional_comment_title">Vă rugăm să ne spuneți de ce ați acordat această evaluare</string>
@@ -1581,7 +1586,7 @@
     <string name="widget_status_connecting">Se conectează</string>
     <string name="widget_sign_in">Conectare</string>
     <string name="widget_toast_added_message">Widget-ul a fost adăugat pe ecran</string>
-    <string name="settings_advanced_ipv6_title">IPv6</string>
+    <string name="settings_advanced_ipv6_title">Suport IPv6</string>
     <string name="settings_advanced_ipv6_description">Direcționează traficul IPv6 prin VPN. Poate spori compatibilitatea cu rețelele IPv6.</string>
     <string name="settings_split_tunneling_ipv6_disabled_dialog_message">Pentru a utiliza această adresă, trebuie să permiteți conexiuni IPv6 prin tunelul VPN.</string>
     <string name="setting_ipv6_disabled_dialog_action_enable">Activare IPv6</string>
@@ -1603,4 +1608,9 @@
     <string name="no_connections_action_sign_out">Deconectare</string>
     <string name="no_connections_help_contact_us"><![CDATA[Aveți nevoie de ajutor? <a href="">Contactați-ne</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Dacă administratorul are nevoie de ajutor cu activarea accesului VPN, trimiteți-i <a href="">aceste instrucțiuni</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_title">Activați OpenVPN?</string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Acest protocol va fi eliminat în curând, deoarece ne concentrăm pe tehnologii mai rapide și mai sigure. Vă recomandăm să treceți la Smart Protocol. <a href="proton.me">Detalii</a>.]]></string>
+    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Acest protocol va fi eliminat în curând, deoarece ne concentrăm pe tehnologii mai rapide și mai sigure. Vă recomandăm să treceți la Smart Protocol.</string>
+    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Continuare cu OpenVPN</string>
+    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Activare Smart Protocol</string>
 </resources>

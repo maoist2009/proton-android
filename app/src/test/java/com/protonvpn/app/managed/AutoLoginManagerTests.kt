@@ -27,9 +27,9 @@ import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.auth.usecase.Logout
 import com.protonvpn.android.managed.AutoLoginConfig
 import com.protonvpn.android.managed.AutoLoginManager
-import com.protonvpn.android.managed.ResetUiForAutoLogin
 import com.protonvpn.android.managed.AutoLoginState
 import com.protonvpn.android.managed.ManagedConfig
+import com.protonvpn.android.managed.ResetUiForAutoLogin
 import com.protonvpn.android.managed.usecase.AutoLogin
 import com.protonvpn.android.notifications.NotificationHelper
 import com.protonvpn.android.ui.ForegroundActivityTracker

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. Proton AG
+ * Copyright (c) 2025. Proton AG
  *
  * This file is part of ProtonVPN.
  *
@@ -17,18 +17,12 @@
  * along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.protonvpn.android.update
+package com.protonvpn.android.auth
 
-import androidx.activity.ComponentActivity
-import javax.inject.Inject
-import javax.inject.Singleton
+import me.proton.core.network.domain.ApiResult
 
-typealias AppUpdateInfo = Unit
+private const val ERROR_CODE_NO_CONNECTIONS_ASSIGNED = 86_300
+const val LOGIN_GUEST_HOLE_ID = "LOGIN_SIGNUP"
 
-@Singleton
-class UpdatePromptForStaleVersion @Inject constructor() {
-
-    // Matches the interface in other variants.
-    suspend fun getUpdatePrompt(): AppUpdateInfo? = null
-    fun launchUpdateFlow(activity: ComponentActivity, updateInfo: AppUpdateInfo) = Unit
-}
+fun ApiResult<*>.isErrorNoConnectionsAssigned(): Boolean =
+    (this as? ApiResult.Error.Http)?.proton?.code == ERROR_CODE_NO_CONNECTIONS_ASSIGNED

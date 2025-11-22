@@ -44,32 +44,38 @@ import com.protonvpn.android.appconfig.UserCountryTelephonyBased
 import com.protonvpn.android.appconfig.VpnFeatureFlagContextProvider
 import com.protonvpn.android.appconfig.globalsettings.GlobalSettingUpdateScheduler
 import com.protonvpn.android.appconfig.globalsettings.GlobalSettingsUpdateWorker
+import com.protonvpn.android.appconfig.periodicupdates.PeriodicUpdateManager
+import com.protonvpn.android.appconfig.periodicupdates.PeriodicUpdateManagerImpl
 import com.protonvpn.android.appconfig.periodicupdates.PeriodicUpdateWorkerScheduler
 import com.protonvpn.android.appconfig.periodicupdates.PeriodicUpdateWorkerSchedulerImpl
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.auth.usecase.CurrentUserProvider
 import com.protonvpn.android.auth.usecase.DefaultCurrentUserProvider
+import com.protonvpn.android.auth.usecase.SetVpnUser
+import com.protonvpn.android.auth.usecase.SetVpnUserImpl
 import com.protonvpn.android.base.ui.theme.VpnTheme
 import com.protonvpn.android.concurrency.DefaultDispatcherProvider
 import com.protonvpn.android.concurrency.VpnDispatcherProvider
 import com.protonvpn.android.managed.usecase.AutoLogin
 import com.protonvpn.android.managed.usecase.AutoLoginImpl
-import com.protonvpn.android.servers.ServersStore
 import com.protonvpn.android.models.vpn.usecase.ProvideLocalNetworks
 import com.protonvpn.android.models.vpn.usecase.ProvideLocalNetworksImpl
 import com.protonvpn.android.models.vpn.usecase.SupportsProtocol
-import com.protonvpn.android.profiles.usecases.GetProfileById
-import com.protonvpn.android.profiles.usecases.GetProfileByIdImpl
 import com.protonvpn.android.profiles.usecases.GetPrivateBrowsingAvailability
 import com.protonvpn.android.profiles.usecases.GetPrivateBrowsingAvailabilityImpl
+import com.protonvpn.android.profiles.usecases.GetProfileById
+import com.protonvpn.android.profiles.usecases.GetProfileByIdImpl
 import com.protonvpn.android.profiles.usecases.IsProfileAutoOpenPrivateBrowsingFeatureFlagEnabled
 import com.protonvpn.android.profiles.usecases.IsProfileAutoOpenPrivateBrowsingFeatureFlagEnabledImpl
 import com.protonvpn.android.redesign.countries.ui.ServerListViewModelDataAdapter
 import com.protonvpn.android.redesign.countries.ui.ServerListViewModelDataAdapterLegacy
+import com.protonvpn.android.redesign.reports.IsRedesignedBugReportFeatureFlagEnabled
+import com.protonvpn.android.redesign.reports.IsRedesignedBugReportFeatureFlagEnabledImpl
 import com.protonvpn.android.redesign.search.ui.SearchViewModelDataAdapter
 import com.protonvpn.android.redesign.search.ui.SearchViewModelDataAdapterLegacy
 import com.protonvpn.android.servers.IsBinaryServerStatusFeatureFlagEnabled
 import com.protonvpn.android.servers.IsBinaryServerStatusFeatureFlagEnabledImpl
+import com.protonvpn.android.servers.ServersStore
 import com.protonvpn.android.servers.UpdateServersWithBinaryStatus
 import com.protonvpn.android.servers.UpdateServersWithBinaryStatusImpl
 import com.protonvpn.android.telemetry.CommonDimensions
@@ -93,6 +99,14 @@ import com.protonvpn.android.ui.promooffers.usecase.IsIapClientSidePromoFeatureF
 import com.protonvpn.android.ui.settings.AppIconManager
 import com.protonvpn.android.ui.settings.AppIconManagerImpl
 import com.protonvpn.android.ui.snackbar.DelegatedSnackManager
+import com.protonvpn.android.update.AppUpdateManager
+import com.protonvpn.android.update.AppUpdateManagerImpl
+import com.protonvpn.android.update.AppUpdateBannerStateFlow
+import com.protonvpn.android.update.AppUpdateBannerStateFlowImpl
+import com.protonvpn.android.update.IsAppUpdateBannerFeatureFlagEnabled
+import com.protonvpn.android.update.IsAppUpdateBannerFeatureFlagEnabledImpl
+import com.protonvpn.android.update.ShouldShowAppUpdateDotFlow
+import com.protonvpn.android.update.ShouldShowAppUpdateDotFlowImpl
 import com.protonvpn.android.userstorage.DefaultLocalDataStoreFactory
 import com.protonvpn.android.userstorage.LocalDataStoreFactory
 import com.protonvpn.android.utils.AndroidSharedPreferencesProvider
@@ -275,6 +289,9 @@ object AppModuleProd {
         @Singleton
         @Binds
         fun provideCurrentUserProvider(provider: DefaultCurrentUserProvider): CurrentUserProvider
+
+        @Binds
+        fun providerSetVpnUser(setVpnUser: SetVpnUserImpl): SetVpnUser
     }
 }
 
@@ -369,7 +386,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDebugApiPrefs(provider: SharedPreferencesProvider): DebugApiPrefs? =
-        if (BuildConfig.DEBUG) DebugApiPrefs(provider) else null
+        if (BuildConfigUtils.displayDebugUi()) DebugApiPrefs(provider) else null
 
     @Module
     @InstallIn(SingletonComponent::class)
@@ -377,6 +394,14 @@ object AppModule {
 
         @Binds
         fun bindAppIconManager(impl: AppIconManagerImpl): AppIconManager
+
+        @Binds
+        fun bindAppUpdateManager(impl: AppUpdateManagerImpl): AppUpdateManager
+
+        @Binds
+        fun bindAppUpdateBannerStateFlow(
+            impl: AppUpdateBannerStateFlowImpl
+        ): AppUpdateBannerStateFlow
 
         @Binds
         fun bindAutoLogin(autoLogin: AutoLoginImpl): AutoLogin
@@ -437,6 +462,11 @@ object AppModule {
         fun bindsIsPrivateBrowsingAvailable(impl: GetPrivateBrowsingAvailabilityImpl): GetPrivateBrowsingAvailability
 
         @Binds
+        fun bindIsRedesignedBugReportFeatureFlagEnabled(
+            impl: IsRedesignedBugReportFeatureFlagEnabledImpl,
+        ): IsRedesignedBugReportFeatureFlagEnabled
+
+        @Binds
         fun bindIsTvAutoConnectFeatureFlagEnabled(
             impl: IsTvAutoConnectFeatureFlagEnabledImpl
         ): IsTvAutoConnectFeatureFlagEnabled
@@ -450,6 +480,14 @@ object AppModule {
         fun bindIsTvNetShieldSettingFeatureFlagEnabled(
             impl: IsTvNetShieldSettingFeatureFlagEnabledImpl
         ): IsTvNetShieldSettingFeatureFlagEnabled
+
+        @Binds
+        fun bindIsAppUpdateBannerFeatureFlagEnabled(
+            impl: IsAppUpdateBannerFeatureFlagEnabledImpl
+        ): IsAppUpdateBannerFeatureFlagEnabled
+
+        @Binds
+        fun bindPeriodicUpdateManager(impl: PeriodicUpdateManagerImpl): PeriodicUpdateManager
 
         @Binds
         fun bindProvideLocalNetworks(impl: ProvideLocalNetworksImpl): ProvideLocalNetworks
@@ -467,6 +505,9 @@ object AppModule {
 
         @Binds
         fun bindServerNameTopStrategyEnabled(impl: ServerNameTopStrategyEnabledImpl): ServerNameTopStrategyEnabled
+
+        @Binds
+        fun bindShouldShowAppUpdateDotFlow(impl: ShouldShowAppUpdateDotFlowImpl): ShouldShowAppUpdateDotFlow
 
         @Binds
         fun bindTelemetryReporter(impl: DefaultTelemetryReporter): TelemetryReporter
