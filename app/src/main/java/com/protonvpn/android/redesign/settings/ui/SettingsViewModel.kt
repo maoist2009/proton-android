@@ -34,14 +34,20 @@ import com.protonvpn.android.managed.ManagedConfig
 import com.protonvpn.android.netshield.NetShieldAvailability
 import com.protonvpn.android.netshield.NetShieldProtocol
 import com.protonvpn.android.netshield.getNetShieldAvailability
+import com.protonvpn.android.redesign.countries.Translator
+import com.protonvpn.android.excludedlocations.usecases.ObserveExcludedLocations
 import com.protonvpn.android.redesign.recents.data.DefaultConnection
 import com.protonvpn.android.redesign.recents.data.getRecentIdOrNull
 import com.protonvpn.android.redesign.recents.usecases.ObserveDefaultConnection
 import com.protonvpn.android.redesign.recents.usecases.RecentsManager
 import com.protonvpn.android.redesign.reports.IsRedesignedBugReportFeatureFlagEnabled
+import com.protonvpn.android.redesign.settings.IsAutomaticConnectionPreferencesFeatureFlagEnabled
+import com.protonvpn.android.redesign.settings.ui.excludedlocations.ExcludedLocationsViewModel.ExcludedLocationUiItem
+import com.protonvpn.android.redesign.settings.ui.excludedlocations.toExcludedLocationUiItem
 import com.protonvpn.android.redesign.vpn.ui.ConnectIntentPrimaryLabel
 import com.protonvpn.android.redesign.vpn.ui.GetConnectIntentViewState
 import com.protonvpn.android.redesign.vpn.usecases.SettingsForConnection
+import com.protonvpn.android.servers.ServerManager2
 import com.protonvpn.android.settings.data.SplitTunnelingMode
 import com.protonvpn.android.theme.ThemeType
 import com.protonvpn.android.theme.label
@@ -53,7 +59,6 @@ import com.protonvpn.android.update.AppUpdateBannerState
 import com.protonvpn.android.update.AppUpdateBannerStateFlow
 import com.protonvpn.android.update.AppUpdateInfo
 import com.protonvpn.android.update.AppUpdateManager
-import com.protonvpn.android.update.IsAppUpdateBannerFeatureFlagEnabled
 import com.protonvpn.android.utils.BuildConfigUtils
 import com.protonvpn.android.utils.combine
 import com.protonvpn.android.vpn.DnsOverride
@@ -67,6 +72,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -76,6 +82,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.proton.core.auth.domain.feature.IsFido2Enabled
 import me.proton.core.auth.fido.domain.entity.Fido2RegisteredKey
@@ -84,6 +91,7 @@ import me.proton.core.user.domain.entity.UserRecovery
 import me.proton.core.user.domain.extension.isCredentialLess
 import me.proton.core.usersettings.domain.usecase.ObserveRegisteredSecurityKeys
 import me.proton.core.usersettings.domain.usecase.ObserveUserSettings
+import java.util.Locale
 import javax.inject.Inject
 import me.proton.core.accountmanager.presentation.R as AccountManagerR
 import me.proton.core.presentation.R as CoreR
@@ -96,6 +104,8 @@ class SettingsViewModel @Inject constructor(
     buildConfigInfo: BuildConfigInfo,
     settingsForConnection: SettingsForConnection,
     observeDefaultConnection: ObserveDefaultConnection,
+    serverManager: ServerManager2,
+    observeExcludedLocations: ObserveExcludedLocations,
     private val uiStateStorage: UiStateStorage,
     private val recentsManager: RecentsManager,
     private val installedAppsProvider: InstalledAppsProvider,
@@ -112,6 +122,8 @@ class SettingsViewModel @Inject constructor(
     appUpdateBannerStateFlow: AppUpdateBannerStateFlow,
     private val isDirectLanConnectionsFeatureFlagEnabled: IsDirectLanConnectionsFeatureFlagEnabled,
     private val isRedesignedBugReportFeatureFlagEnabled: IsRedesignedBugReportFeatureFlagEnabled,
+    private val isAutomaticConnectionPreferencesFeatureFlagEnabled: IsAutomaticConnectionPreferencesFeatureFlagEnabled,
+    private val translator: Translator,
 ) : ViewModel() {
 
     sealed class SettingViewState<T>(
@@ -193,6 +205,28 @@ class SettingsViewModel @Inject constructor(
             val predefinedTitle: Int?,
             val recentLabel: ConnectIntentPrimaryLabel?,
         )
+
+        data class ConnectionPreferencesState(
+            val isFeatureDiscovered: Boolean,
+            val isFreeUser: Boolean,
+            val defaultConnectionPreferences: DefaultConnectionPreferences,
+            val excludeLocationsPreferences: ExcludedLocationsPreferences,
+        ) {
+
+            data class DefaultConnectionPreferences(
+                val defaultConnection: DefaultConnection,
+                val connectIntentPrimaryLabel: ConnectIntentPrimaryLabel?,
+                val predefinedTitle: Int?,
+            )
+
+            data class ExcludedLocationsPreferences(
+                val canSelectLocations: Boolean,
+                val excludedLocationUiItems: List<ExcludedLocationUiItem.Location>,
+                val isFeatureDiscovered: Boolean,
+            )
+
+        }
+
         class Protocol(
             protocol: ProtocolSelection,
             overrideProfilePrimaryLabel: ConnectIntentPrimaryLabel.Profile?,
@@ -339,11 +373,14 @@ class SettingsViewModel @Inject constructor(
         val versionName: String,
         val isRedesignedBugReportFeatureFlagEnabled: Boolean,
         val appUpdateBannerState: AppUpdateBannerState,
-        val showSingInOnAnotherDeviceQr: Boolean,
+        val showAccountCategory: Boolean,
+        val connectionPreferences: SettingViewState.ConnectionPreferencesState,
+        val isAutomaticConnectionPreferencesEnabled: Boolean,
     )
 
     enum class UiEvent {
-        NavigateToWidgetInstructions
+        NavigateToConnectionPreferences,
+        NavigateToWidgetInstructions,
     }
 
     // The configuration doesn't change during runtime.
@@ -361,18 +398,85 @@ class SettingsViewModel @Inject constructor(
             }
         }
 
+    private data class FeaturePreferences(
+        val isConnectionPreferencesDiscovered: Boolean,
+        val isExcludedLocationsDiscovered: Boolean,
+        val isWidgetDiscovered: Boolean,
+    )
+
+    private val featurePreferencesFlow = combine(
+        uiStateStorage.state,
+        appFeaturePrefs.isWidgetDiscoveredFlow,
+    ) { uiStoredState, isWidgetDiscovered ->
+        FeaturePreferences(
+            isConnectionPreferencesDiscovered = uiStoredState.isConnectionPreferencesDiscovered,
+            isExcludedLocationsDiscovered = uiStoredState.isExcludedLocationsDiscovered,
+            isWidgetDiscovered = isWidgetDiscovered,
+        )
+    }.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
+
+    private data class FeatureFlags(
+        val isIPv6FeatureFlagEnabled: Boolean,
+        val isRedesignedBugReportFeatureFlagEnabled: Boolean,
+        val isAutomaticConnectionPreferencesFeatureFlagEnabled: Boolean,
+    )
+
+    private val featureFlagsFlow = combine(
+        isIPv6FeatureFlagEnabled.observe(),
+        isRedesignedBugReportFeatureFlagEnabled.observe(),
+        isAutomaticConnectionPreferencesFeatureFlagEnabled.observe(),
+        ::FeatureFlags,
+    )
+
+    private val localeFlow = MutableStateFlow<Locale?>(value = null)
+
+    private val excludedLocationPreferencesFlow = localeFlow
+        .flatMapLatest { locale ->
+            if(locale == null) {
+                flowOf(
+                    value = SettingViewState.ConnectionPreferencesState.ExcludedLocationsPreferences(
+                        canSelectLocations = false,
+                        excludedLocationUiItems = emptyList(),
+                        isFeatureDiscovered = false,
+                    )
+                )
+            } else {
+                combine(
+                    observeExcludedLocations(),
+                    serverManager.hasAnyCountryFlow,
+                    featurePreferencesFlow,
+                    translator.flow,
+                ) { excludedLocations, hasCountries, featurePreferences, translations ->
+                    SettingViewState.ConnectionPreferencesState.ExcludedLocationsPreferences(
+                        canSelectLocations = hasCountries,
+                        excludedLocationUiItems = excludedLocations.allLocations.map { excludedLocation ->
+                            excludedLocation.toExcludedLocationUiItem(
+                                locale = locale,
+                                translations = translations,
+                            )
+                        },
+                        isFeatureDiscovered = featurePreferences.isExcludedLocationsDiscovered,
+                    )
+                }
+            }
+        }
+
     val viewState =
         combine(
             currentUser.jointUserFlow,
             observeDefaultConnection(),
             // Will return override settings if connected else global
             settingsForConnection.getFlowForCurrentConnection(),
-            appFeaturePrefs.isWidgetDiscoveredFlow,
-            isIPv6FeatureFlagEnabled.observe(),
+            featurePreferencesFlow,
             isPrivateDnsActiveFlow,
-            isRedesignedBugReportFeatureFlagEnabled.observe(),
             acknowledgingAppUpdateBannerStateFlow,
-        ) { user, defaultConnection, connectionSettings, isWidgetDiscovered, isIPv6FeatureFlagEnabled, isPrivateDnsActive, isRedesignedBugReportFeatureFlagEnabled, appUpdateBannerState ->
+            excludedLocationPreferencesFlow,
+            featureFlagsFlow,
+        ) { user, defaultConnection, connectionSettings, featurePreferences, isPrivateDnsActive, appUpdateBannerState, excludedLocationPreferences, featureFlags ->
             val isFree = user?.vpnUser?.isFreeUser == true
             val isCredentialLess = user?.user?.isCredentialLess() == true
             val settings = connectionSettings.connectionSettings
@@ -435,7 +539,7 @@ class SettingsViewModel @Inject constructor(
                 showDebugTools = displayDebugUi,
                 showSignOut = !isCredentialLess && !managedConfig.isManaged,
                 accountScreenEnabled = !managedConfig.isManaged,
-                isWidgetDiscovered = isWidgetDiscovered,
+                isWidgetDiscovered = featurePreferences.isWidgetDiscovered,
                 customDns =
                     SettingViewState.CustomDns(
                         enabled = settings.customDns.effectiveEnabled,
@@ -445,11 +549,22 @@ class SettingsViewModel @Inject constructor(
                         isPrivateDnsActive = isPrivateDnsActive,
                     ),
                 versionName = BuildConfig.VERSION_NAME,
-                ipV6 = if (isIPv6FeatureFlagEnabled) SettingViewState.IPv6(enabled = settings.ipV6Enabled) else null,
+                ipV6 = if (featureFlags.isIPv6FeatureFlagEnabled) SettingViewState.IPv6(enabled = settings.ipV6Enabled) else null,
                 theme = SettingViewState.Theme(settings.theme),
-                isRedesignedBugReportFeatureFlagEnabled = isRedesignedBugReportFeatureFlagEnabled,
+                isRedesignedBugReportFeatureFlagEnabled = featureFlags.isRedesignedBugReportFeatureFlagEnabled,
                 appUpdateBannerState = appUpdateBannerState,
-                showSingInOnAnotherDeviceQr = !managedConfig.isManaged,
+                showAccountCategory = !managedConfig.isManaged,
+                connectionPreferences = SettingViewState.ConnectionPreferencesState(
+                    isFeatureDiscovered = featurePreferences.isConnectionPreferencesDiscovered,
+                    isFreeUser = isFree,
+                    defaultConnectionPreferences = SettingViewState.ConnectionPreferencesState.DefaultConnectionPreferences(
+                        defaultConnection = defaultConnection,
+                        connectIntentPrimaryLabel = defaultConnectionSetting?.recentLabel,
+                        predefinedTitle = defaultConnectionSetting?.predefinedTitle,
+                    ),
+                    excludeLocationsPreferences = excludedLocationPreferences,
+                ),
+                isAutomaticConnectionPreferencesEnabled = featureFlags.isAutomaticConnectionPreferencesFeatureFlagEnabled,
             )
         }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(1_000), replay = 1)
 
@@ -465,6 +580,7 @@ class SettingsViewModel @Inject constructor(
     val customDns = viewState.map { it.customDns }.distinctUntilChanged()
     val splitTunneling = viewState.map { it.splitTunneling }.distinctUntilChanged()
     val theme = viewState.map { it.theme.value }.distinctUntilChanged()
+    val connectionPreferences = viewState.map { it.connectionPreferences }.distinctUntilChanged()
 
     data class AdvancedSettingsViewState(
         val altRouting: SettingViewState.AltRouting,
@@ -549,6 +665,25 @@ class SettingsViewModel @Inject constructor(
             appFeaturePrefs.isWidgetDiscovered = true
         }
     }
+
+    fun onLocaleChanged(newLocale: Locale) {
+        localeFlow.update { newLocale }
+    }
+
+    fun onOpenConnectionPreferences() {
+        viewModelScope.launch {
+            uiStateStorage.update { it.copy(isConnectionPreferencesDiscovered = true) }
+
+            event.emit(value = UiEvent.NavigateToConnectionPreferences)
+        }
+    }
+
+    fun onExcludedLocationsDiscovered() {
+        viewModelScope.launch {
+            uiStateStorage.update { it.copy(isExcludedLocationsDiscovered = true) }
+        }
+    }
+
 }
 
 private fun UserRecovery.State?.passwordHint(): Int? = when(this) {

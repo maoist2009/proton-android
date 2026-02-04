@@ -664,6 +664,16 @@
     <string name="select_default_connection">Виберіть типове з\'єднання</string>
     <string name="settings_default_connection_title">Типове з\'єднання</string>
     <string name="fastest_country_description">Найкращий сервер на основі вашого розташування</string>
+    <string name="settings_connection_preferences_title">Параметри з\'єднання</string>
+    <string name="settings_connection_preferences_snackbar_message_excluded_location_removed">Item removed</string>
+    <string name="settings_excluded_locations_title">Винятки розташувань</string>
+    <string name="settings_excluded_locations_description">Вибрані розташування ніколи не використовуватимуться для Найшвидшого з\'єднання.</string>
+    <string name="settings_excluded_locations_unavailable">Немає доступних розташувань</string>
+    <string name="settings_excluded_locations_selection_hint">Виберіть…</string>
+    <string name="settings_excluded_locations_accessibility_label_deletion">Вилучити з винятків розташувань</string>
+    <string name="settings_excluded_locations_accessibility_label_city">Місто</string>
+    <string name="settings_excluded_locations_accessibility_label_country">Країна</string>
+    <string name="settings_excluded_locations_accessibility_label_state">Штат</string>
     <string name="settings_last_connection_title">Останнє з\'єднання</string>
     <string name="settings_last_connection_description">Ваше нещодавно використане з\'єднання</string>
     <string name="settings_change_icon_title">Піктограма програми</string>
@@ -1152,6 +1162,7 @@
     <string name="country_filter_p2p_list_header">Країни P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_cities">Міста P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_states">Штати P2P (%1$d)</string>
+    <string name="counrty_filter_p2p_servers_list_header">P2P servers</string>
     <string name="country_filter_tor_list_header">Країни Tor (%1$d)</string>
     <string name="country_filter_tor_servers_list_header">Сервери Tor</string>
     <string name="country_filter_info_label">Інформація</string>
@@ -1206,6 +1217,8 @@
     <string name="connection_details_country">Країна</string>
     <!-- tag(Redesign_2023) -->
     <string name="connection_details_city">Місто</string>
+    <!-- Label for server location "state", as a state of the USA. -->
+    <string name="connection_details_state">State</string>
     <!-- tag(Redesign_2023)
          Will be shown in a UI row which indicates Server load, on the left side will be Server load, and on the right actual load values.
     -->

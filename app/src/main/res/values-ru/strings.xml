@@ -53,7 +53,7 @@
     <string name="close">Закрыть</string>
     <string name="dialogContinue">Продолжить</string>
     <string name="drawerReportProblem">Сообщить о проблеме</string>
-    <string name="action_done">Продолжить</string>
+    <string name="action_done">Готово</string>
     <string name="action_share">Поделиться</string>
     <string name="accountFree">Proton Free</string>
     <string name="restrictedMaintenanceTitle">На техобслуживании</string>
@@ -324,7 +324,7 @@
          Please note the double % sign after the placeholder. It is displayed as a single % sign in the app.
 
          Example: 76% server load -->
-    <string name="tv_server_list_load">Загрузка сервера %1$s%%</string>
+    <string name="tv_server_list_load">%1$s%% нагрузка сервера</string>
     <string name="tv_recently_used_servers">Недавно использованные серверы</string>
     <string name="tv_available_servers">Доступные серверы</string>
     <string name="tv_locked_servers">Заблокированные серверы</string>
@@ -479,7 +479,7 @@
         <item quantity="many">%1$d адресов электронной почты</item>
         <item quantity="other">%1$d адресов электронной почты</item>
     </plurals>
-    <string name="upgrade_unlimited_mail_unlimited_folders">Неограниченное количество папок и ярлыков</string>
+    <string name="upgrade_unlimited_mail_unlimited_folders">Неограниченное количество папок и фильтров</string>
     <string name="upgrade_unlimited_mail_dark_web">Мониторинг Темной паутины</string>
     <string name="upgrade_unlimited_mail_aliases">Неограниченное количество псевдонимов hide-my-email</string>
     <string name="upgrade_unlimited_mail_autoreply">Автоответчик</string>
@@ -664,9 +664,19 @@
     <string name="select_default_connection">Выберите ваше подключение по умолчанию</string>
     <string name="settings_default_connection_title">Подключение по умолчанию</string>
     <string name="fastest_country_description">Лучший сервер на основе вашего местоположения</string>
+    <string name="settings_connection_preferences_title">Connection preferences</string>
+    <string name="settings_connection_preferences_snackbar_message_excluded_location_removed">Item removed</string>
+    <string name="settings_excluded_locations_title">Excluded locations</string>
+    <string name="settings_excluded_locations_description">The selected locations will never be used when you connect to Fastest.</string>
+    <string name="settings_excluded_locations_unavailable">No locations available</string>
+    <string name="settings_excluded_locations_selection_hint">Select…</string>
+    <string name="settings_excluded_locations_accessibility_label_deletion">Удалить из исключённых местоположений</string>
+    <string name="settings_excluded_locations_accessibility_label_city">Город</string>
+    <string name="settings_excluded_locations_accessibility_label_country">Страна</string>
+    <string name="settings_excluded_locations_accessibility_label_state">Штат</string>
     <string name="settings_last_connection_title">Последнее подключение</string>
     <string name="settings_last_connection_description">Последнее использованное подключение</string>
-    <string name="settings_change_icon_title">Значок приложения</string>
+    <string name="settings_change_icon_title">Иконка приложения</string>
     <string name="settings_change_icon_details">Настройте, как приложение Proton VPN будет отображаться на вашем устройстве. Почему?</string>
     <string name="settings_change_icon_confirmation_title">Сменить значок приложения?</string>
     <string name="settings_change_icon_confirmation_details">Это приведет к закрытию приложения Proton VPN. Чтобы перезапустить Proton VPN, просто коснитесь нового значка приложения.</string>
@@ -744,7 +754,7 @@
     <string name="not_wanted_country_title">Не та страна, которую вы хотели?</string>
     <string name="not_wanted_country_description">Улучшите для выбора любого сервера</string>
     <string name="whats_new_title">Что нового</string>
-    <string name="whats_new_profiles_title">Профили вернулись</string>
+    <string name="whats_new_profiles_title">Профили снова доступны</string>
     <string name="whats_new_profiles_description">Создавайте и сохраняйте пользовательские подключения с помощью выбранного вами местоположения, сервера и протокола.</string>
     <string name="whats_new_widget_title">Представляем виджеты</string>
     <string name="whats_new_widget_description">Теперь вы можете просматривать и управлять своим подключением к VPN, не покидая главного экрана.</string>
@@ -1131,7 +1141,7 @@
     <string name="dialog_sign_out_action">Выйти</string>
     <!-- tag(Redesign_2023) -->
     <string name="dialog_action_cancel">Отменить</string>
-    <string name="dialog_action_change_icon">Сменить значок</string>
+    <string name="dialog_action_change_icon">Изменить иконку</string>
     <!-- tag(Redesign_2023) -->
     <string name="country_filter_all">Все</string>
     <string name="country_filter_cities">Города</string>
@@ -1152,13 +1162,14 @@
     <string name="country_filter_p2p_list_header">Страны P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_cities">Города P2P (%1$d)</string>
     <string name="country_filter_p2p_list_header_states">Страны P2P (%1$d)</string>
+    <string name="counrty_filter_p2p_servers_list_header">P2P servers</string>
     <string name="country_filter_tor_list_header">Страны Tor (%1$d)</string>
     <string name="country_filter_tor_servers_list_header">Серверы Tor</string>
     <string name="country_filter_info_label">Информация</string>
     <!-- Content description for server load indicator. Used by accessibility services only.
          Note: the trailing \'%\' sign needs to be doubled
          (this doesn\'t apply to other percent sign characters, e.g. ٪). -->
-    <string name="country_filter_server_load_content_description">Загрузка: %1$s%%</string>
+    <string name="country_filter_server_load_content_description">Нагрузка: %1$s%%</string>
     <!-- tag(Redesign_2023)
          Indicates that VPN is connected and network is protected
     -->
@@ -1206,6 +1217,8 @@
     <string name="connection_details_country">Страна</string>
     <!-- tag(Redesign_2023) -->
     <string name="connection_details_city">Город</string>
+    <!-- Label for server location "state", as a state of the USA. -->
+    <string name="connection_details_state">State</string>
     <!-- tag(Redesign_2023)
          Will be shown in a UI row which indicates Server load, on the left side will be Server load, and on the right actual load values.
     -->
@@ -1487,7 +1500,7 @@
     <string name="settings_split_tunneling_included_apps">Добавленные приложения</string>
     <string name="settings_split_tunneling_included_ips">Добавленные адреса IP</string>
     <string name="settings_split_tunneling_empty" comment="Used to indicate that no IP or Apps are included in split tunneling">Ничего</string>
-    <string name="settings_split_tunneling_excluded_format" comment="Used for describing excluded items. Example: Chrome, Facebook and 2 more. The same logic used for IP addresses too.">%1$s, %2$s и еще %3$d</string>
+    <string name="settings_split_tunneling_excluded_format" comment="Used for describing excluded items. Example: Chrome, Facebook and 2 more. The same logic used for IP addresses too.">%1$s, %2$s и ещё %3$d</string>
     <string name="settings_split_tunneling_already_excluded">Уже исключено</string>
     <string name="settings_split_tunneling_already_included">Уже добавлено</string>
     <string name="settings_split_tunneling_remove_ip_dialog_message">Удалить IP-адреса из списка?</string>
@@ -1590,7 +1603,7 @@
     <string name="profile_unavailable_dialog_message">Выбранный сервер для %1$s недоступен. Выберите другой сервер или попробуйте позже.</string>
     <!-- %1$d - profile icon number
          Example: Icon 1, Icon 2, ... -->
-    <string name="profile_icon_accessibility">Значок %1$d</string>
+    <string name="profile_icon_accessibility">Иконка %1$d</string>
     <!-- %1$d - profile icon number
          Example: Color 1, Color 2, ... -->
     <string name="profile_color_accessibility">Цвет %1$d</string>

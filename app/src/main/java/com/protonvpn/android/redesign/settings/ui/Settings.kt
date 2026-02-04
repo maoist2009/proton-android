@@ -64,7 +64,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.protonvpn.android.R
 import com.protonvpn.android.base.ui.LabelBadge
 import com.protonvpn.android.base.ui.ProtonVpnPreview
-import com.protonvpn.android.update.VpnUpdateBanner
 import com.protonvpn.android.profiles.data.ProfileColor
 import com.protonvpn.android.profiles.data.ProfileIcon
 import com.protonvpn.android.profiles.ui.nav.ProfileCreationStepTarget
@@ -85,6 +84,7 @@ import com.protonvpn.android.ui.planupgrade.UpgradeVpnAcceleratorHighlightsFragm
 import com.protonvpn.android.ui.settings.OssLicensesActivity
 import com.protonvpn.android.ui.settings.SettingsTelemetryActivity
 import com.protonvpn.android.update.AppUpdateInfo
+import com.protonvpn.android.update.VpnUpdateBanner
 import com.protonvpn.android.utils.openUrl
 import me.proton.core.accountmanager.presentation.compose.AccountSettingsInfo
 import me.proton.core.accountmanager.presentation.compose.viewmodel.AccountSettingsViewModel
@@ -101,7 +101,6 @@ import me.proton.core.presentation.utils.openMarketLink
 import me.proton.core.telemetry.presentation.ProductMetricsDelegateOwner
 import me.proton.core.telemetry.presentation.compose.LocalProductMetricsDelegateOwner
 import me.proton.core.presentation.R as CoreR
-
 
 @SuppressLint("InlinedApi")
 @Composable
@@ -126,9 +125,14 @@ fun SettingsRoute(
     }
 
     viewModel.event.collectAsEffect { event ->
-        when(event) {
-            SettingsViewModel.UiEvent.NavigateToWidgetInstructions ->
+        when (event) {
+            SettingsViewModel.UiEvent.NavigateToConnectionPreferences -> {
+                onNavigateToSubSetting(SubSettingsScreen.Type.ConnectionPreferences)
+            }
+
+            SettingsViewModel.UiEvent.NavigateToWidgetInstructions -> {
                 onNavigateToSubSetting(SubSettingsScreen.Type.Widget)
+            }
         }
     }
 
@@ -177,6 +181,9 @@ fun SettingsRoute(
                 },
                 onDefaultConnectionClick = {
                     onNavigateToSubSetting(SubSettingsScreen.Type.DefaultConnection)
+                },
+                onConnectionPreferencesClick = {
+                    viewModel.onOpenConnectionPreferences()
                 },
                 onVpnAcceleratorClick = {
                     onNavigateToSubSetting(SubSettingsScreen.Type.VpnAccelerator)
@@ -250,6 +257,7 @@ fun SettingsView(
     onSplitTunnelUpgrade: () -> Unit,
     onAlwaysOnClick: () -> Unit,
     onDefaultConnectionClick: () -> Unit,
+    onConnectionPreferencesClick: () -> Unit,
     onProtocolClick: () -> Unit,
     onVpnAcceleratorClick: () -> Unit,
     onVpnAcceleratorUpgrade: () -> Unit,
@@ -295,14 +303,14 @@ fun SettingsView(
                     profileOverrideInfo = it
                 )
             }
-            AccountCategory(
-                state = accountSettingsViewState,
-                onAccountClick = onAccountClick,
-                onSignUpClick = onSignUpClick,
-                onSignInClick = onSignInClick,
-                onSignOutClick = onSignOutClick,
-                showSingInOnAnotherDeviceQr = viewState.showSingInOnAnotherDeviceQr
-            )
+            if (viewState.showAccountCategory)
+                AccountCategory(
+                    state = accountSettingsViewState,
+                    onAccountClick = onAccountClick,
+                    onSignUpClick = onSignUpClick,
+                    onSignInClick = onSignInClick,
+                    onSignOutClick = onSignOutClick,
+                )
             FeatureCategory(
                 viewState = viewState,
                 onNetShieldClick = onNetShieldClick,
@@ -315,17 +323,27 @@ fun SettingsView(
                 modifier = horizontalItemPadding,
                 stringResource(id = R.string.settings_connection_category)
             ) {
-                viewState.defaultConnection?.let { connnection ->
-                    val connectionLabel = with(connnection) {
-                        predefinedTitle?.let { stringResource(id = it) } ?: recentLabel?.label()
-                    }
+                if(viewState.isAutomaticConnectionPreferencesEnabled) {
                     SettingRowWithIcon(
-                        icon = connnection.iconRes,
-                        title = stringResource(id = connnection.titleRes),
-                        settingValue = connectionLabel?.let { SettingValue.SettingText(it) },
-                        onClick = onDefaultConnectionClick,
+                        icon = CoreR.drawable.ic_proton_bookmark,
+                        title = stringResource(id = R.string.settings_connection_preferences_title),
+                        hasNewLabel = !viewState.connectionPreferences.isFeatureDiscovered,
+                        onClick = onConnectionPreferencesClick,
                     )
+                } else {
+                    viewState.defaultConnection?.let { connnection ->
+                        val connectionLabel = with(connnection) {
+                            predefinedTitle?.let { stringResource(id = it) } ?: recentLabel?.label()
+                        }
+                        SettingRowWithIcon(
+                            icon = connnection.iconRes,
+                            title = stringResource(id = connnection.titleRes),
+                            settingValue = connectionLabel?.let { SettingValue.SettingText(it) },
+                            onClick = onDefaultConnectionClick,
+                        )
+                    }
                 }
+
                 SettingRowWithIcon(
                     icon = viewState.protocol.iconRes,
                     title = stringResource(id = viewState.protocol.titleRes),
@@ -515,7 +533,6 @@ private fun ColumnScope.FeatureCategory(
 private fun ColumnScope.AccountCategory(
     modifier: Modifier = Modifier,
     state: AccountSettingsViewState,
-    showSingInOnAnotherDeviceQr: Boolean,
     onAccountClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onSignInClick: () -> Unit,
@@ -534,17 +551,15 @@ private fun ColumnScope.AccountCategory(
             initialCount = 1,
             state = state
         )
-        if (showSingInOnAnotherDeviceQr) {
-            SignInToAnotherDeviceItem(
-                content = { label, onLogOut ->
-                    SettingRowWithIcon(
-                        icon = CoreR.drawable.ic_proton_qr_code,
-                        title = label,
-                        onClick = onLogOut
-                    )
-                }
-            )
-        }
+        SignInToAnotherDeviceItem(
+            content = { label, onLogOut ->
+                SettingRowWithIcon(
+                    icon = CoreR.drawable.ic_proton_qr_code,
+                    title = label,
+                    onClick = onLogOut
+                )
+            }
+        )
     }
 }
 
@@ -813,7 +828,6 @@ fun AccountCategoryLoggedInPreview() {
                 onSignUpClick = { },
                 onSignInClick = { },
                 onSignOutClick = { },
-                showSingInOnAnotherDeviceQr = true
             )
         }
     }
@@ -830,7 +844,6 @@ fun AccountCategoryCredentialLessPreview() {
                 onSignUpClick = { },
                 onSignInClick = { },
                 onSignOutClick = { },
-                showSingInOnAnotherDeviceQr = true
             )
         }
     }

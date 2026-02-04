@@ -613,6 +613,16 @@
     <string name="select_default_connection">選取您的預設連線</string>
     <string name="settings_default_connection_title">預設連線</string>
     <string name="fastest_country_description">按您所在位置挑選最佳伺服器</string>
+    <string name="settings_connection_preferences_title">Connection preferences</string>
+    <string name="settings_connection_preferences_snackbar_message_excluded_location_removed">Item removed</string>
+    <string name="settings_excluded_locations_title">Excluded locations</string>
+    <string name="settings_excluded_locations_description">The selected locations will never be used when you connect to Fastest.</string>
+    <string name="settings_excluded_locations_unavailable">No locations available</string>
+    <string name="settings_excluded_locations_selection_hint">Select…</string>
+    <string name="settings_excluded_locations_accessibility_label_deletion">Remove from excluded locations</string>
+    <string name="settings_excluded_locations_accessibility_label_city">City</string>
+    <string name="settings_excluded_locations_accessibility_label_country">Country</string>
+    <string name="settings_excluded_locations_accessibility_label_state">State</string>
     <string name="settings_last_connection_title">最後一次連接</string>
     <string name="settings_last_connection_description">您最近一次使用的連線</string>
     <string name="settings_change_icon_title">應用程式圖示</string>
@@ -1077,6 +1087,7 @@
     <string name="country_filter_p2p_list_header">P2P 國家 (%1$d)</string>
     <string name="country_filter_p2p_list_header_cities">P2P 城市 (%1$d)</string>
     <string name="country_filter_p2p_list_header_states">P2P州 (%1$d)</string>
+    <string name="counrty_filter_p2p_servers_list_header">P2P servers</string>
     <string name="country_filter_tor_list_header">Tor 國家/地區 (%1$d)</string>
     <string name="country_filter_tor_servers_list_header">Tor 伺服器</string>
     <string name="country_filter_info_label">資訊</string>
@@ -1131,6 +1142,8 @@
     <string name="connection_details_country">國家</string>
     <!-- tag(Redesign_2023) -->
     <string name="connection_details_city">城市</string>
+    <!-- Label for server location "state", as a state of the USA. -->
+    <string name="connection_details_state">State</string>
     <!-- tag(Redesign_2023)
          Will be shown in a UI row which indicates Server load, on the left side will be Server load, and on the right actual load values.
     -->
