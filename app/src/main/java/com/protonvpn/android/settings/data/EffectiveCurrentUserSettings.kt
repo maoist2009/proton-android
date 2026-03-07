@@ -127,10 +127,8 @@ abstract class BaseApplyEffectiveUserSettings(
         val isUserPlusOrAbove = vpnUser?.isUserPlusOrAbove == true
         val effectiveVpnAccelerator = !isUserPlusOrAbove || settings.vpnAccelerator
         val netShieldAvailable = vpnUser.getNetShieldAvailability() == NetShieldAvailability.AVAILABLE
-        val effectiveSplitTunneling =
-            if (isUserPlusOrAbove) settings.splitTunneling
-            else SplitTunnelingSettings(isEnabled = false)
-        val lanConnections = isUserPlusOrAbove && settings.lanConnections
+        val effectiveSplitTunneling = settings.splitTunneling
+        val lanConnections = settings.lanConnections
         val defaultProfileId = when {
             isUserPlusOrAbove -> settings.defaultProfileId
             flags.tvDisableFavoriteCountryForFreeUser -> SavedProfilesV3.FASTEST_PROFILE_ID
@@ -147,7 +145,7 @@ abstract class BaseApplyEffectiveUserSettings(
             } else {
                 NetShieldProtocol.DISABLED
             },
-            customDns = if (isUserPlusOrAbove) settings.customDns else CustomDnsSettings(false),
+            customDns = settings.customDns,
             theme = settings.theme,
             tvAutoConnectOnBoot = if (isTv && flags.isTvAutoConnectEnabled) settings.tvAutoConnectOnBoot else false,
             vpnAccelerator = effectiveVpnAccelerator,

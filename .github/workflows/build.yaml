@@ -1,0 +1,116 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'gradle/**'
+      - 'CMakeLists.txt'
+      - '**.cpp'
+      - '**.h'
+      - 'swig/**'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'gradle/**'
+      - 'CMakeLists.txt'
+      - '**.cpp'
+      - '**.h'
+      - 'swig/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"
+      SWIG_VERSION: "4.1.1"
+      ANDROID_NDK_VERSION: "25.1.8937393"
+      ANDROID_CMAKE_VERSION: "3.22.1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true  # This is CRITICAL - fetches Git tags needed for versioning
+
+      - name: Setup Java
+        id: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
+
+      - name: Install Android NDK
+        run: |
+          echo "Installing NDK ${{ env.ANDROID_NDK_VERSION }}"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+
+      - name: Install CMake
+        run: |
+          echo "Installing CMake ${{ env.ANDROID_CMAKE_VERSION }}"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;${{ env.ANDROID_CMAKE_VERSION }}"
+
+      - name: Install SWIG
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpcre3-dev
+          wget https://downloads.sourceforge.net/project/swig/swig/swig-${{ env.SWIG_VERSION }}/swig-${{ env.SWIG_VERSION }}.tar.gz
+          tar -xzf swig-${{ env.SWIG_VERSION }}.tar.gz
+          cd swig-${{ env.SWIG_VERSION }}
+          ./configure
+          make
+          sudo make install
+          cd ..
+          rm -rf swig-${{ env.SWIG_VERSION }}*
+
+      - name: Accept Android licenses
+        run: |
+          mkdir -p $HOME/.android
+          echo "count=0" > $HOME/.android/repositories.cfg
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleProductionVanillaOpenSourceDebug --stacktrace
+        env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
+
+      - name: Verify APK exists
+        run: |
+          if [ ! -f $(find app/build/outputs/apk/productionVanillaOpenSource/debug/ -name "*.apk" | head -1) ]; then
+            echo "Error: APK file not found after build"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProductionVanillaOpenSource-Debug-APK
+          path: app/build/outputs/apk/productionVanillaOpenSource/debug/*.apk
+          if-no-files-found: error

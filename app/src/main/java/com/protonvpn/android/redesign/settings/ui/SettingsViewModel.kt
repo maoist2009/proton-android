@@ -30,16 +30,17 @@ import com.protonvpn.android.appconfig.AppFeaturesPrefs
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.auth.usecase.uiName
 import com.protonvpn.android.components.InstalledAppsProvider
-import com.protonvpn.android.excludedlocations.usecases.ObserveExcludedLocations
 import com.protonvpn.android.managed.ManagedConfig
 import com.protonvpn.android.netshield.NetShieldAvailability
 import com.protonvpn.android.netshield.NetShieldProtocol
 import com.protonvpn.android.netshield.getNetShieldAvailability
 import com.protonvpn.android.redesign.countries.Translator
+import com.protonvpn.android.excludedlocations.usecases.ObserveExcludedLocations
 import com.protonvpn.android.redesign.recents.data.DefaultConnection
 import com.protonvpn.android.redesign.recents.data.getRecentIdOrNull
 import com.protonvpn.android.redesign.recents.usecases.ObserveDefaultConnection
 import com.protonvpn.android.redesign.recents.usecases.RecentsManager
+import com.protonvpn.android.redesign.reports.IsRedesignedBugReportFeatureFlagEnabled
 import com.protonvpn.android.redesign.settings.IsAutomaticConnectionPreferencesFeatureFlagEnabled
 import com.protonvpn.android.redesign.settings.ui.excludedlocations.ExcludedLocationsViewModel.ExcludedLocationUiItem
 import com.protonvpn.android.redesign.settings.ui.excludedlocations.toExcludedLocationUiItem
@@ -66,7 +67,6 @@ import com.protonvpn.android.vpn.ProtocolSelection
 import com.protonvpn.android.vpn.getDnsOverride
 import com.protonvpn.android.vpn.usecases.IsDirectLanConnectionsFeatureFlagEnabled
 import com.protonvpn.android.vpn.usecases.IsIPv6FeatureFlagEnabled
-import com.protonvpn.android.vpn.usecases.IsProTunV1FeatureFlagEnabled
 import com.protonvpn.android.widget.WidgetManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -121,8 +121,8 @@ class SettingsViewModel @Inject constructor(
     private val appUpdateManager: AppUpdateManager,
     appUpdateBannerStateFlow: AppUpdateBannerStateFlow,
     private val isDirectLanConnectionsFeatureFlagEnabled: IsDirectLanConnectionsFeatureFlagEnabled,
+    private val isRedesignedBugReportFeatureFlagEnabled: IsRedesignedBugReportFeatureFlagEnabled,
     private val isAutomaticConnectionPreferencesFeatureFlagEnabled: IsAutomaticConnectionPreferencesFeatureFlagEnabled,
-    isProTunV1FeatureFlagEnabled: IsProTunV1FeatureFlagEnabled,
     private val translator: Translator,
 ) : ViewModel() {
 
@@ -178,7 +178,7 @@ class SettingsViewModel @Inject constructor(
             override val iconRes: Int = if (isEnabled) R.drawable.feature_splittunneling_on else R.drawable.feature_splittunneling_off
         ) : SettingViewState<Boolean>(
             value = isEnabled,
-            isRestricted = isFreeUser,
+            isRestricted = false,
             titleRes = R.string.settings_split_tunneling_title,
             settingValueView = SettingValue.SettingStringRes(if (isEnabled) R.string.split_tunneling_state_on else R.string.split_tunneling_state_off),
             descriptionRes = R.string.settings_split_tunneling_description,
@@ -230,7 +230,6 @@ class SettingsViewModel @Inject constructor(
         class Protocol(
             protocol: ProtocolSelection,
             overrideProfilePrimaryLabel: ConnectIntentPrimaryLabel.Profile?,
-            val showProTun: Boolean,
             override val iconRes: Int = CoreR.drawable.ic_proton_servers,
         ) : SettingViewState<ProtocolSelection>(
             value = protocol,
@@ -293,7 +292,7 @@ class SettingsViewModel @Inject constructor(
             overrideProfilePrimaryLabel: ConnectIntentPrimaryLabel.Profile?,
         ) : SettingViewState<Boolean>(
             value = value,
-            isRestricted = isFreeUser,
+            isRestricted = false,
             titleRes = R.string.settings_advanced_allow_lan_title,
             settingValueView =
                 if (overrideProfilePrimaryLabel != null) {
@@ -372,6 +371,7 @@ class SettingsViewModel @Inject constructor(
         val isWidgetDiscovered: Boolean,
         val accountScreenEnabled: Boolean,
         val versionName: String,
+        val isRedesignedBugReportFeatureFlagEnabled: Boolean,
         val appUpdateBannerState: AppUpdateBannerState,
         val showAccountCategory: Boolean,
         val connectionPreferences: SettingViewState.ConnectionPreferencesState,
@@ -421,14 +421,14 @@ class SettingsViewModel @Inject constructor(
 
     private data class FeatureFlags(
         val isIPv6FeatureFlagEnabled: Boolean,
+        val isRedesignedBugReportFeatureFlagEnabled: Boolean,
         val isAutomaticConnectionPreferencesFeatureFlagEnabled: Boolean,
-        val isProTunV1Enabled: Boolean,
     )
 
     private val featureFlagsFlow = combine(
         isIPv6FeatureFlagEnabled.observe(),
+        isRedesignedBugReportFeatureFlagEnabled.observe(),
         isAutomaticConnectionPreferencesFeatureFlagEnabled.observe(),
-        isProTunV1FeatureFlagEnabled.observe(),
         ::FeatureFlags,
     )
 
@@ -523,19 +523,15 @@ class SettingsViewModel @Inject constructor(
                     mode = settings.splitTunneling.mode,
                     currentModeAppNames = currentModeAppNames,
                     currentModeIps = settings.splitTunneling.currentModeIps(),
-                    isFreeUser = isFree,
+                    isFreeUser = false,
                 ),
-                protocol = SettingViewState.Protocol(
-                    settings.protocol,
-                    profileOverrideInfo?.primaryLabel,
-                    showProTun = featureFlags.isProTunV1Enabled
-                ),
+                protocol = SettingViewState.Protocol(settings.protocol, profileOverrideInfo?.primaryLabel),
                 defaultConnection = defaultConnectionSetting,
                 altRouting = SettingViewState.AltRouting(settings.apiUseDoh),
                 lanConnections = SettingViewState.LanConnections(
                     settings.lanConnections,
                     allowDirectConnections = settings.lanConnectionsAllowDirect.takeIf { isDirectLanConnectionsFeatureFlagEnabled() },
-                    isFree,
+                    isFreeUser = false,
                     profileOverrideInfo?.primaryLabel
                 ),
                 natType = SettingViewState.Nat(NatType.fromRandomizedNat(settings.randomizedNat), isFree, profileOverrideInfo?.primaryLabel),
@@ -549,12 +545,13 @@ class SettingsViewModel @Inject constructor(
                         enabled = settings.customDns.effectiveEnabled,
                         customDns = settings.customDns.rawDnsList,
                         overrideProfilePrimaryLabel = profileOverrideInfo?.primaryLabel,
-                        isFreeUser = isFree,
+                        isFreeUser = false,
                         isPrivateDnsActive = isPrivateDnsActive,
                     ),
                 versionName = BuildConfig.VERSION_NAME,
                 ipV6 = if (featureFlags.isIPv6FeatureFlagEnabled) SettingViewState.IPv6(enabled = settings.ipV6Enabled) else null,
                 theme = SettingViewState.Theme(settings.theme),
+                isRedesignedBugReportFeatureFlagEnabled = featureFlags.isRedesignedBugReportFeatureFlagEnabled,
                 appUpdateBannerState = appUpdateBannerState,
                 showAccountCategory = !managedConfig.isManaged,
                 connectionPreferences = SettingViewState.ConnectionPreferencesState(
@@ -653,8 +650,8 @@ class SettingsViewModel @Inject constructor(
 
     fun setNewAppIcon(newIcon: CustomAppIconData) = appIconManager.setNewAppIcon(newIcon)
 
-    suspend fun onAppUpdateClick(activity: Activity) {
-        appUpdateManager.launchUpdateFlow(activity)
+    fun onAppUpdateClick(activity: Activity, appUpdateInfo: AppUpdateInfo) {
+        appUpdateManager.launchUpdateFlow(activity, appUpdateInfo)
     }
 
     @TargetApi(26)
