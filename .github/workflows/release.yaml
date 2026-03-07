@@ -97,18 +97,31 @@ jobs:
           fi
           echo "$KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
           echo "Keystore file created at $(pwd)/release-keystore.jks"
-          ls -la
+          ls -la release-keystore.jks
+
+      - name: Configure signing config for release build
+        run: |
+          sed -i 's/signingConfig signingConfigs\.debug/signingConfig signingConfigs.release/' app/build.gradle
+          echo 'aW1wb3J0IHJlCndpdGggb3BlbigiYXBwL2J1aWxkLmdyYWRsZSIsICJyIikgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQpzaWduaW5nX2NvbmZpZ3Nfc3RhcnQgPSBjb250ZW50LmZpbmQoInNpZ25pbmdDb25maWdzIHsiKQpkZWJ1Z19zZWN0aW9uID0gY29udGVudC5maW5kKCJpZiAoZGVidWdLZXlzdG9yZVBhdGgpIHsiLCBzaWduaW5nX2NvbmZpZ3Nfc3RhcnQpCmJyYWNlX2NvdW50ID0gMApwb3MgPSBjb250ZW50LmZpbmQoInsiLCBkZWJ1Z19zZWN0aW9uKQpmb3IgaSBpbiByYW5nZShwb3MsIGxlbihjb250ZW50KSk6CiAgICBpZiBjb250ZW50W2ldID09ICJ7IjoKICAgICAgICBicmFjZV9jb3VudCArPSAxCiAgICBlbGlmIGNvbnRlbnRbaV0gPT0gIn0iOgogICAgICAgIGJyYWNlX2NvdW50IC09IDEKICAgICAgICBpZiBicmFjZV9jb3VudCA9PSAxOgogICAgICAgICAgICBpbnNlcnRfcG9zID0gaSArIDEKICAgICAgICAgICAgYnJlYWsKcmVsZWFzZV9jb25maWcgPSAiICAgICAgICByZWxlYXNlIHtcbiAgICAgICAgICAgIHN0b3JlRmlsZSBmaWxlKFwicmVsZWFzZS1rZXlzdG9yZS5qa3NcIilcbiAgICAgICAgICAgIHN0b3JlUGFzc3dvcmQgU3lzdGVtLmdldGVudihcIktFWVNUT1JFX1BBU1NXT1JEXCIpXG4gICAgICAgICAgICBrZXlBbGlhcyBTeXN0ZW0uZ2V0ZW52KFwiS0VZX0FMSUFTXCIpXG4gICAgICAgICAgICBrZXlQYXNzd29yZCBTeXN0ZW0uZ2V0ZW52KFwiS0VZX1BBU1NXT1JEXCIpXG4gICAgICAgIH1cbiIKY29udGVudCA9IGNvbnRlbnRbOmluc2VydF9wb3NdICsgcmVsZWFzZV9jb25maWcgKyBjb250ZW50W2luc2VydF9wb3M6XQp3aXRoIG9wZW4oImFwcC9idWlsZC5ncmFkbGUiLCAidyIpIGFzIGY6CiAgICBmLndyaXRlKGNvbnRlbnQpCnByaW50KCJhcHAvYnVpbGQuZ3JhZGxlIG1vZGlmaWVkIHN1Y2Nlc3NmdWxseSIpCg==' | base64 -d > /tmp/fix_signing.py
+          python3 /tmp/fix_signing.py
+          echo "=== Modified signingConfigs section ==="
+          grep -A 25 "signingConfigs {" app/build.gradle | head -30
+          echo ""
+          echo "=== Modified buildTypes section ==="
+          grep -A 5 "buildTypes {" app/build.gradle | head -10
 
       - name: Build release APK
         run: |
           ./gradlew assembleProductionVanillaOpenSourceRelease \
-            -PkeyStoreFilePath=./release-keystore.jks \
-            -PkeyStoreKeyAlias=${{ secrets.KEYSTORE_KEY_ALIAS }} \
-            -PkeyStorePassword=${{ secrets.KEYSTORE_PASSWORD }} \
-            -PkeyStoreKeyPassword=${{ secrets.KEYSTORE_KEY_PASSWORD }} \
-            --stacktrace
+            --stacktrace \
+            -Dorg.gradle.daemon=false \
+            -Dorg.gradle.parallel=true \
+            -Dorg.gradle.jvmargs=-Xmx4096m
         env:
           JAVA_HOME: ${{ steps.setup-java.outputs.path }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
 
       - name: Verify APK exists
         run: |
