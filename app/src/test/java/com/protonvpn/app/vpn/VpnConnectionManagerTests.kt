@@ -183,9 +183,10 @@ class VpnConnectionManagerTests {
         every { mockBackend.selfStateFlow } returns mockBackendSelfState
         every { mockBackend.internalVpnProtocolState } returns mockBackendSelfState
         every { mockBackend.lastKnownExitIp } returns MutableStateFlow(null)
+        every { mockBackend.eventRestrictions } returns MutableSharedFlow()
         every { mockVpnErrorHandler.switchConnectionFlow } returns MutableSharedFlow()
         every { mockVpnBackgroundUiDelegate.shouldSkipAccessRestrictions() } returns false
-        every { mockVpnBackgroundUiDelegate.showInfoNotification(any()) } just Runs
+        every { mockVpnBackgroundUiDelegate.showErrorNotification(any()) } just Runs
         every { mockVpnBackgroundUiDelegate.askForPermissions(any(), any(), any()) } answers {
             arg<() -> Unit>(2).invoke()
         }

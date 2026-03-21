@@ -25,9 +25,9 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.SdkSuppress
-import com.protonvpn.robots.mobile.HomeRobot
-import com.protonvpn.interfaces.verify
 import com.protonvpn.android.BuildConfig
+import com.protonvpn.interfaces.verify
+import com.protonvpn.robots.mobile.HomeRobot
 import com.protonvpn.robots.mobile.HumanVerificationRobot
 import com.protonvpn.robots.mobile.LoginRobotVpn
 import com.protonvpn.test.shared.TestUserEndToEnd
@@ -36,14 +36,13 @@ import com.protonvpn.testsHelper.AtlasEnvVarHelper
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.serialization.SerializationException
 import me.proton.core.auth.test.robot.CredentialLessWelcomeRobot
-import me.proton.core.auth.test.robot.login.LoginLegacyRobot
 import me.proton.core.auth.test.robot.login.LoginRobot
 import me.proton.core.compose.component.PROTON_OUTLINED_TEXT_INPUT_TAG
-import me.proton.core.test.android.robots.auth.AddAccountRobot
 import me.proton.core.test.quark.Quark
 import me.proton.core.test.quark.data.User
 import me.proton.test.fusion.Fusion
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -102,14 +101,15 @@ class LoginTestsBlack {
     }
 
     @Test
+    @Ignore("Disabled until the test environment is fixed.")
     //Can't complete captcha on API23 due to animations bug in test framework.
     @SdkSuppress(minSdkVersion = 28)
     fun loginWithHumanVerification() {
-        atlasEnvVarHelper.withAtlasEnvVar({ forceCaptchaOnLogin() }) {
+        atlasEnvVarHelper.withDangerousAtlasEnvVar({ forceCaptchaOnLogin() }) {
             LoginRobotVpn.signIn(testUserEndToEnd.plusUser)
-            HumanVerificationRobot.verifyViaCaptchaSlow()
-            HomeRobot.verify { isLoggedIn() }
         }
+        HumanVerificationRobot.verifyViaCaptcha()
+        HomeRobot.verify { isLoggedIn() }
     }
 
     @Test

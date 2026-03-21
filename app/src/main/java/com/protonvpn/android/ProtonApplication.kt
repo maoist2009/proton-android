@@ -43,7 +43,7 @@ import com.protonvpn.android.logging.ProtonLogger
 import com.protonvpn.android.logging.ProtonLoggerImpl
 import com.protonvpn.android.logging.SettingChangesLogger
 import com.protonvpn.android.managed.AutoLoginManager
-import com.protonvpn.android.notifications.NotificationHelper.Companion.initNotificationChannel
+import com.protonvpn.android.notifications.NotificationChannels
 import com.protonvpn.android.notifications.NotificationPermissionManager
 import com.protonvpn.android.profiles.usecases.PopulateInitialProfiles
 import com.protonvpn.android.profiles.usecases.ProfileAutoOpenHandler
@@ -53,6 +53,8 @@ import com.protonvpn.android.quicktile.QuickTileDataStoreUpdater
 import com.protonvpn.android.redesign.recents.usecases.ConnectingUpdatesRecents
 import com.protonvpn.android.redesign.recents.usecases.RecentsListValidator
 import com.protonvpn.android.redesign.upgrade.usecase.PurchasesEnabledUpdater
+import com.protonvpn.android.restrictonsupsell.StreamingUpsellRestrictionsDialogTrigger
+import com.protonvpn.android.restrictonsupsell.StreamingUpsellRestrictionsNotificationTrigger
 import com.protonvpn.android.servers.StreamingServicesUpdater
 import com.protonvpn.android.servers.UpdateServerTranslations
 import com.protonvpn.android.telemetry.VpnConnectionTelemetry
@@ -137,6 +139,8 @@ open class ProtonApplication : Application() {
         val serverListUpdater: ServerListUpdater
         val showUpgradeSuccess: ShowUpgradeSuccess?
         val streamingServicesUpdater: StreamingServicesUpdater
+        val streamingUpsellRestrictionsDialogTrigger: StreamingUpsellRestrictionsDialogTrigger
+        val streamingUpsellRestrictionsNotificationTrigger: StreamingUpsellRestrictionsNotificationTrigger
         val updateAndroidAppTheme: UpdateAndroidAppTheme
         val updateProfileLastConnected: UpdateProfileLastConnected
         val updateSettingsOnVpnUserChange: UpdateSettingsOnVpnUserChange?
@@ -184,7 +188,9 @@ open class ProtonApplication : Application() {
                 ProtonLogger.logCustom(LogCategory.HV, "WebView package: $webViewAppString")
             }
 
-            initNotificationChannel(this)
+            if (UpdateMigration.isFirstStart()) {
+                NotificationChannels.createChannels(this)
+            }
 
             CoreLogger.set(VpnCoreLogger())
         }
@@ -234,6 +240,8 @@ open class ProtonApplication : Application() {
         dependencies.userPlanManager
         dependencies.showUpgradeSuccess
         dependencies.streamingServicesUpdater
+        dependencies.streamingUpsellRestrictionsDialogTrigger.start()
+        dependencies.streamingUpsellRestrictionsNotificationTrigger.start()
         dependencies.vpnConnectionObservability
         dependencies.vpnConnectionTelemetry.start()
         dependencies.widgetStateUpdater.start()

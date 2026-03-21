@@ -26,6 +26,7 @@ import com.proton.gopenpgp.localAgent.Features
 import com.proton.gopenpgp.localAgent.LocalAgent
 import com.proton.gopenpgp.localAgent.NativeClient
 import com.proton.gopenpgp.localAgent.StatusMessage
+import com.proton.gopenpgp.localAgent.StringArray
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.concurrency.VpnDispatcherProvider
 import com.protonvpn.android.logging.ConnError
@@ -56,6 +57,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -73,7 +75,9 @@ import kotlinx.coroutines.yield
 import me.proton.core.network.data.di.SharedOkHttpClient
 import me.proton.core.network.domain.NetworkManager
 import me.proton.core.network.domain.NetworkStatus
+import me.proton.core.util.kotlin.equalsNoCase
 import okhttp3.OkHttpClient
+import java.util.EnumSet
 
 data class PrepareResult(val backend: VpnBackend, val connectionParams: ConnectionParams) : java.io.Serializable
 
@@ -233,6 +237,15 @@ abstract class VpnBackend(
                             getNetZone.updateCountry(newConnectionDetails.deviceCountry)
                     }
                 }
+                val restrictions = status.restrictions.toRestrictionSet()
+                val connectionParams = lastConnectionParams
+                if (restrictions.isNotEmpty() && connectionParams != null) {
+                    val event = VpnConnectionRestrictions(
+                        restrictions = restrictions,
+                        connectionId = connectionParams.uuid,
+                    )
+                    eventRestrictions.tryEmit(event)
+                }
                 isFinalError = status.reason?.final == true
                 ProtonLogger.log(LocalAgentStatus, status.toString())
             }
@@ -386,6 +399,8 @@ abstract class VpnBackend(
             internalVpnProtocolState.value = value
             if (hasChanged) onVpnProtocolStateChange(value)
         }
+
+    val eventRestrictions = MutableSharedFlow<VpnConnectionRestrictions>(extraBufferCapacity = 1)
 
     final override val selfStateFlow = MutableStateFlow<VpnState>(VpnState.Disabled)
     private var agent: AgentConnectionInterface? = null
@@ -665,3 +680,17 @@ private suspend fun OkHttpClient.resetSockets() {
 
 private fun Runnable?.unwrapIdleCallback(): Runnable? =
     if (this is OkHttpIdleCallbackWrapper) original?.unwrapIdleCallback() else this
+
+private fun StringArray.toRestrictionSet(): Set<VpnConnectionRestriction> {
+    val array = this
+    val set = EnumSet.noneOf(VpnConnectionRestriction::class.java)
+    for (i in 0..<array.count) {
+        val name = array.get(i)
+        val restriction =
+            VpnConnectionRestriction.entries.find { it.name.equalsNoCase(name) }
+        if (restriction != null) {
+            set.add(restriction)
+        }
+    }
+    return set
+}

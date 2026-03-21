@@ -268,14 +268,23 @@ class VpnConnectionManager @Inject constructor(
         }.launchIn(scope)
         scope.launch {
             activeBackendFlow.collectLatest { backend ->
-                if (backend == null)
+                if (backend == null) {
                     vpnStateMonitor.internalVpnProtocolState.value = VpnState.Disabled
-                else {
+                } else {
                     backend.internalVpnProtocolState.collect { state ->
                         vpnStateMonitor.internalVpnProtocolState.value = state
                     }
                 }
             }
+        }
+        scope.launch {
+            activeBackendFlow
+                .filterNotNull()
+                .collectLatest { backend ->
+                    backend.eventRestrictions.collect { state ->
+                        vpnStateMonitor.eventRestrictions.emit(state)
+                    }
+                }
         }
     }
 
@@ -408,7 +417,7 @@ class VpnConnectionManager @Inject constructor(
                         SwitchServerReason.ServerInMaintenance
                     }
                 )
-                vpnBackgroundUiDelegate.showInfoNotification(
+                vpnBackgroundUiDelegate.showErrorNotification(
                     if (server == null) R.string.error_server_not_set
                     else R.string.restrictedMaintenanceDescription
                 )
@@ -681,7 +690,7 @@ class VpnConnectionManager @Inject constructor(
 
     // Will do complete reconnection, which may result in different protocol or server
     // if compared to original connection
-    fun reconnect(triggerAction: String, uiDelegate: VpnUiDelegate) {
+    fun reconnect(triggerAction: String, uiDelegate: VpnUiDelegate = vpnBackgroundUiDelegate) {
         scope.launch {
             val currentConnectionParams = activeConnectionParams
             if (currentConnectionParams != null) {

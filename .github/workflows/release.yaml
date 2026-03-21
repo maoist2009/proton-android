@@ -14,14 +14,6 @@ jobs:
       SWIG_VERSION: "4.1.1"
       ANDROID_NDK_VERSION: "25.1.8937393"
       ANDROID_CMAKE_VERSION: "3.22.1"
-      # 确保在 build.gradle 中设置了正确的签名配置
-      # signingConfigs {
-      #   release {
-      #     v1SigningEnabled true
-      #     v2SigningEnabled true
-      #     v3SigningEnabled true
-      #   }
-      # }
 
     steps:
       - name: Checkout repository
@@ -101,14 +93,48 @@ jobs:
 
       - name: Configure signing config for release build
         run: |
-          sed -i 's/signingConfig signingConfigs\.debug/signingConfig signingConfigs.release/' app/build.gradle
-          echo 'aW1wb3J0IHJlCndpdGggb3BlbigiYXBwL2J1aWxkLmdyYWRsZSIsICJyIikgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQpzaWduaW5nX2NvbmZpZ3Nfc3RhcnQgPSBjb250ZW50LmZpbmQoInNpZ25pbmdDb25maWdzIHsiKQpkZWJ1Z19zZWN0aW9uID0gY29udGVudC5maW5kKCJpZiAoZGVidWdLZXlzdG9yZVBhdGgpIHsiLCBzaWduaW5nX2NvbmZpZ3Nfc3RhcnQpCmJyYWNlX2NvdW50ID0gMApwb3MgPSBjb250ZW50LmZpbmQoInsiLCBkZWJ1Z19zZWN0aW9uKQpmb3IgaSBpbiByYW5nZShwb3MsIGxlbihjb250ZW50KSk6CiAgICBpZiBjb250ZW50W2ldID09ICJ7IjoKICAgICAgICBicmFjZV9jb3VudCArPSAxCiAgICBlbGlmIGNvbnRlbnRbaV0gPT0gIn0iOgogICAgICAgIGJyYWNlX2NvdW50IC09IDEKICAgICAgICBpZiBicmFjZV9jb3VudCA9PSAxOgogICAgICAgICAgICBpbnNlcnRfcG9zID0gaSArIDEKICAgICAgICAgICAgYnJlYWsKcmVsZWFzZV9jb25maWcgPSAiICAgICAgICByZWxlYXNlIHtcbiAgICAgICAgICAgIHN0b3JlRmlsZSBmaWxlKFwicmVsZWFzZS1rZXlzdG9yZS5qa3NcIilcbiAgICAgICAgICAgIHN0b3JlUGFzc3dvcmQgU3lzdGVtLmdldGVudihcIktFWVNUT1JFX1BBU1NXT1JEXCIpXG4gICAgICAgICAgICBrZXlBbGlhcyBTeXN0ZW0uZ2V0ZW52KFwiS0VZX0FMSUFTXCIpXG4gICAgICAgICAgICBrZXlQYXNzd29yZCBTeXN0ZW0uZ2V0ZW52KFwiS0VZX1BBU1NXT1JEXCIpXG4gICAgICAgIH1cbiIKY29udGVudCA9IGNvbnRlbnRbOmluc2VydF9wb3NdICsgcmVsZWFzZV9jb25maWcgKyBjb250ZW50W2luc2VydF9wb3M6XQp3aXRoIG9wZW4oImFwcC9idWlsZC5ncmFkbGUiLCAidyIpIGFzIGY6CiAgICBmLndyaXRlKGNvbnRlbnQpCnByaW50KCJhcHAvYnVpbGQuZ3JhZGxlIG1vZGlmaWVkIHN1Y2Nlc3NmdWxseSIpCg==' | base64 -d > /tmp/fix_signing.py
-          python3 /tmp/fix_signing.py
+          python3 - <<'EOF'
+          import re
+
+          with open("app/build.gradle", "r") as f:
+              content = f.read()
+
+          release_config = '''        release {
+                      storeFile file("release-keystore.jks")
+                      storePassword System.getenv("KEYSTORE_PASSWORD")
+                      keyAlias System.getenv("KEY_ALIAS")
+                      keyPassword System.getenv("KEY_PASSWORD")
+                  }
+          '''
+
+          # 在 signingConfigs { 行的下一行插入 release 配置（插在 if 块之前，顶层始终可见）
+          insert_marker = "signingConfigs {"
+          pos = content.find(insert_marker)
+          if pos == -1:
+              raise RuntimeError("signingConfigs { not found in app/build.gradle")
+          insert_pos = content.find("\n", pos) + 1
+          content = content[:insert_pos] + release_config + content[insert_pos:]
+
+          # 只替换 release buildType 里的 signingConfig，不动 debug buildType
+          content = re.sub(
+              r'(release\s*\{[^}]*?)signingConfig\s+signingConfigs\.debug',
+              r'\1signingConfig signingConfigs.release',
+              content,
+              count=1,
+              flags=re.DOTALL
+          )
+
+          with open("app/build.gradle", "w") as f:
+              f.write(content)
+
+          print("app/build.gradle modified successfully")
+          EOF
+
           echo "=== Modified signingConfigs section ==="
-          grep -A 25 "signingConfigs {" app/build.gradle | head -30
+          grep -A 30 "signingConfigs {" app/build.gradle | head -35
           echo ""
           echo "=== Modified buildTypes section ==="
-          grep -A 5 "buildTypes {" app/build.gradle | head -10
+          grep -A 8 "buildTypes {" app/build.gradle | head -20
 
       - name: Build release APK
         run: |

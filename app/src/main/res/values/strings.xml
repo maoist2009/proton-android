@@ -370,6 +370,8 @@
     <string name="enable">Enable</string>
     <string name="notification_smart_protocol_disabled_title">Smart Protocol is currently disabled</string>
     <string name="notification_smart_protocol_disabled_content">Proton VPN detected that your current network is preventing a connection to the VPN. Enabling Smart Protocol might bypass these limitations.</string>
+    <string name="notification_streaming_blocked_title">Blocked website?</string>
+    <string name="notification_streaming_blocked_text">Some websites and streaming services block free VPN users. Upgrade to Proton VPN Plus to bypass these blocks.</string>
     <string name="upsell_advanced_features">Advanced features: NetShield, Secure Core, Tor, P2P</string>
     <string name="upsell_streaming_services">Access streaming services (Netflix, Disney+, etc) anywhere in the world</string>
     <!-- Number of servers available in the service.
@@ -408,6 +410,8 @@
     <string name="upgrade_profiles_text">Unlock profiles with VPN Plus</string>
     <string name="upgrade_streaming_title">Stream in 4K</string>
     <string name="upgrade_streaming_text">Enjoy your favorite movies and TV shows from anywhere in the world.</string>
+    <string name="upgrade_streaming_block_title">Upgrade to bypass VPN blocks</string>
+    <string name="upgrade_streaming_block_text">VPN Plus servers let you enjoy your favorite movies and TV shows from around the world.</string>
     <string name="upgrade_tor_title">Access the Tor network in one tap</string>
     <string name="upgrade_tor_text">Connect to hidden services and onion sites with your regular browser.</string>
     <string name="upgrade_vpn_accelerator_title">Browse at even higher speeds</string>
@@ -652,7 +656,7 @@
     <string name="upgrade_country_message"><![CDATA[Unlock <b>country selection</b> with VPN Plus.]]></string>
     <string name="free_connections_info_message">Proton Free automatically connects you to the fastest available server. This will normally be the closest server to your location.</string>
     <string name="free_connections_info_server_locations">Free server locations (%1$d)</string>
-    <string name="free_connections_info_banner_text">Get worldwide coverage with VPN Plus</string>
+    <string name="free_connections_info_banner_text">Access all countries with VPN Plus</string>
     <string name="free_connection_info_title">Free connections</string>
     <string name="search_upsell_banner_title">Stream from anywhere</string>
     <!-- Example: Unlock geoblocked content from 10 countries with VPN Plus. -->
@@ -1496,7 +1500,13 @@
     <string name="info_p2p_why_description_logs">No activity logs</string>
     <string name="info_p2p_why_description_hide">Hide your IP address from your service provider and peers</string>
     <string name="info_dialog_smart_routing_description">Smart Routing uses virtual servers to provide VPN coverage in hard-to-reach countries.\n\nWhen you connect to a Smart Routing server, you’ll appear to be browsing in your destination country, even though the physical server is located elsewhere.  \n\nSmart Routing is typically used to get around anti-privacy laws and other forms of censorship.</string>
-    <string name="countries_upsell_banner_description">Get worldwide coverage with VPN Plus</string>
+    <string name="notifications_channel_connection_status_name">Connection status</string>
+    <string name="notifications_channel_connection_status_description">Shows which server you’re connected to and your VPN speed.</string>
+    <string name="notifications_channel_connection_errors_name">Connection errors</string>
+    <string name="notifications_channel_connection_errors_description">Alerts you to problems that pause or stop your VPN connection.</string>
+    <string name="notifications_channel_connection_tips_name">Connection tips</string>
+    <string name="notifications_channel_connection_tips_description">Contextual tips that help you get more out of Proton VPN.</string>
+    <string name="countries_upsell_banner_description">Access all countries with VPN Plus</string>
     <string name="secure_core_upsell_banner_description">Add another layer of encryption to your VPN connection</string>
     <string name="p2p_upsell_banner_description">Download files through BitTorrent and other file sharing protocols</string>
     <string name="tor_upsell_banner_description">Use the Tor network over your VPN connection for extra privacy</string>
@@ -1512,7 +1522,6 @@
     <string name="tv_settings_split_tunneling_description">Customize your connection by deciding which apps are protected by VPN.</string>
     <string name="tv_settings_split_tunneling_mode_description_standard">Selected apps are excluded from VPN connection.</string>
     <string name="tv_settings_split_tunneling_mode_description_inverse">Only selected apps connect through VPN, all other traffic is unprotected.</string>
-    <!-- Temporary strings for auto-login feature -->
     <string name="auto_login_error_title" translatable="false">Setup failed</string>
     <string name="auto_login_loading_description" translatable="false">Setting up ProtonVPN…</string>
     <string name="notification_auto_login_start" translatable="false">@string/auto_login_loading_description</string>
@@ -1520,6 +1529,9 @@
     <string name="notification_auto_login_error" translatable="false">There was a problem setting up ProtonVPN. Click to open the app.</string>
     <string name="app_restrictions_username_title" translatable="false">Username</string>
     <string name="app_restrictions_password_title" translatable="false">Password</string>
+    <string name="app_restrictions_token_title" translatable="false">Token</string>
+    <string name="app_restrictions_group_title" translatable="false">Group</string>
+    <string name="app_restrictions_device_id_title" translatable="false">DeviceID</string>
     <string name="profile_action_edit">Edit</string>
     <string name="profile_action_duplicate">Duplicate</string>
     <string name="profile_action_delete">Delete</string>

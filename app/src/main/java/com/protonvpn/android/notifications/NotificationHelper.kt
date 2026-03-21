@@ -133,7 +133,7 @@ class NotificationHelper @Inject constructor(
 
     fun buildSwitchNotification(notificationInfo: InformationNotification) {
         val notificationBuilder =
-            NotificationCompat.Builder(appContext, CHANNEL_ID)
+            NotificationCompat.Builder(appContext, NotificationChannels.ID_CONNECTION_STATUS)
                 .setSmallIcon(R.drawable.ic_vpn_status_information)
                 .setColor(appContext.getThemeColor(CoreR.attr.colorAccent))
 
@@ -226,7 +226,7 @@ class NotificationHelper @Inject constructor(
                 trafficUpdate?.notificationString(appContext)
 
         val builder =
-                NotificationCompat.Builder(context, CHANNEL_ID)
+                NotificationCompat.Builder(context, NotificationChannels.ID_CONNECTION_STATUS)
                         .setSmallIcon(getIconForState(state))
                         .setContentTitle(getStringFromState(vpnStatus))
                         .setContentText(notificationContentString)
@@ -328,15 +328,16 @@ class NotificationHelper @Inject constructor(
         updateStatusNotification(vpnStateMonitor.status.value, trafficMonitor.trafficStatus.value)
     }
 
-    fun showInformationNotification(
+    fun showSimpleNotification(
         @StringRes content: Int,
         @StringRes title: Int? = null,
         @DrawableRes icon: Int = R.drawable.ic_vpn_status_information,
         action: ActionItem? = null,
+        notificationChannelId: String,
         notificationId: Int = Constants.NOTIFICATION_INFO_ID
     ) {
         with(notificationManager) {
-            val builder = NotificationCompat.Builder(appContext, CHANNEL_ID)
+            val builder = NotificationCompat.Builder(appContext, notificationChannelId)
                 .setSmallIcon(icon)
                 .setContentText(appContext.getString(content))
                 .setColor(appContext.getThemeColor(CoreR.attr.colorAccent))
@@ -384,23 +385,7 @@ class NotificationHelper @Inject constructor(
     }
 
     companion object {
-        const val CHANNEL_ID = "com.protonvpn.android"
         const val PENDING_REQUEST_STATUS = 0
         const val PENDING_REQUEST_OTHER = 1
-
-        fun initNotificationChannel(context: Context) {
-            val channelOneName = "ProtonChannel"
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val notificationChannel = NotificationChannel(
-                    CHANNEL_ID, channelOneName,
-                    NotificationManager.IMPORTANCE_LOW)
-                notificationChannel.enableLights(true)
-                notificationChannel.setShowBadge(true)
-                notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                val manager =
-                    context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                manager.createNotificationChannel(notificationChannel)
-            }
-        }
     }
 }
