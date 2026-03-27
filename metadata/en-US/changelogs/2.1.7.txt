@@ -1,2 +1,0 @@
-What's new:
-* Fixed crash on start in F-droid builds
