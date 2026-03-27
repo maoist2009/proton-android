@@ -1,2 +1,0 @@
-What's new:
-* Fixes bug that caused the application to not show up in Google Play for Android TV

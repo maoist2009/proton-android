@@ -535,12 +535,13 @@ class SettingsViewModel @Inject constructor(
                 profileOverrideInfo = profileOverrideInfo,
                 netShield = netShieldSetting,
                 vpnAccelerator = SettingViewState.VpnAccelerator(settings.vpnAccelerator, isFree),
+                // [PATCH] isFreeUser=false: split tunneling is a local feature, no plan restriction in UI
                 splitTunneling = SettingViewState.SplitTunneling(
                     isEnabled = settings.splitTunneling.isEnabled,
                     mode = settings.splitTunneling.mode,
                     currentModeAppNames = currentModeAppNames,
                     currentModeIps = settings.splitTunneling.currentModeIps(),
-                    isFreeUser = isFree,
+                    isFreeUser = false,
                 ),
                 protocol = SettingViewState.Protocol(
                     settings.protocol,
@@ -549,10 +550,11 @@ class SettingsViewModel @Inject constructor(
                 ),
                 defaultConnection = defaultConnectionSetting,
                 altRouting = SettingViewState.AltRouting(settings.apiUseDoh),
+                // [PATCH] isFreeUser=false: LAN connections is a local feature, no plan restriction in UI
                 lanConnections = SettingViewState.LanConnections(
                     settings.lanConnections,
                     allowDirectConnections = settings.lanConnectionsAllowDirect.takeIf { isDirectLanConnectionsFeatureFlagEnabled() },
-                    isFree,
+                    isFreeUser = false,
                     profileOverrideInfo?.primaryLabel
                 ),
                 natType = SettingViewState.Nat(
@@ -565,12 +567,13 @@ class SettingsViewModel @Inject constructor(
                 showSignOut = !isCredentialLess && !managedConfig.isManaged,
                 accountScreenEnabled = !managedConfig.isManaged,
                 isWidgetDiscovered = featurePreferences.isWidgetDiscovered,
+                // [PATCH] isFreeUser=false: custom DNS is a local feature, no plan restriction in UI
                 customDns =
                     SettingViewState.CustomDns(
                         enabled = settings.customDns.effectiveEnabled,
                         customDns = settings.customDns.rawDnsList,
                         overrideProfilePrimaryLabel = profileOverrideInfo?.primaryLabel,
-                        isFreeUser = isFree,
+                        isFreeUser = false,
                         isPrivateDnsActive = isPrivateDnsActive,
                     ),
                 versionName = BuildConfig.VERSION_NAME,

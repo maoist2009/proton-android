@@ -121,10 +121,13 @@ abstract class BaseApplyEffectiveUserSettings(
     ): LocalUserSettings {
         val isUserPlusOrAbove = vpnUser?.isUserPlusOrAbove == true
         val effectiveVpnAccelerator = !isUserPlusOrAbove || settings.vpnAccelerator
+        val netShieldAvailable = vpnUser.getNetShieldAvailability() == NetShieldAvailability.AVAILABLE
+        // [PATCH] Allow split tunneling for all users (pure local feature)
         val effectiveSplitTunneling =
-            if (isUserPlusOrAbove) settings.splitTunneling
+            if (true) settings.splitTunneling
             else SplitTunnelingSettings(isEnabled = false)
-        val lanConnections = isUserPlusOrAbove && settings.lanConnections
+        // [PATCH] Allow LAN connections for all users (pure local feature)
+        val lanConnections = settings.lanConnections
         val defaultProfileId = when {
             isUserPlusOrAbove -> settings.defaultProfileId
             flags.tvDisableFavoriteCountryForFreeUser -> SavedProfilesV3.FASTEST_PROFILE_ID
@@ -156,7 +159,8 @@ abstract class BaseApplyEffectiveUserSettings(
             lanConnectionsAllowDirect =
                 lanConnections && settings.lanConnectionsAllowDirect && flags.isDirectLanConnectionsEnabled,
             netShield = netShieldProtocol,
-            customDns = if (isUserPlusOrAbove) settings.customDns else CustomDnsSettings(false),
+            // [PATCH] Allow custom DNS for all users (pure local feature)
+            customDns = if (true) settings.customDns else CustomDnsSettings(false),
             theme = settings.theme,
             tvAutoConnectOnBoot = if (isTv && flags.isTvAutoConnectEnabled) settings.tvAutoConnectOnBoot else false,
             vpnAccelerator = effectiveVpnAccelerator,
