@@ -274,6 +274,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">Data spart</string>
     <string name="netshield_setting_warning">Noen nettsteder lastes kanskje ikke inn riktig når annonser og sporere er blokkert.</string>
+    <string name="netshield_setting_block_adult_content">Block adult content</string>
     <string name="dialogDontShowAgain">Ikke vis igjen</string>
     <string name="guestHoleNotificationContent">Prøver å omgå nettverksproblemer. Dette vil hjelpe deg med å få tilgang til Proton VPN.</string>
     <string name="errorTunMultiUserPermission">Kunne ikke initialisere VPN-tilkobling på grunn av en konflikt mellom dual-app (for eksempel Dual Messenger) og delt tunnelering. Deaktiver en av disse og start enheten på nytt.</string>
@@ -356,8 +357,8 @@
     <string name="enable">Aktiver</string>
     <string name="notification_smart_protocol_disabled_title">Smart Protocol er for øyeblikket deaktivert</string>
     <string name="notification_smart_protocol_disabled_content">Proton VPN oppdaget at ditt nåværende nettverk hindrer en tilkobling til VPN-et. Aktivering av Smart Protocol kan omgå disse begrensningene.</string>
-    <string name="notification_streaming_blocked_title">Blocked website?</string>
-    <string name="notification_streaming_blocked_text">Some websites and streaming services block free VPN users. Upgrade to Proton VPN Plus to bypass these blocks.</string>
+    <string name="notification_streaming_blocked_title">Blokkert nettsted?</string>
+    <string name="notification_streaming_blocked_text">Noen nettsteder og strømmetjenester blokkerer brukere av gratis VPN. Oppgrader til Proton VPN Plus for å omgå disse blokkeringene.</string>
     <string name="upsell_advanced_features">Avanserte funksjoner: NetShield, Secure Core, Tor, P2P</string>
     <string name="upsell_streaming_services">Få tilgang til strømmetjenester (Netflix, Disney+, osv) hvor som helst i verden</string>
     <!-- Number of servers available in the service.
@@ -396,8 +397,8 @@
     <string name="upgrade_profiles_text">Lås opp profiler med VPN Plus</string>
     <string name="upgrade_streaming_title">Strøm i 4K</string>
     <string name="upgrade_streaming_text">Nyt favorittfilmene og TV-programmene dine fra hvor som helst i verden.</string>
-    <string name="upgrade_streaming_block_title">Upgrade to bypass VPN blocks</string>
-    <string name="upgrade_streaming_block_text">VPN Plus servers let you enjoy your favorite movies and TV shows from around the world.</string>
+    <string name="upgrade_streaming_block_title">Oppgrader for å omgå VPN-blokkeringer</string>
+    <string name="upgrade_streaming_block_text">VPN Plus-tjenere lar deg se favorittfilmene og TV-programmene dine fra hele verden.</string>
     <string name="upgrade_tor_title">Få tilgang til Tor-nettverket med ett trykk</string>
     <string name="upgrade_tor_text">Koble til skjulte tjenester og onion-sider med din vanlige nettleser.</string>
     <string name="upgrade_vpn_accelerator_title">Surf med enda høyere hastigheter</string>
@@ -786,7 +787,7 @@
     <string name="no_logs_banner_description">VPN-aktiviteten din er beskyttet av sveitsiske personvernlover. Vi vil aldri spore deg på nettet eller dele informasjonen din med tredjeparter.</string>
     <!-- tag(Redesign_2023) Bottom bar label for home screen -->
     <string name="bottom_nav_home">Hjem</string>
-    <string name="bottom_nav_gateways">Porttjenere</string>
+    <string name="bottom_nav_gateways">Gateway-tjenere</string>
     <string name="bottom_nav_profiles">Profiler</string>
     <!-- tag(Redesign_2023) Bottom bar label for country list screen -->
     <string name="bottom_nav_countries">Land</string>
@@ -1050,12 +1051,12 @@
     <string name="message_server_not_available">Tjener ikke tilgjengelig</string>
     <string name="message_server_location_excluded">Tjenerplassering ekskludert</string>
     <!-- tag(Redesign_2023): Displayed in a dialog when all servers of a gateway are in maintenance -->
-    <string name="message_gateway_in_maintenance">Porttjener blir vedlikeholdt</string>
+    <string name="message_gateway_in_maintenance">Gateway blir vedlikeholdt</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_sign_out">Logg av</string>
     <!-- tag(Redesign_2023) -->
     <string name="settings_title">Innstillinger</string>
-    <string name="gateways_title">Porttjenere</string>
+    <string name="gateways_title">Gateway-tjenere</string>
     <string name="countries_title">Land</string>
     <string name="profiles_title">Profiler</string>
     <string name="settings_autoconnect_title">Koble til automatisk</string>
@@ -1181,7 +1182,7 @@
     <!-- tag(Redesign_2023) -->
     <string name="connection_details_server">Tjener</string>
     <!-- tag(Redesign_2023) -->
-    <string name="connection_details_gateway">Porttjener</string>
+    <string name="connection_details_gateway">Gateway</string>
     <!-- tag(Redesign_2023) -->
     <string name="connection_details_country">Land</string>
     <!-- tag(Redesign_2023) -->
@@ -1480,12 +1481,12 @@
     <string name="info_p2p_why_description_logs">Ingen aktivitetslogger</string>
     <string name="info_p2p_why_description_hide">Skjul IP-adressen din for tjenesteleverandøren og noder</string>
     <string name="info_dialog_smart_routing_description">Smart Routing bruker virtuelle tjenere for å gi VPN-dekning i vanskelig tilgjengelige land.\n\nNår du kobler til en Smart Routing-tjener, ser det ut til at du surfer i destinasjonslandet ditt, selv om den fysiske tjeneren befinner seg et annet sted.  \n\nSmart Routing brukes vanligvis til å omgå personvernlover og andre former for sensur.</string>
-    <string name="notifications_channel_connection_status_name">Connection status</string>
-    <string name="notifications_channel_connection_status_description">Shows which server you’re connected to and your VPN speed.</string>
-    <string name="notifications_channel_connection_errors_name">Connection errors</string>
-    <string name="notifications_channel_connection_errors_description">Alerts you to problems that pause or stop your VPN connection.</string>
-    <string name="notifications_channel_connection_tips_name">Connection tips</string>
-    <string name="notifications_channel_connection_tips_description">Contextual tips that help you get more out of Proton VPN.</string>
+    <string name="notifications_channel_connection_status_name">Tilkoblingsstatus</string>
+    <string name="notifications_channel_connection_status_description">Viser hvilken tjener du er koblet til og VPN-hastigheten.</string>
+    <string name="notifications_channel_connection_errors_name">Tilkoblingsfeil</string>
+    <string name="notifications_channel_connection_errors_description">Varsler deg om problemer som pauser eller stopper VPN-tilkoblingen din.</string>
+    <string name="notifications_channel_connection_tips_name">Tilkoblingstips</string>
+    <string name="notifications_channel_connection_tips_description">Kontekstuelle tips som hjelper deg med å få mer ut av Proton VPN.</string>
     <string name="countries_upsell_banner_description">Få tilgang til alle land med VPN Plus</string>
     <string name="secure_core_upsell_banner_description">Legg til et ekstra krypteringslag til VPN-tilkoblingen din.</string>
     <string name="p2p_upsell_banner_description">Last ned filer gjennom BitTorrent og andre fildelingsprotokoller</string>
@@ -1521,11 +1522,11 @@
     <string name="create_profile_type_standard">Standard</string>
     <string name="create_profile_type_secure_core">Secure Core</string>
     <string name="create_profile_type_p2p">P2P</string>
-    <string name="create_profile_gateway">Porttjener</string>
+    <string name="create_profile_gateway">Gateway</string>
     <string name="create_profile_pick_state_title">Stat</string>
     <string name="create_profile_pick_city_title">By</string>
     <string name="create_profile_pick_server_title">Tjener</string>
-    <string name="create_profile_pick_gateway_title">Porttjener</string>
+    <string name="create_profile_pick_gateway_title">Gateway</string>
     <string name="create_profile_pick_netshield_title">NetShield</string>
     <string name="create_profile_pick_netshield_description">Blokkér annonser, sporere og skadelig programvare på nettsteder og apper</string>
     <string name="create_profile_pick_protocol_title">Protokoll</string>
@@ -1614,15 +1615,41 @@
     <string name="no_connections_action_sign_out">Logg av</string>
     <string name="no_connections_help_contact_us"><![CDATA[Trenger du hjelp? <a href="">Kontakt oss</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Hvis administratoren din trenger hjelp med å aktivere VPN-tilgang, sende dem <a href="">disse instruksjonene</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">Aktivere OpenVPN?</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Denne protokollen vil bli fjernet snart da vi fokuserer på raskere og sikrere teknologier. Vi anbefaler å bytte til Smart Protocol. <a href="proton.me">Lær mer</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Denne protokollen vil bli fjernet snart ettersom vi fokuserer på raskere og sikrere teknologier. Vi anbefaler å bytte til Smart Protocol.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Fortsett med OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Aktiver Smart Protocol</string>
     <string name="settings_protocol_proton_protocols">Proton-protokoller</string>
     <string name="settings_protocol_proton_protocols_description">Bruk Protons egen implementering av WireGuard. Dette er en eksperimentell funksjon, så du kan oppleve en viss ustabilitet.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">Ikke landet du ønsket?</string>
     <string name="connection_preferences_smart_discovery_dialog_message">Hvis det er steder du ikke vil bli automatisk koblet til, kan du ekskludere dem fra raskeste land.</string>
     <string name="excluded_locations_adoption_title">Unngå uønskede steder</string>
     <string name="excluded_locations_adoption_description"><![CDATA[Du kan nå ekskludere land og byer fra <b>raskeste</b> tilkoblinger.]]></string>
+    <string name="session_fork_no_account_title">Logg inn på Android TV</string>
+    <string name="session_fork_no_account_message">Fullfør påloggingen på denne enheten for å begynne å bruke Proton VPN på TV-en.</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[Ved å bruke denne appen godtar du våre <a href="">vilkår og betingelser</a>.]]></string>
+    <string name="session_fork_no_account_signup_button">Opprett en konto</string>
+    <string name="session_fork_no_account_signin_button">Logg på</string>
+    <string name="session_fork_confirmation_title">Logge inn på Android TV?</string>
+    <string name="session_fork_confirmation_message">Dette vil gi TV-en tilgang til Proton-kontoen din.</string>
+    <string name="session_fork_confirmation_bottom_note">Logg bare på enheter du stoler på</string>
+    <string name="session_fork_confirmation_too_soon_toast">Please review before continuing</string>
+    <string name="session_fork_success_title">Pålogging fullført</string>
+    <string name="session_fork_success_message">Du er nå logget på TV-en din.</string>
+    <string name="session_fork_error_expired_title">Koden er utløpt</string>
+    <string name="session_fork_error_expired_message">Opprett en ny kode på TV-en og prøv på nytt.</string>
+    <string name="session_fork_error_generic_title">Kunne ikke logge deg på</string>
+    <string name="session_fork_error_fatal_message">Sjekk nettverket ditt og prøv på nytt. Hvis problemet vedvarer, ta kontakt med kundestøtteteamet vårt. </string>
+    <string name="session_fork_error_network_message">Sjekk nettverket ditt og prøv på nytt.</string>
+    <string name="session_fork_error_try_fallback_message">Klikk på \'Problemer med pålogging?\' på TV-en for å følge de alternative trinnene.</string>
+    <string name="session_fork_error_report_button">Rapporter problemet</string>
+    <string name="session_fork_qr_code_content_description">QR-kode</string>
+    <string name="session_fork_qr_code_message">Skann QR-koden for å logge på eller opprette en konto.</string>
+    <string name="session_fork_qr_code_trouble_button">Problemer med å logge på?</string>
+    <string name="session_fork_qr_code_error_expired">Av sikkerhetshensyn er valideringskoden utløpt</string>
+    <string name="session_fork_qr_code_error_network">Check your network and try again</string>
+    <string name="session_fork_qr_code_error_create_new_button">Opprett en ny kode</string>
+    <string name="session_fork_user_code_title">Får du ikke skannet koden? Logg på manuelt</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Gå til: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Logg på eller opprett en konto</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Skriv inn koden: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Still need help? Visit <b>%1$s</b>]]></string>
 </resources>

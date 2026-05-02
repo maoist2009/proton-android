@@ -19,10 +19,10 @@
 
 package com.protonvpn.android.servers
 
+import com.protonvpn.android.BuildConfig
 import com.protonvpn.android.api.ProtonApiRetroFit
 import com.protonvpn.android.appconfig.periodicupdates.PeriodicActionResult
 import com.protonvpn.android.appconfig.periodicupdates.toPeriodicActionResultWithCustomValue
-import com.protonvpn.android.di.WallClock
 import com.protonvpn.android.logging.ApiLogResponse
 import com.protonvpn.android.logging.ProtonLogger
 import com.protonvpn.android.servers.api.LogicalsResponse
@@ -31,7 +31,6 @@ import com.protonvpn.android.servers.api.ServerListV1
 import com.protonvpn.android.ui.home.ServerListUpdaterPrefs
 import com.protonvpn.android.utils.CountryTools
 import com.protonvpn.android.utils.DebugUtils
-import com.protonvpn.android.utils.ServerManager
 import com.protonvpn.android.vpn.ProtocolSelection
 import com.protonvpn.android.vpn.apiNames
 import com.protonvpn.android.vpn.usecases.GetTruncationMustHaveIDs
@@ -48,7 +47,6 @@ import javax.inject.Inject
 class UpdateServerListFromApi @Inject constructor(
     private val api: ProtonApiRetroFit,
     private val dispatcherProvider: DispatcherProvider,
-    private val serverManager: ServerManager,
     private val serversDataManager: ServersDataManager,
     private val prefs: ServerListUpdaterPrefs,
     private val updateWithBinaryStatus: UpdateServersWithBinaryStatus,
@@ -221,12 +219,16 @@ class UpdateServerListFromApi @Inject constructor(
     }
 
     private fun debugCountryCheck(serverList: List<Server>) {
-        DebugUtils.debugAssert("Country with no continent") {
-            val countriesWithNoContinent = serverList
-                .flatMapTo(HashSet()) { listOf(it.entryCountry, it.exitCountry) }
-                .filter { CountryTools.oldMapLocations[it]?.continent == null }
-            countriesWithNoContinent.isEmpty()
-        }
+        if (!BuildConfig.DEBUG) return
+
+        serverList
+            .flatMapTo(HashSet()) { listOf(it.entryCountry, it.exitCountry) }
+            .filter { CountryTools.oldMapLocations[it]?.continent == null }
+            .also { countriesWithNoContinent ->
+                DebugUtils.debugAssert("Countries with no continent: $countriesWithNoContinent") {
+                    countriesWithNoContinent.isEmpty()
+                }
+            }
     }
 
     private fun Response<*>.durationMs() = with(raw()) { receivedResponseAtMillis - sentRequestAtMillis }

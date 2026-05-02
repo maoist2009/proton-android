@@ -274,6 +274,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">Δεδομένα εξοικονομήθηκαν</string>
     <string name="netshield_setting_warning">Ορισμένοι ιστότοποι ενδέχεται να μη φορτώνουν σωστά όταν αποκλείονται διαφημίσεις και ιχνηλάτες.</string>
+    <string name="netshield_setting_block_adult_content">Αποκλεισμός περιεχομένου για ενηλίκους</string>
     <string name="dialogDontShowAgain">Να μην εμφανιστεί ξανά</string>
     <string name="guestHoleNotificationContent">Γίνεται προσπάθεια παράκαμψης των προβλημάτων δικτύου. Έτσι θα μπορέσετε να αποκτήσετε πρόσβαση στο Proton VPN.</string>
     <string name="errorTunMultiUserPermission">Δεν ήταν δυνατή η VPN σύνδεση, λόγω ότι οι λειτουργίες διπλής εφαρμογής (Dual Messenger) και split tunneling είναι ταυτόχρονα ενεργοποιημένες. Παρακαλούμε απενεργοποιήστε ένα από αυτά και επανεκκινήστε τη συσκευή σας.</string>
@@ -1479,7 +1480,7 @@
     <string name="info_p2p_why_description_speed">Αυξημένες ταχύτητες μεταφόρτωσης και λήψης</string>
     <string name="info_p2p_why_description_logs">Χωρίς αρχεία καταγραφής</string>
     <string name="info_p2p_why_description_hide">Απόκρυψη της διεύθυνσης IP σας από τον πάροχο υπηρεσιών και τους συναδέλφους σας</string>
-    <string name="info_dialog_smart_routing_description">Το Smart Routing χρησιμοποιεί εικονικούς διακομιστές για να παρέχει κάλυψη VPN σε δυσπρόσιτες χώρες.\n\nΌταν συνδέεστε σε ένα Smart Routing διακομιστή, θα φαίνεται ότι περιηγείστε στη χώρα προορισμού σας, παρόλο που ο φυσικός διακομιστής βρίσκεται αλλού.  \n\nΤο Smart Routing χρησιμοποιείται συνήθως για την παράκαμψη των νόμων κατά της ιδιωτικότητας και άλλων μορφών λογοκρισίας.</string>
+    <string name="info_dialog_smart_routing_description">Το Smart Routing μας επιτρέπει να παρέχουμε κάλυψη VPN σε δυσπρόσιτες χώρες.\n\nΌταν συνδέεστε σε ένα Smart Routing διακομιστή, θα φαίνεται ότι περιηγείστε στη χώρα προορισμού σας, παρόλο που ο φυσικός διακομιστής βρίσκεται αλλού.  \n\nΤο Smart Routing χρησιμοποιείται συνήθως για την παράκαμψη των νόμων κατά της ιδιωτικότητας και άλλων μορφών λογοκρισίας.</string>
     <string name="notifications_channel_connection_status_name">Κατάσταση σύνδεσης</string>
     <string name="notifications_channel_connection_status_description">Δείχνει σε ποιον διακομιστή είστε συνδεδεμένοι και την ταχύτητα του VPN σας.</string>
     <string name="notifications_channel_connection_errors_name">Σφάλματα σύνδεσης</string>
@@ -1614,15 +1615,41 @@
     <string name="no_connections_action_sign_out">Αποσύνδεση</string>
     <string name="no_connections_help_contact_us"><![CDATA[Χρειάζεστε βοήθεια; <a href="">Επικοινωνήστε μαζί μας</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Εάν ο διαχειριστής σας χρειάζεται βοήθεια με την ενεργοποίηση της πρόσβασης VPN, στείλτε του <a href="">αυτές τις οδηγίες</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">Ενεργοποίηση OpenVPN;</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Αυτό το πρωτόκολλο θα καταργηθεί σύντομα, καθώς εστιάζουμε σε ταχύτερες και ασφαλέστερες τεχνολογίες. Σας συνιστούμε να μεταβείτε στο Smart Protocol. <a href="proton.me">Μάθετε περισσότερα</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Αυτό το πρωτόκολλο θα καταργηθεί σύντομα, καθώς εστιάζουμε σε ταχύτερες και ασφαλέστερες τεχνολογίες. Σας συνιστούμε να μεταβείτε στο Smart Protocol.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Συνέχεια με OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Ενεργοποίηση Smart protocol</string>
     <string name="settings_protocol_proton_protocols">Πρωτόκολλα Proton</string>
     <string name="settings_protocol_proton_protocols_description">Χρησιμοποιήστε την εφαρμογή WireGuard της Proton VPN. Πρόκειται για μια πειραματική λειτουργία, οπότε ενδέχεται να αντιμετωπίσετε κάποια αστάθεια.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">Δεν είναι η χώρα που θέλατε;</string>
     <string name="connection_preferences_smart_discovery_dialog_message">Εάν υπάρχουν τοποθεσίες στις οποίες δε θέλετε να συνδέεστε αυτόματα, μπορείτε να τις εξαιρέσετε από την επιλογή Ταχύτερη χώρα.</string>
     <string name="excluded_locations_adoption_title">Αποφύγετε ανεπιθύμητες τοποθεσίες</string>
     <string name="excluded_locations_adoption_description"><![CDATA[Τώρα μπορείτε να εξαιρέσετε χώρες και πόλεις από τις <b>Ταχύτερες</b> συνδέσεις.]]></string>
+    <string name="session_fork_no_account_title">Σύνδεση σε Android TV</string>
+    <string name="session_fork_no_account_message">Ολοκληρώστε τη σύνδεση σε αυτήν τη συσκευή για να ξεκινήσετε να χρησιμοποιείτε το Proton VPN στην τηλεόρασή σας</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[Χρησιμοποιώντας αυτήν την εφαρμογή αποδέχεστε τους <a href="">Όρους και Προϋποθέσεις</a> μας.]]></string>
+    <string name="session_fork_no_account_signup_button">Δημιουργία λογαριασμού</string>
+    <string name="session_fork_no_account_signin_button">Σύνδεση</string>
+    <string name="session_fork_confirmation_title">Σύνδεση σε Android TV;</string>
+    <string name="session_fork_confirmation_message">Αυτό θα επιτρέψει στην τηλεόραση να έχει πρόσβαση στον λογαριασμό σας στο Proton.</string>
+    <string name="session_fork_confirmation_bottom_note">Συνδεθείτε μόνο σε συσκευές που εμπιστεύεστε</string>
+    <string name="session_fork_confirmation_too_soon_toast">Παρακαλούμε ελέγξτε πριν συνεχίσετε</string>
+    <string name="session_fork_success_title">Η σύνδεση ολοκληρώθηκε</string>
+    <string name="session_fork_success_message">Τώρα είστε συνδεδεμένοι στην τηλεόρασή σας.</string>
+    <string name="session_fork_error_expired_title">Ο κωδικός έληξε</string>
+    <string name="session_fork_error_expired_message">Δημιουργήστε έναν νέο κωδικό στην τηλεόρασή σας και δοκιμάστε ξανά.</string>
+    <string name="session_fork_error_generic_title">Δεν μπορούσα να συνδεθώ</string>
+    <string name="session_fork_error_fatal_message">Ελέγξτε το δίκτυό σας και προσπαθήστε ξανά. Εάν το πρόβλημα συνεχιστεί, επικοινωνήστε με την ομάδα υποστήριξης πελατών μας. </string>
+    <string name="session_fork_error_network_message">Ελέγξτε το δίκτυό σας και δοκιμάστε ξανά.</string>
+    <string name="session_fork_error_try_fallback_message">Κάντε κλικ στο \‘Πρόβλημα σύνδεσης;\’ στην τηλεόρασή σας για να ακολουθήσετε τα εναλλακτικά βήματα.</string>
+    <string name="session_fork_error_report_button">Αναφορά προβλήματος</string>
+    <string name="session_fork_qr_code_content_description">Κωδικός QR</string>
+    <string name="session_fork_qr_code_message">Σαρώστε τον κωδικό QR για να συνδεθείτε ή να δημιουργήσετε έναν λογαριασμό.</string>
+    <string name="session_fork_qr_code_trouble_button">Πρόβλημα σύνδεσης;</string>
+    <string name="session_fork_qr_code_error_expired">Για λόγους ασφαλείας ο κωδικός επαλήθευσης έχει λήξει</string>
+    <string name="session_fork_qr_code_error_network">Ελέγξτε το δίκτυό σας και δοκιμάστε ξανά</string>
+    <string name="session_fork_qr_code_error_create_new_button">Δημιουργήστε έναν νέο κωδικό</string>
+    <string name="session_fork_user_code_title">Δεν μπορείτε να σαρώσετε τον κωδικό; Συνδεθείτε χειροκίνητα</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Μεταβείτε στο: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Συνδεθείτε ή δημιουργήστε λογαριασμό</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Εισάγετε τον κωδικό: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Χρειάζεστε ακόμα βοήθεια; Επισκεφθείτε το <b>%1$s</b>]]></string>
 </resources>

@@ -24,6 +24,7 @@ import com.protonvpn.android.models.config.VpnProtocol
 import com.protonvpn.android.redesign.recents.data.DefaultConnection
 import com.protonvpn.android.redesign.recents.usecases.ObserveDefaultConnection
 import com.protonvpn.android.redesign.settings.IsAutomaticConnectionPreferencesFeatureFlagEnabled
+import com.protonvpn.android.redesign.settings.ui.NatType
 import com.protonvpn.android.settings.data.EffectiveCurrentUserSettings
 import com.protonvpn.android.settings.data.SplitTunnelingMode
 import com.protonvpn.android.telemetry.CommonDimensions
@@ -35,6 +36,7 @@ import com.protonvpn.android.ui.settings.AppIconManager
 import com.protonvpn.android.ui.settings.CustomAppIconData
 import com.protonvpn.android.utils.isIPv6
 import com.protonvpn.android.vpn.ConnectivityMonitor
+import com.protonvpn.android.vpn.alwayson.VpnAlwaysOnStorage
 import com.protonvpn.android.vpn.usecases.GetTruncationMustHaveIDs
 import com.protonvpn.android.vpn.usecases.IsProTunV1FeatureFlagEnabled
 import com.protonvpn.android.vpn.usecases.ServerListTruncationEnabled
@@ -60,6 +62,7 @@ class GetSettingsTelemetryHeartbeatDimensions @Inject constructor(
     private val observerExcludedLocations: ObserveExcludedLocations,
     private val isAutomaticConnectionEnabled: IsAutomaticConnectionPreferencesFeatureFlagEnabled,
     private val isProTunV1FeatureFlagEnabled: IsProTunV1FeatureFlagEnabled,
+    private val vpnAlwaysOnStorage: VpnAlwaysOnStorage,
 ) {
 
     suspend operator fun invoke(): Map<String, String> = buildMap {
@@ -215,7 +218,24 @@ class GetSettingsTelemetryHeartbeatDimensions @Inject constructor(
             value = isProTunEnabledTelemetry(settings.protocol.vpn, isProTunV1FeatureFlagEnabled())
         )
 
-        commonDimensions.add(this, CommonDimensions.Key.USER_TIER)
+        put(
+            key = DIMENSION_NAT_TYPE,
+            value = NatType.fromRandomizedNat(settings.randomizedNat).toTelemetry(),
+        )
+
+        put(
+            key = DIMENSION_NETSHIELD_LEVEL,
+            value = settings.netShield.toTelemetry(),
+        )
+
+        vpnAlwaysOnStorage.getLastKnownVpnAlwaysOn()?.let { vpnAlwaysOn ->
+            put(
+                key = DIMENSION_KILL_SWITCH_LEVEL,
+                value = vpnAlwaysOn.toTelemetry(),
+            )
+        }
+
+        commonDimensions.add(this, CommonDimensions.Key.USER_TIER_LEGACY)
     }
 
     private fun CustomAppIconData.getTelemetryName() = when (this) {
@@ -326,6 +346,9 @@ class GetSettingsTelemetryHeartbeatDimensions @Inject constructor(
         private const val DIMENSION_IS_RATING_BOOSTER_ELIGIBLE = "is_rating_booster_eligible"
         private const val DIMENSION_EXCLUDED_COUNTRIES_COUNT = "excluded_countries_count"
         private const val DIMENSION_EXCLUDED_CITIES_AND_STATES_COUNT = "excluded_cities_count"
+        private const val DIMENSION_NAT_TYPE = "nat_type"
+        private const val DIMENSION_NETSHIELD_LEVEL = "netshield_level"
+        private const val DIMENSION_KILL_SWITCH_LEVEL = "kill_switch_level"
     }
 
 }

@@ -22,8 +22,10 @@
 package com.protonvpn.android.tests.settings
 
 import androidx.compose.runtime.Composable
+import com.android.tools.screenshot.PreviewTest
 import com.protonvpn.android.annotations.ProtonVpnTestPreview
 import com.protonvpn.android.base.ui.ProtonVpnPreview
+import com.protonvpn.android.netshield.NetShieldProtocol
 import com.protonvpn.android.redesign.settings.ui.KillSwitchInfo
 import com.protonvpn.android.redesign.settings.ui.LanSetting
 import com.protonvpn.android.redesign.settings.ui.NetShieldSetting
@@ -34,6 +36,7 @@ import com.protonvpn.android.settings.data.SplitTunnelingMode
 import com.protonvpn.android.theme.ThemeType
 import com.protonvpn.android.vpn.DnsOverride
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun NetshieldSettingPage() {
@@ -46,16 +49,19 @@ fun NetshieldSettingPage() {
             onDisableCustomDns = {},
             onCustomDnsLearnMore = {},
             onNetShieldToggle = {},
+            onToggleNetShieldAdultContentBlock = {},
             netShield = SettingsViewModel.SettingViewState.NetShield(
-                netShieldEnabled = true,
+                netShieldProtocol = NetShieldProtocol.ENABLED_EXTENDED,
                 isRestricted = false,
                 profileOverrideInfo = null,
                 dnsOverride = DnsOverride.None,
+                isNetShieldLevelThreeAvailable = false,
             ),
         )
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun LanSettingPage() {
@@ -74,6 +80,7 @@ fun LanSettingPage() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun NetshieldPrivateDnsSettingPage() {
@@ -86,16 +93,19 @@ fun NetshieldPrivateDnsSettingPage() {
             onDisableCustomDns = {},
             onCustomDnsLearnMore = {},
             onNetShieldToggle = {},
+            onToggleNetShieldAdultContentBlock = {},
             netShield = SettingsViewModel.SettingViewState.NetShield(
-                netShieldEnabled = true,
+                netShieldProtocol = NetShieldProtocol.ENABLED_EXTENDED,
                 isRestricted = false,
                 profileOverrideInfo = null,
                 dnsOverride = DnsOverride.SystemPrivateDns,
+                isNetShieldLevelThreeAvailable = false,
             ),
         )
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun NetshieldCustomDnsSettingPage() {
@@ -108,16 +118,43 @@ fun NetshieldCustomDnsSettingPage() {
             onDisableCustomDns = {},
             onCustomDnsLearnMore = {},
             onNetShieldToggle = {},
+            onToggleNetShieldAdultContentBlock = {},
             netShield = SettingsViewModel.SettingViewState.NetShield(
-                netShieldEnabled = true,
+                netShieldProtocol = NetShieldProtocol.ENABLED_EXTENDED,
                 isRestricted = false,
                 profileOverrideInfo = null,
                 dnsOverride = DnsOverride.CustomDns,
+                isNetShieldLevelThreeAvailable = false,
             ),
         )
     }
 }
 
+@ProtonVpnTestPreview
+@Composable
+fun NetShieldAdultContentBlockSettingPage() {
+    ProtonVpnPreview {
+        NetShieldSetting(
+            onClose = {},
+            onLearnMore = {},
+            onPrivateDnsLearnMore = {},
+            onOpenPrivateDnsSettings = {},
+            onDisableCustomDns = {},
+            onCustomDnsLearnMore = {},
+            onNetShieldToggle = {},
+            onToggleNetShieldAdultContentBlock = {},
+            netShield = SettingsViewModel.SettingViewState.NetShield(
+                netShieldProtocol = NetShieldProtocol.ENABLED_EXTENDED_ADULT_CONTENT,
+                isRestricted = false,
+                profileOverrideInfo = null,
+                dnsOverride = DnsOverride.None,
+                isNetShieldLevelThreeAvailable = true,
+            ),
+        )
+    }
+}
+
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun SplitTunnelingPage() {
@@ -145,6 +182,7 @@ fun SplitTunnelingPage() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun KillSwitchPage() {
@@ -157,6 +195,7 @@ fun KillSwitchPage() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun ThemePage() {

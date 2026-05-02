@@ -20,9 +20,11 @@
 package com.protonvpn.android.auth.data
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.protonvpn.android.models.login.NetShieldConfig
 import com.protonvpn.android.servers.Server
 import me.proton.core.account.data.entity.AccountEntity
 import me.proton.core.domain.entity.UserId
@@ -53,6 +55,7 @@ data class VpnUser(
     val expirationTime: Int,
     val planName: String?,
     val planDisplayName: String?,
+    @ColumnInfo(defaultValue = "false") val isBusiness: Boolean,
     val maxTier: Int?,
     val maxConnect: Int,
     val name: String,
@@ -60,16 +63,18 @@ data class VpnUser(
     val updateTime: Long,
     val sessionId: SessionId,
     val autoLoginId: String?,
+    @Embedded
+    val netShieldConfig: NetShieldConfig?,
 ) {
-    val accountType get() = if (services == 4)
-        "Proton VPN Account" else "Proton Mail Account"
-
     val isFreeUser get() = maxTier == FREE_TIER
     val isBasicUser get() = userTier == BASIC_TIER
     val isUserBasicOrAbove get() = userTier >= BASIC_TIER
     val isUserPlusOrAbove get() = userTier >= PLUS_TIER
     val isUserDelinquent get() = delinquent >= 3
     val isPMTeam get() = maxTier == 3
+
+    val hasNetShieldLevelThreeAvailable: Boolean
+        get() = netShieldConfig?.adultContentBlockingAvailable == true
 
     val hasSubscription get() = subscribed != 0
 

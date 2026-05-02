@@ -274,6 +274,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">Data sparad</string>
     <string name="netshield_setting_warning">Vissa webbplatser kanske inte laddas korrekt när annonser och spårare är blockerade.</string>
+    <string name="netshield_setting_block_adult_content">Block adult content</string>
     <string name="dialogDontShowAgain">Visa inte igen</string>
     <string name="guestHoleNotificationContent">Försöker kringgå nätverksproblem. Detta kommer att hjälpa dig att komma åt Proton VPN.</string>
     <string name="errorTunMultiUserPermission">Kunde inte initiera VPN-anslutning på grund av en konflikt mellan dual-app (till exempel Dual Messenger) och split tunneling. Inaktivera en av dem och starta om din enhet.</string>
@@ -1479,7 +1480,7 @@
     <string name="info_p2p_why_description_speed">Ökad upp- och nedladdningshastighet</string>
     <string name="info_p2p_why_description_logs">Inga aktivitetsloggar</string>
     <string name="info_p2p_why_description_hide">Dölj din IP-adress från din internetleverantör och andra användare</string>
-    <string name="info_dialog_smart_routing_description">Smart Routing använder virtuella servrar för att tillhandahålla VPN-täckning i svåråtkomliga länder.\n\nNär du ansluter till en Smart Routing-server verkar det som om du surfar i ditt destinationsland, även om den fysiska servern finns någon annanstans.  \n\nSmart Routing används vanligtvis för att komma runt antiintegritetslagar och andra former av censur.</string>
+    <string name="info_dialog_smart_routing_description">Smart Routing allows us to provide VPN coverage in hard-to-reach countries.\n\nWhen you connect to a Smart Routing server, you’ll appear to be browsing in your destination country, even though the physical server is located elsewhere.  \n\nSmart Routing is typically used to get around anti-privacy laws and other forms of censorship.</string>
     <string name="notifications_channel_connection_status_name">Anslutningsstatus</string>
     <string name="notifications_channel_connection_status_description">Visar vilken server du är ansluten till och din VPN-hastighet.</string>
     <string name="notifications_channel_connection_errors_name">Anslutningsfel</string>
@@ -1614,15 +1615,41 @@
     <string name="no_connections_action_sign_out">Logga ut</string>
     <string name="no_connections_help_contact_us"><![CDATA[Behöver du hjälp? <a href="">Kontakta oss</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Om din administratör behöver hjälp med att aktivera VPN-åtkomst, skicka dem <a href="">dessa instruktioner</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">Aktivera OpenVPN?</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Detta protokoll kommer att tas bort snart eftersom vi fokuserar på snabbare och säkrare teknologier. Vi rekommenderar att byta till Smart Protocol. <a href="proton.me">Lär dig mer</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Detta protokoll kommer att tas bort snart eftersom vi fokuserar på snabbare och säkrare teknologier. Vi rekommenderar att byta till Smart Protocol.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Fortsätt med OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Aktivera Smart Protocol</string>
     <string name="settings_protocol_proton_protocols">Proton-protokoll</string>
     <string name="settings_protocol_proton_protocols_description">Använd Protons egen implementering av WireGuard. Detta är en experimentell funktion, så du kan uppleva viss instabilitet.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">Inte det land du ville ha?</string>
     <string name="connection_preferences_smart_discovery_dialog_message">Om det finns platser som du inte vill anslutas till automatiskt kan du exkludera dem från “Snabbaste land“.</string>
     <string name="excluded_locations_adoption_title">Undvik oönskade platser</string>
     <string name="excluded_locations_adoption_description"><![CDATA[Du kan nu exkludera länder och orter från <b>Snabbaste</b> anslutningar.]]></string>
+    <string name="session_fork_no_account_title">Logga in på Android TV</string>
+    <string name="session_fork_no_account_message">Slutför inloggningen på denna enhet för att börja använda Proton VPN på din TV.</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[Genom att använda denna app accepterar du våra <a href="">användarvillkor</a>.]]></string>
+    <string name="session_fork_no_account_signup_button">Skapa ett konto</string>
+    <string name="session_fork_no_account_signin_button">Logga in</string>
+    <string name="session_fork_confirmation_title">Logga in på Android TV?</string>
+    <string name="session_fork_confirmation_message">Detta kommer tillåta TV:n åtkomst till ditt Proton-konto.</string>
+    <string name="session_fork_confirmation_bottom_note">Logga endast in på enheter du litar på</string>
+    <string name="session_fork_confirmation_too_soon_toast">Please review before continuing</string>
+    <string name="session_fork_success_title">Inloggning slutförd</string>
+    <string name="session_fork_success_message">Du är nu inloggad på din TV.</string>
+    <string name="session_fork_error_expired_title">Kod löpt ut</string>
+    <string name="session_fork_error_expired_message">Skapa en ny kod på din TV och försök igen.</string>
+    <string name="session_fork_error_generic_title">Kunde inte logga in</string>
+    <string name="session_fork_error_fatal_message">Kontrollera ditt nätverk och försök igen. Om problemet kvarstår, kontakta vår kundsupport. </string>
+    <string name="session_fork_error_network_message">Kontrollera ditt nätverk och försök igen.</string>
+    <string name="session_fork_error_try_fallback_message">Klicka på \‘Problem att logga in?\’ på din tv för att följa de alternativa stegen.</string>
+    <string name="session_fork_error_report_button">Rapportera problemet</string>
+    <string name="session_fork_qr_code_content_description">QR-kod</string>
+    <string name="session_fork_qr_code_message">Skanna QR-koden för att logga in eller skapa ett konto.</string>
+    <string name="session_fork_qr_code_trouble_button">Problem att logga in?</string>
+    <string name="session_fork_qr_code_error_expired">Av säkerhetsskäl har valideringskoden löpt ut</string>
+    <string name="session_fork_qr_code_error_network">Kontrollera ditt nätverk och försök igen</string>
+    <string name="session_fork_qr_code_error_create_new_button">Skapa en ny kod</string>
+    <string name="session_fork_user_code_title">Kan du inte skanna koden? Logga in manuellt</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Gå till: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Logga in eller skapa ett konto</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Ange koden: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Behöver du fortfarande hjälp? Besök <b>%1$s</b>]]></string>
 </resources>

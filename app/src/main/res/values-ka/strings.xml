@@ -274,6 +274,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">მინაცემები შენახულია</string>
     <string name="netshield_setting_warning">ზოგიერთი ვებგვერდი, შეიძლება, სწორად არ ჩაიტვირთოს, თუ რეკლამას და ტრეკერებს დაბლოკავთ.</string>
+    <string name="netshield_setting_block_adult_content">Block adult content</string>
     <string name="dialogDontShowAgain">აღარ მაჩვენო</string>
     <string name="guestHoleNotificationContent">ქსელის პრობლემის გვერდის ავლის მცდელობა. ეს Proton VPN-თან წვდომაში დაგეხმარებათ.</string>
     <string name="errorTunMultiUserPermission">VPN შეერთების ინიციალიზაცია შეუძლებელია ორმაგ-აპს (Dual Messenger-ი, მაგალითად) და Split Tunneling-ს შორის. გამორთეთ ერთ-ერთი და გადატვირთეთ მოწყობილობა.</string>
@@ -1479,7 +1480,7 @@
     <string name="info_p2p_why_description_speed">გაზრდილი ატვირთვის და გადმოწერის სიჩქარეები</string>
     <string name="info_p2p_why_description_logs">აქტივობის ჟურნალის შესახებ</string>
     <string name="info_p2p_why_description_hide">დამალეთ თქვენი IP მისამართი თქვენი ინტერნეტპროვაიდერისგან და პარტნორებისგან</string>
-    <string name="info_dialog_smart_routing_description">Smart Routing იყენებს ვირტუალურ სერვერბს, რომ  VPN დაფარვა ძნელად ხელმსაწვდომ ქვეყნებშიც იყო ხელმისაწვდომი.\n\nროცა უერთდებით Smart Routing სერვერს, გამოჩნდება, რომ თქვენ სამიზნე ქვეყანაში ხართ მაშინაც კი, თუ ფიზიკური სერვერი სადმე სხვაგანაა.  \n\nSmart Routing, ჩვეულებრივ, ანტი-კონფიდენციალობის კანონებისა და სხვა ფორმის ცენზურის თავის დასაღწევად გამოიყენება.</string>
+    <string name="info_dialog_smart_routing_description">Smart Routing საშუალებას გვაძლევს, მოგაწოდოთ VPN დაფარვა ძნელად ხელმსაწვდომ ქვეყნებშიც იყო ხელმისაწვდომი.\n\nროცა უერთდებით Smart Routing სერვერს, გამოჩნდება, რომ თქვენ სამიზნე ქვეყანაში ხართ მაშინაც კი, თუ ფიზიკური სერვერი სადმე სხვაგანაა.  \n\nSmart Routing, ჩვეულებრივ, ანტი-კონფიდენციალობის კანონებისა და სხვა ფორმის ცენზურის თავის დასაღწევად გამოიყენება.</string>
     <string name="notifications_channel_connection_status_name">შეერთების სტატუსი</string>
     <string name="notifications_channel_connection_status_description">აჩვენებს, თუ რომელ სერვერთან ხართ დაკავშირებული და თქვენს VPN სიჩქარეს.</string>
     <string name="notifications_channel_connection_errors_name">შეერთების შეცდომები</string>
@@ -1614,15 +1615,41 @@
     <string name="no_connections_action_sign_out">გასვლა</string>
     <string name="no_connections_help_contact_us"><![CDATA[დახმარება გჭირდებათ? <a href="">დაგვიკავშირდით</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[თუ თქვენს ადმინისტრატორს სჭირდება დახმარება VPN-ზე წვდომის ჩასართავად, გაუგზავნეთ <a href="">ეს ინსტრუქციები</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">ჩაირთოს OpenVPN?</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[ეს პროტოკოლი მალე წაიშლება, რადგან ჩვენ ყურადღებას უფრო სწრაფ და უსაფრთხო ტექნოლოგიებზე ვამახვილებთ. გირჩევთ, გადახვიდეთ Smart Protocol-ზე. <a href="proton.me">გაიგეთ მეტი</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">ეს პროტოკოლი მალე წაიშლება, რადგან ჩვენ ყურადღებას უფრო სწრაფ და უსაფრთხო ტექნოლოგიებზე ვამახვილებთ. გირჩევთ, გადახვიდეთ Smart Protocol-ზე.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">OpenVPN-ით გაგრძელება</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Smart Protocol-ის ჩართვა</string>
     <string name="settings_protocol_proton_protocols">Proton-ის პროტოკოლები</string>
     <string name="settings_protocol_proton_protocols_description">გამოიყენეთ Proton VPN-ის WireGuard-ის საკუთარი ვარიანტი. ეს ექსპერიმენტული ფუნქციაა, ასე რომ, შეიძლება, არასტაბილურობას გადააწყდეთ.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">ის ქვეყანა არაა, რომელიც გნებავდათ?</string>
     <string name="connection_preferences_smart_discovery_dialog_message">თუ არსებობს მდებარეობები, რომელთაგანაც არ გსურთ ავტომატურად დაკავშირება, შეგიძლიათ გამორიცხოთ ისინი „ყველაზე სწრაფი ქვეყნიდან“.</string>
     <string name="excluded_locations_adoption_title">არასასურველი მდებარეობების აცილება</string>
     <string name="excluded_locations_adoption_description"><![CDATA[ახლა შეგიძლიათ ქვეყნებისა და ქალაქების გამორიცხვა <b>ყველაზე სწრაფი</b> კავშირებიდან.]]></string>
+    <string name="session_fork_no_account_title">შესვლა Android TV-ზე</string>
+    <string name="session_fork_no_account_message">დაასრულეთ შესვლის პროცესი ამ მოწყობილობაზე Proton VPN-ის თქვენს ტელევიზორზე გამოყენების დასაწყებად</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[ამ აპის გამოყენებით თქვენ ეთანხმებით ჩვენს <a href="">წესებსა და პირობებს</a>]]></string>
+    <string name="session_fork_no_account_signup_button">ანგარიშის შექმნა</string>
+    <string name="session_fork_no_account_signin_button">შესვლა</string>
+    <string name="session_fork_confirmation_title">შესვლა Android TV-ზე?</string>
+    <string name="session_fork_confirmation_message">ეს ტელევიზორს თქვენს Proton-ის ანგარიშზე წვდომის საშუალებას მისცემს.</string>
+    <string name="session_fork_confirmation_bottom_note">შედით მხოლოდ იმ მოწყობილობებიდან, რომლებსაც ენდობით</string>
+    <string name="session_fork_confirmation_too_soon_toast">Please review before continuing</string>
+    <string name="session_fork_success_title">შესვლა დასრულდა</string>
+    <string name="session_fork_success_message">თქვენ ახლა შეხვედით თქვენი TV-ით.</string>
+    <string name="session_fork_error_expired_title">კოდის ვადა ამოწურულია</string>
+    <string name="session_fork_error_expired_message">შექმენით ახალი კოდი თქვენს ტელევიზორზე და სცადეთ ხელახლა.</string>
+    <string name="session_fork_error_generic_title">შესვლა ვერ მოხერხდა</string>
+    <string name="session_fork_error_fatal_message">შეამოწმეთ თქვენი ქსელი და თავიდან სცადეთ. თუ პრობლემა არ გაქრა, დაუკავშირდით ჩვენი მხარდაჭერის გუნდს. </string>
+    <string name="session_fork_error_network_message">შეამოწმეთ თქვენი ქსელი და კიდევ სცადეთ.</string>
+    <string name="session_fork_error_try_fallback_message">ალტერანატიული გზის მისაყოლად ტელევიზორზე დააწკაპუნეთ ბმულზე \'პრობლემები გაქვთ შესვლასთან?\'.</string>
+    <string name="session_fork_error_report_button">პრობლემის ანგარიშის გაგზავნა</string>
+    <string name="session_fork_qr_code_content_description">QR code</string>
+    <string name="session_fork_qr_code_message">Scan the QR code to sign in or create an account.</string>
+    <string name="session_fork_qr_code_trouble_button">Trouble signing in?</string>
+    <string name="session_fork_qr_code_error_expired">For security reasons the validation code has expired</string>
+    <string name="session_fork_qr_code_error_network">Check your network and try again</string>
+    <string name="session_fork_qr_code_error_create_new_button">Create a new code</string>
+    <string name="session_fork_user_code_title">Can’t scan the code? Sign in manually</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Go to: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Sign in or create an account</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Enter the code: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Still need help? Visit <b>%1$s</b>]]></string>
 </resources>

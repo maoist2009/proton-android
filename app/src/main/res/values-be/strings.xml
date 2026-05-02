@@ -278,6 +278,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">даных захавана</string>
     <string name="netshield_setting_warning">Некаторыя вэб-сайты могуць некарэктна загружацца, калі рэклама і праграмы сачэння заблакіраваны.</string>
+    <string name="netshield_setting_block_adult_content">Блакіраваць дарослае змесціва</string>
     <string name="dialogDontShowAgain">Больш не паказваць</string>
     <string name="guestHoleNotificationContent">Паспрабаваць абысці праблемы з сеткай. Гэта дапаможа вам атрымаць доступ да Proton VPN.</string>
     <string name="errorTunMultiUserPermission">Немагчыма ініцыялізаваць падключэнне па VPN. Прычынай можа быць канфлікт паміж праграмай для падвойнага ўліковага запісу (напрыклад, Dual Messenger) і Split Tunneling. Адключыце адну з іх і перазапусціце прыладу.</string>
@@ -1472,7 +1473,7 @@
     <string name="settings_dns_list_title">Серверы (%1$d)</string>
     <string name="settings_dns_list_description">Будзе выкарыстоўвацца стандартны DNS ад VPN, калі ваш карыстальніцкі сервер DNS не працуе.</string>
     <string name="settings_dns_list_description_multiple">Будзе зроблена спроба падключыцца да гэтых сервераў па парадку. Калі ніводны з іх працаваць не будзе, то будуць выкарыстоўвацца DNS ад VPN.</string>
-    <string name="settings_changes_apply_on_reconnect_toast">Змены будуць ужытыя пасля перападключэння</string>
+    <string name="settings_changes_apply_on_reconnect_toast">Змены будуць прыменены пасля перападключэння</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_title">NetShield будзе недаступны</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_message">NetShield не зможа адфільтраваць рэкламу, праграмы сачэння і шкодныя праграмы, калі выкарыстоўваецца карыстальніцкі DNS. Даведацца больш</string>
     <string name="settings_custom_dns_netshield_conflict_dialog_message_tv">NetShield не зможа адфільтраваць рэкламу, праграмы сачэння і шкодныя праграмы, калі выкарыстоўваецца карыстальніцкі DNS.</string>
@@ -1526,8 +1527,8 @@
     <string name="settings_theme_value_auto">Тэма прылады</string>
     <string name="settings_theme_value_light">Светлая</string>
     <string name="settings_theme_value_dark">Цёмная</string>
-    <string name="settings_dialog_reconnect">Новыя налады будуць ужыты пры наступным падключэнні.</string>
-    <string name="settings_needs_reconnect_banner">Новыя налады будуць ужыты пры наступным падключэнні.</string>
+    <string name="settings_dialog_reconnect">Новыя налады будуць прыменены пры наступным падключэнні.</string>
+    <string name="settings_needs_reconnect_banner">Новыя налады будуць прыменены пры наступным падключэнні.</string>
     <string name="private_dns_conflict_banner_custom_dns_title">Карыстальніцкі DNS недаступны</string>
     <string name="private_dns_conflict_banner_custom_dns_description">Ваша прылада выкарыстоўвае старонні DNS, які перашкаджае працы карыстальніцкаму DNS ад Proton VPN. Даведацца больш</string>
     <string name="private_dns_conflict_banner_custom_dns_description_tv">Ваша прылада выкарыстоўвае старонні DNS, які перашкаджае працы карыстальніцкаму DNS ад Proton VPN.</string>
@@ -1551,7 +1552,7 @@
     <string name="info_p2p_why_description_speed">Павялічаныя хуткасці запампоўвання і спампоўвання</string>
     <string name="info_p2p_why_description_logs">Адсутнасць журналаў актыўнасці</string>
     <string name="info_p2p_why_description_hide">Хавайце свой IP-адрас ад вашага пастаўшчыка паслуг інтэрнэту і аднарангавых вузлоў</string>
-    <string name="info_dialog_smart_routing_description">Smart Routing выкарыстоўвае віртуальныя серверы, каб забяспечваць пакрыццё VPN у цяжкадаступных краінах.\n\nКалі вы падключаецеся да сервера Smart Routing, то ўсё будзе выглядаць так, быццам вы ажыццяўляеце прагляд з краіны прызначэння, хоць фізічна сервер размяшчаецца ў іншым месцы.\n\nSmart Routing звычайна выкарыстоўваюць для абыходу законаў, якія парушаюць прыватнасць і канфідэнцыяльнасць, а таксама іншых форм цэнзуры.</string>
+    <string name="info_dialog_smart_routing_description">Smart Routing дазваляе нам забяспечваць пакрыццё VPN у цяжкадаступных краінах.\n\nКалі вы падключаецеся да сервера Smart Routing, то ўсё будзе выглядаць так, быццам вы ажыццяўляеце прагляд з краіны прызначэння, хоць фізічна сервер размяшчаецца ў іншым месцы.\n\nSmart Routing звычайна выкарыстоўваюць для абыходу законаў, якія парушаюць прыватнасць і канфідэнцыяльнасць, а таксама іншых форм цэнзуры.</string>
     <string name="notifications_channel_connection_status_name">Статус падключэння</string>
     <string name="notifications_channel_connection_status_description">Паказвае, да якога сервера вы падключаны, і хуткасць вашага VPN.</string>
     <string name="notifications_channel_connection_errors_name">Памылкі падключэння</string>
@@ -1686,15 +1687,41 @@
     <string name="no_connections_action_sign_out">Выйсці</string>
     <string name="no_connections_help_contact_us"><![CDATA[Неабходна дапамога? <a href="">Звяжыцеся з намі</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Адпраўце свайму адміністратару <a href="">гэтыя інструкцыі</a>, калі яму патрэбна дапамога з уключэннем доступу па VPN.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">Уключыць OpenVPN?</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Гэты пратакол неўзабаве будзе выдалены, бо ў цяперашні час аддаецца перавага больш хуткім і бяспечным тэхналогіям. Рэкамендуецца пераключыцца на Smart Protocol. <a href="proton.me">Даведацца больш</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Гэты пратакол неўзабаве будзе выдалены, бо ў цяперашні час аддаецца перавага больш хуткім і бяспечным тэхналогіям. Рэкамендуецца пераключыцца на Smart Protocol.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Працягнуць з OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Уключыць пратакол Smart</string>
     <string name="settings_protocol_proton_protocols">Пратаколы Proton</string>
     <string name="settings_protocol_proton_protocols_description">Выкарыстоўвайце ўласную рэалізацыю WireGuard ад Proton VPN. Гэта эксперыментальная функцыя, таму вы можаце сутыкнуцца з некаторай нестабільнасцю.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">Не тая краіна, якую хацелі?</string>
     <string name="connection_preferences_smart_discovery_dialog_message">Вы можаце выключыць месцазнаходжанні з найхутчэйшых краін, калі ёсць такія, да якіх вы не хочаце аўтаматычна падключацца.</string>
     <string name="excluded_locations_adoption_title">Пазбягайце непажаданых месцазнаходжанняў</string>
     <string name="excluded_locations_adoption_description"><![CDATA[Цяпер вы можаце выключыць краіны і гарады з <b>Найхутчэйшых</b> падключэнняў.]]></string>
+    <string name="session_fork_no_account_title">Увайсці на Android TV</string>
+    <string name="session_fork_no_account_message">Завяршыце ўваход на гэтай прыладзе, каб пачаць карыстацца Proton VPN на вашым тэлевізары</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[Выкарыстоўваючы гэту праграму вы прымаеце нашы <a href="">Умовы выкарыстання</a>.]]></string>
+    <string name="session_fork_no_account_signup_button">Стварыць уліковы запіс</string>
+    <string name="session_fork_no_account_signin_button">Увайсці</string>
+    <string name="session_fork_confirmation_title">Увайсці на Android TV?</string>
+    <string name="session_fork_confirmation_message">Гэта дазволіць тэлевізару атрымаць доступ да вашага ўліковага запісу Proton.</string>
+    <string name="session_fork_confirmation_bottom_note">Уваходзьце толькі на прыладах якім давяраеце</string>
+    <string name="session_fork_confirmation_too_soon_toast">Паглядзіце перад працягам</string>
+    <string name="session_fork_success_title">Уваход завершаны</string>
+    <string name="session_fork_success_message">Цяпер вы ўвайшлі ў сістэму на сваім тэлевізары.</string>
+    <string name="session_fork_error_expired_title">Код пратэрмінаваны</string>
+    <string name="session_fork_error_expired_message">Стварыце новы код на сваім тэлевізары і паўтарыце спробу.</string>
+    <string name="session_fork_error_generic_title">Не ўдалося ўвайсці</string>
+    <string name="session_fork_error_fatal_message">Праверце сетку і паспрабуйце яшчэ раз. Калі праблема застанецца, звярніцеся ў нашу каманду падтрымкі кліентаў. </string>
+    <string name="session_fork_error_network_message">Праверце сетку і паспрабуйце яшчэ раз.</string>
+    <string name="session_fork_error_try_fallback_message">Націсніце \‘Праблемы з уваходам?\’ у тэлевізары і прытрымлівайцеся альтэрнатыўных крокаў.</string>
+    <string name="session_fork_error_report_button">Паведаміць аб праблеме</string>
+    <string name="session_fork_qr_code_content_description">QR-код</string>
+    <string name="session_fork_qr_code_message">Сканіруйце QR-код, каб увайсці або стварыць уліковы запіс</string>
+    <string name="session_fork_qr_code_trouble_button">Праблемы з уваходам?</string>
+    <string name="session_fork_qr_code_error_expired">У мэтах бяспекі тэрмін дзеяння праверачнага кода мініў</string>
+    <string name="session_fork_qr_code_error_network">Праверце сетку і паспрабуйце яшчэ раз</string>
+    <string name="session_fork_qr_code_error_create_new_button">Стварыць новы код</string>
+    <string name="session_fork_user_code_title">Не атрымліваецца адсканіраваць код? Увайдзіце звычайным спосабам</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Перайдзіце: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Увайдзіце або стварыце ўліковы запіс</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Увядзіце код: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Усё яшчэ неабходна дапамога? Наведайце <b>%1$s</b>]]></string>
 </resources>

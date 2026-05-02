@@ -22,9 +22,11 @@
 package com.protonvpn.android.tests.settings
 
 import androidx.compose.runtime.Composable
+import com.android.tools.screenshot.PreviewTest
 import com.protonvpn.android.annotations.ProtonVpnTestPreview
 import com.protonvpn.android.annotations.ProtonVpnTestPreviewLong
 import com.protonvpn.android.base.ui.ProtonVpnPreview
+import com.protonvpn.android.netshield.NetShieldProtocol
 import com.protonvpn.android.profiles.data.ProfileColor
 import com.protonvpn.android.profiles.data.ProfileIcon
 import com.protonvpn.android.redesign.CountryId
@@ -48,6 +50,7 @@ import com.protonvpn.android.vpn.ProtocolSelection
 import me.proton.core.accountmanager.presentation.compose.viewmodel.AccountSettingsViewState
 import me.proton.core.domain.entity.UserId
 
+@PreviewTest
 @ProtonVpnTestPreviewLong
 @Composable
 fun SettingsCredentialless() {
@@ -88,6 +91,7 @@ fun SettingsCredentialless() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreviewLong
 @Composable
 fun SettingsPaidProfileConnected() {
@@ -127,6 +131,7 @@ fun SettingsPaidProfileConnected() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun AdvancedSettingsNotConnectedPaid() {
@@ -155,6 +160,7 @@ fun AdvancedSettingsNotConnectedPaid() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun CustomDnsEmptyState() {
@@ -180,6 +186,7 @@ fun CustomDnsEmptyState() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun CustomDnsState() {
@@ -200,6 +207,7 @@ fun CustomDnsState() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun CustomDnsStatePrivateDns() {
@@ -220,6 +228,7 @@ fun CustomDnsStatePrivateDns() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun AdvancedSettingsProfileConnected() {
@@ -248,6 +257,7 @@ fun AdvancedSettingsProfileConnected() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun AdvancedSettingsFree() {
@@ -276,6 +286,7 @@ fun AdvancedSettingsFree() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun AddNewDnsScreenPreview() {
@@ -287,6 +298,7 @@ fun AddNewDnsScreenPreview() {
     }
 }
 
+@PreviewTest
 @ProtonVpnTestPreview
 @Composable
 fun AddNewDnsScreenErrorPreview() {
@@ -311,10 +323,11 @@ private class SettingsData(isFree: Boolean, connectedToProfile: Boolean = false,
     ), "name") else null
 
     private val netshield = SettingViewState.NetShield(
-        netShieldEnabled = true,
+        netShieldProtocol = NetShieldProtocol.ENABLED_EXTENDED,
         isRestricted = isFree,
         profileOverrideInfo = overrideInfo,
-        dnsOverride = if (isPrivateDnsActive) DnsOverride.SystemPrivateDns else DnsOverride.None
+        dnsOverride = if (isPrivateDnsActive) DnsOverride.SystemPrivateDns else DnsOverride.None,
+        isNetShieldLevelThreeAvailable = false,
     )
     private val vpnAccelerator = SettingViewState.VpnAccelerator(true, isFree)
     private val protocol = SettingViewState.Protocol(ProtocolSelection.SMART, overrideInfo?.primaryLabel, showProTun = true)

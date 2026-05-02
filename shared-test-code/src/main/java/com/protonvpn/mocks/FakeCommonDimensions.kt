@@ -26,9 +26,11 @@ class FakeCommonDimensions(
 ) : CommonDimensions {
 
     override suspend fun add(dimensions: MutableMap<String, String>, vararg keys: CommonDimensions.Key) {
-        keys.map { it.reportedName }
-            .forEach { key ->
-                dimensions[key] = this.dimensions[key] ?: CommonDimensions.NO_VALUE
-            }
+        keys.forEach { key ->
+            dimensions[key.reportedName] = getValue(key)
+        }
     }
+
+    override suspend fun getValue(key: CommonDimensions.Key): String =
+        dimensions[key.reportedName] ?: CommonDimensions.NO_VALUE
 }

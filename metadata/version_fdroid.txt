@@ -1,2 +1,2 @@
-versionName=5.17.21.0
-versionCode=605172100
+versionName=5.18.1.0
+versionCode=605180100

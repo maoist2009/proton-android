@@ -53,6 +53,10 @@ import com.protonvpn.android.appconfig.periodicupdates.PeriodicUpdateWorkerSched
 import com.protonvpn.android.auth.usecase.CurrentUser
 import com.protonvpn.android.auth.usecase.CurrentUserProvider
 import com.protonvpn.android.auth.usecase.DefaultCurrentUserProvider
+import com.protonvpn.android.auth.usecase.EventShowOnboarding
+import com.protonvpn.android.auth.usecase.EventShowOnboardingImpl
+import com.protonvpn.android.auth.usecase.IsQrCodeTvLoginFeatureFlagEnabled
+import com.protonvpn.android.auth.usecase.IsQrCodeTvLoginFeatureFlagEnabledImpl
 import com.protonvpn.android.auth.usecase.SetVpnUser
 import com.protonvpn.android.auth.usecase.SetVpnUserImpl
 import com.protonvpn.android.base.ui.theme.VpnTheme
@@ -64,6 +68,8 @@ import com.protonvpn.android.mmp.IsMmpFeatureFlagEnabled
 import com.protonvpn.android.mmp.IsMmpFeatureFlagEnabledImpl
 import com.protonvpn.android.models.vpn.usecase.ProvideLocalNetworks
 import com.protonvpn.android.models.vpn.usecase.ProvideLocalNetworksImpl
+import com.protonvpn.android.netshield.IsNetShieldLevelThreeFeatureFlagEnabled
+import com.protonvpn.android.netshield.IsNetShieldLevelThreeFeatureFlagEnabledImpl
 import com.protonvpn.android.profiles.usecases.GetPrivateBrowsingAvailability
 import com.protonvpn.android.profiles.usecases.GetPrivateBrowsingAvailabilityImpl
 import com.protonvpn.android.profiles.usecases.GetProfileById
@@ -308,6 +314,9 @@ object AppModuleProd {
         fun bindVpnPrepareDelegate(delegate: VpnServicePermissionDelegate): VpnPermissionDelegate
 
         @Binds
+        fun bindTelemetryReporter(impl: DefaultTelemetryReporter): TelemetryReporter
+
+        @Binds
         fun bindTelemetryUploadScheduler(scheduler: TelemetryUploadWorkerScheduler): TelemetryUploadScheduler
 
         @Binds
@@ -445,6 +454,9 @@ object AppModule {
         fun bindDefaultLocaleProvider(impl: DefaultLocaleProviderImpl): DefaultLocaleProvider
 
         @Binds
+        fun bindEventShowOnboarding(impl: EventShowOnboardingImpl): EventShowOnboarding
+
+        @Binds
         fun bindFeatureFlagContextProvider(provider: VpnFeatureFlagContextProvider): FeatureFlagContextProvider
 
         @Binds
@@ -487,6 +499,11 @@ object AppModule {
 
         @Binds
         fun bindsIsProTunV1FeatureFlagEnabled(impl: IsProTunV1FeatureFlagEnabledImpl): IsProTunV1FeatureFlagEnabled
+
+        @Binds
+        fun bindsIsQrCodeTvLoginFeatureFlagEnabled(
+            impl: IsQrCodeTvLoginFeatureFlagEnabledImpl
+        ): IsQrCodeTvLoginFeatureFlagEnabled
 
         @Binds
         fun bindIsAutomaticConnectionPreferencesFeatureFlagEnabled(
@@ -542,6 +559,9 @@ object AppModule {
         fun bindIsMmpFeatureFlagEnabled(impl: IsMmpFeatureFlagEnabledImpl): IsMmpFeatureFlagEnabled
 
         @Binds
+        fun bindsIsNetShieldLevelThreeFeatureFlagEnabled(impl: IsNetShieldLevelThreeFeatureFlagEnabledImpl): IsNetShieldLevelThreeFeatureFlagEnabled
+
+        @Binds
         fun bindPeriodicUpdateManager(impl: PeriodicUpdateManagerImpl): PeriodicUpdateManager
 
         @Binds
@@ -560,9 +580,6 @@ object AppModule {
 
         @Binds
         fun bindShouldShowAppUpdateDotFlow(impl: ShouldShowAppUpdateDotFlowImpl): ShouldShowAppUpdateDotFlow
-
-        @Binds
-        fun bindTelemetryReporter(impl: DefaultTelemetryReporter): TelemetryReporter
 
         @Singleton
         @Binds

@@ -272,6 +272,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">Data yang dihemat</string>
     <string name="netshield_setting_warning">Beberapa situs web mungkin tidak akan dapat termuat dengan benar pada saat iklan dan pelacak diblokir.</string>
+    <string name="netshield_setting_block_adult_content">Block adult content</string>
     <string name="dialogDontShowAgain">Jangan tampilkan lagi</string>
     <string name="guestHoleNotificationContent">Cobalah untuk mengatasi isu jaringan. Hal ini akan membantu Anda mengakses Proton VPN.</string>
     <string name="errorTunMultiUserPermission">Koneksi VPN tidak dapat dikukuhkan karena terdapat konflik antar aplikasi multi-akun (mis. Dual Messenger) dan split tunneling. Silakan nonaktifkan salah satu di antaranya dan nyalakan ulang perangkat Anda.</string>
@@ -1443,7 +1444,7 @@
     <string name="info_p2p_why_description_speed">Kecepatan unggahan dan unduhan yang ditingkatkan</string>
     <string name="info_p2p_why_description_logs">Tanpa log aktivitas</string>
     <string name="info_p2p_why_description_hide">Sembunyikan alamat IP Anda dari penyedia layanan internet dan komputer lain</string>
-    <string name="info_dialog_smart_routing_description">Smart Routing menggunakan server virtual untuk menyediakan VPN di negara dengan pembatasan internet yang ketat.\n\nPada saat Anda terhubung ke server dengan Smart Routing, Anda akan terlihat seolah-olah Anda sedang menjelajah dari negara tujuan Anda, meskipun server yang melayani Anda secara fisik terletak di tempat lain.  \n\nSmart Routing pada umumnya digunakan untuk menghindari undang-undang anti-privasi dan bentuk sensor lainnya.</string>
+    <string name="info_dialog_smart_routing_description">Smart Routing allows us to provide VPN coverage in hard-to-reach countries.\n\nWhen you connect to a Smart Routing server, you’ll appear to be browsing in your destination country, even though the physical server is located elsewhere.  \n\nSmart Routing is typically used to get around anti-privacy laws and other forms of censorship.</string>
     <string name="notifications_channel_connection_status_name">Connection status</string>
     <string name="notifications_channel_connection_status_description">Shows which server you’re connected to and your VPN speed.</string>
     <string name="notifications_channel_connection_errors_name">Connection errors</string>
@@ -1578,15 +1579,41 @@
     <string name="no_connections_action_sign_out">Keluar</string>
     <string name="no_connections_help_contact_us"><![CDATA[Butuh bantuan? <a href="">Hubungi kami</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Apabila administrator Anda memerlukan bantuan untuk mengaktifkan akses VPN, kirimkan <a href="">instruksi ini</a> kepada mereka.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">Aktifkan OpenVPN?</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Protokol ini akan segera dihapus seiring dengan fokus kami pada teknologi yang lebih cepat dan aman. Kami menyarankan Anda untuk beralih ke Smart Protocol. <a href="proton.me">Pelajari lebih lanjut</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Protokol ini akan segera dihapus seiring dengan fokus kami pada teknologi yang lebih cepat dan aman. Kami menyarankan Anda untuk beralih ke Smart Protocol.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Lanjutkan dengan OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Aktifkan Smart Protocol</string>
     <string name="settings_protocol_proton_protocols">Protokol Proton</string>
     <string name="settings_protocol_proton_protocols_description">Gunakan implementasi WireGuard milik Proton VPN. Fitur ini adalah fitur eksperimental, sehingga Anda mungkin dapat mengalami ketidakstabilan.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">Not the country you wanted?</string>
     <string name="connection_preferences_smart_discovery_dialog_message">If there are locations you don’t want to be automatically connected to, you can exclude them from Fastest country.</string>
     <string name="excluded_locations_adoption_title">Avoid unwanted locations</string>
     <string name="excluded_locations_adoption_description"><![CDATA[You can now exclude countries and cities from <b>Fastest</b> connections.]]></string>
+    <string name="session_fork_no_account_title">Sign in on Android TV</string>
+    <string name="session_fork_no_account_message">Complete the sign-in on this device to start using Proton VPN on your TV</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[By using this app you accept our <a href="">Terms and Conditions</a>.]]></string>
+    <string name="session_fork_no_account_signup_button">Create an account</string>
+    <string name="session_fork_no_account_signin_button">Sign in</string>
+    <string name="session_fork_confirmation_title">Sign in on Android TV?</string>
+    <string name="session_fork_confirmation_message">This will allow the TV to access your Proton account.</string>
+    <string name="session_fork_confirmation_bottom_note">Only sign in on devices you trust</string>
+    <string name="session_fork_confirmation_too_soon_toast">Please review before continuing</string>
+    <string name="session_fork_success_title">Sign-in complete</string>
+    <string name="session_fork_success_message">You\'re now signed in on your TV.</string>
+    <string name="session_fork_error_expired_title">Code expired</string>
+    <string name="session_fork_error_expired_message">Create a new code on your TV and try again.</string>
+    <string name="session_fork_error_generic_title">Couldn’t sign in</string>
+    <string name="session_fork_error_fatal_message">Check your network and try again. If the problem persists, get in touch with our customer support team. </string>
+    <string name="session_fork_error_network_message">Check your network and try again.</string>
+    <string name="session_fork_error_try_fallback_message">Click \‘Trouble signing in?\’ on your TV to follow the alternative steps.</string>
+    <string name="session_fork_error_report_button">Report the issue</string>
+    <string name="session_fork_qr_code_content_description">QR code</string>
+    <string name="session_fork_qr_code_message">Scan the QR code to sign in or create an account.</string>
+    <string name="session_fork_qr_code_trouble_button">Trouble signing in?</string>
+    <string name="session_fork_qr_code_error_expired">For security reasons the validation code has expired</string>
+    <string name="session_fork_qr_code_error_network">Check your network and try again</string>
+    <string name="session_fork_qr_code_error_create_new_button">Create a new code</string>
+    <string name="session_fork_user_code_title">Can’t scan the code? Sign in manually</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Go to: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Sign in or create an account</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Enter the code: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Still need help? Visit <b>%1$s</b>]]></string>
 </resources>

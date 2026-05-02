@@ -19,11 +19,13 @@
 
 package com.protonvpn.android.telemetry
 
+import com.protonvpn.android.netshield.NetShieldProtocol
 import com.protonvpn.android.profiles.data.ProfileAutoOpen
 import com.protonvpn.android.profiles.ui.ProfileType
 import com.protonvpn.android.profiles.usecases.PrivateBrowsingAvailability
 import com.protonvpn.android.redesign.settings.ui.NatType
 import com.protonvpn.android.vpn.ProtocolSelection
+import com.protonvpn.android.vpn.alwayson.VpnAlwaysOn
 
 fun Boolean.toTelemetry() = if (this) "true" else "false"
 
@@ -34,8 +36,15 @@ fun ProtocolSelection.toTelemetry(): String {
 }
 
 fun NatType.toTelemetry() = when(this) {
-    NatType.Strict -> "type3_strict"
-    NatType.Moderate -> "type2_moderate"
+    NatType.Strict -> "strict"
+    NatType.Moderate -> "moderate"
+}
+
+fun NetShieldProtocol.toTelemetry(): String = when(this) {
+    NetShieldProtocol.DISABLED -> "off"
+    NetShieldProtocol.ENABLED -> "malware"
+    NetShieldProtocol.ENABLED_EXTENDED -> "ads_trackers_and_malware"
+    NetShieldProtocol.ENABLED_EXTENDED_ADULT_CONTENT -> "ads_trackers_malware_and_adult_content"
 }
 
 fun ProfileAutoOpen.toTelemetry() = when(this) {
@@ -55,4 +64,10 @@ fun ProfileType.toTelemetry() = when(this) {
     ProfileType.SecureCore -> "secure_core"
     ProfileType.P2P -> "p2p"
     ProfileType.Gateway -> "gateway"
+}
+
+fun VpnAlwaysOn.toTelemetry(): String = if (isLockdownEnabled) {
+    "advanced"
+} else {
+    "off"
 }

@@ -278,6 +278,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">Ušetřená data</string>
     <string name="netshield_setting_warning">Některé webové stránky se nemusí správně načíst, pokud je blokována reklama a sledovací prvky.</string>
+    <string name="netshield_setting_block_adult_content">Block adult content</string>
     <string name="dialogDontShowAgain">Příště nezobrazovat</string>
     <string name="guestHoleNotificationContent">Snažíme se obejít problémy se sítí. Toto vám pomůže připojit se k Proton VPN.</string>
     <string name="errorTunMultiUserPermission">Nepodařilo se aktivovat připojení VPN kvůli konfliktu mezi duální aplikací (například Dual Messenger) a funkcí Split tunneling. Prosím deaktivujte jednu z nich a restartujte vaše zařízení.</string>
@@ -1551,13 +1552,13 @@
     <string name="info_p2p_why_description_speed">Zvýšená rychlost nahrávání a stahování</string>
     <string name="info_p2p_why_description_logs">Žádné logy aktivity</string>
     <string name="info_p2p_why_description_hide">Skryjte svoji IP adresu přes poskytovatelem internetu a ostatními</string>
-    <string name="info_dialog_smart_routing_description">Smart Routing využívá virtuální servery k poskytování VPN v těžko dostupných zemích.\n\nKdyž se připojíte k serveru Smart Routing, bude se zdát, že prohlížíte ve své cílové zemi, i když je fyzický server umístěn jinde.\n\nSmart Routing se obvykle používá k obcházení zákonů potlačujících ochranu soukromí a jiných forem cenzury.</string>
-    <string name="notifications_channel_connection_status_name">Connection status</string>
-    <string name="notifications_channel_connection_status_description">Shows which server you’re connected to and your VPN speed.</string>
-    <string name="notifications_channel_connection_errors_name">Connection errors</string>
-    <string name="notifications_channel_connection_errors_description">Alerts you to problems that pause or stop your VPN connection.</string>
-    <string name="notifications_channel_connection_tips_name">Connection tips</string>
-    <string name="notifications_channel_connection_tips_description">Contextual tips that help you get more out of Proton VPN.</string>
+    <string name="info_dialog_smart_routing_description">Smart Routing nám umožňuje zajistit pokrytí VPN v těžko dostupných zemích.\n\nKdyž se připojíte k serveru Smart Routing, bude se zdát, že prohlížíte internet ve své cílové zemi, i když bude fyzický server umístěn jinde.\n\nSmart Routing se obvykle používá k obcházení zákonů potlačujících soukromí a jiných forem cenzury.</string>
+    <string name="notifications_channel_connection_status_name">Stav připojení</string>
+    <string name="notifications_channel_connection_status_description">Zobrazuje, ke kterému serveru jste připojeni a rychlost vaší VPN.</string>
+    <string name="notifications_channel_connection_errors_name">Chyby připojení</string>
+    <string name="notifications_channel_connection_errors_description">Upozorní vás na problémy, které způsobí pozastavení nebo zastavení vašeho připojení k VPN.</string>
+    <string name="notifications_channel_connection_tips_name">Tipy k připojení</string>
+    <string name="notifications_channel_connection_tips_description">Kontextové tipy, které vám pomohou lépe využít Proton VPN.</string>
     <string name="countries_upsell_banner_description">Přístup do všech zemí s VPN Plus</string>
     <string name="secure_core_upsell_banner_description">Přidejte další úroveň šifrování vašemu VPN připojení</string>
     <string name="p2p_upsell_banner_description">Stahujte soubory přes BitTorrent a jiné protokoly ke sdílení souborů</string>
@@ -1686,15 +1687,41 @@
     <string name="no_connections_action_sign_out">Odhlásit se</string>
     <string name="no_connections_help_contact_us"><![CDATA[Potřebujete pomoc? <a href="">Kontaktujte nás</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[Pokud váš administrátor potřebuje pomoc s povolením přístupu VPN, odešlete mu <a href="">tyto instrukce</a>]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">Zapnout OpenVPN?</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[Tento protokol bude brzy odebrán, protože se zaměřujeme na rychlejší a bezpečnější technologie. Doporučujeme přejít na Smart Protocol. <a href="proton.me">Více informací</a>.]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">Tento protokol bude brzy odebrán, protože se zaměřujeme na rychlejší a bezpečnější technologie. Doporučujeme přejít na Smart Protocol.</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">Pokračovat s OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">Zapnout Smart Protocol</string>
     <string name="settings_protocol_proton_protocols">Protokoly Proton</string>
     <string name="settings_protocol_proton_protocols_description">Použijte vlastní implementaci VPN protokolu WireGuard od Proton. Jedná se o experimentální funkci, takže můžete zaznamenat určitou nestabilitu.</string>
     <string name="connection_preferences_smart_discovery_dialog_title">Chtěli jste jinou zemi?</string>
     <string name="connection_preferences_smart_discovery_dialog_message">Pokud existují umístění, ke kterým se nechcete automaticky připojovat, můžete je ze sekce Nejrychlejší země vyloučit.</string>
     <string name="excluded_locations_adoption_title">Vyhnout se nechtěným umístěním</string>
     <string name="excluded_locations_adoption_description"><![CDATA[Nyní můžete vyloučit země a města z <b>Nejrychlejších</b> připojení.]]></string>
+    <string name="session_fork_no_account_title">Přihlásit se na Android TV</string>
+    <string name="session_fork_no_account_message">Dokončete přihlášení na tomto zařízení a začněte používat Proton VPN na své TV</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[Používáním této aplikace souhlasíte s našimi <a href="">smluvními podmínkami užívání</a>.]]></string>
+    <string name="session_fork_no_account_signup_button">Vytvořit účet</string>
+    <string name="session_fork_no_account_signin_button">Přihlásit se</string>
+    <string name="session_fork_confirmation_title">Přihlásit se na Android TV?</string>
+    <string name="session_fork_confirmation_message">Díky tomu bude mít TV přístup k vašemu účtu Proton.</string>
+    <string name="session_fork_confirmation_bottom_note">Přihlašujte se pouze na zařízeních, kterým důvěřujete</string>
+    <string name="session_fork_confirmation_too_soon_toast">Před pokračováním si prosím přečtěte následující informace</string>
+    <string name="session_fork_success_title">Přihlášení dokončeno</string>
+    <string name="session_fork_success_message">Nyní jste přihlášeni na své TV.</string>
+    <string name="session_fork_error_expired_title">Platnost kódu vypršela</string>
+    <string name="session_fork_error_expired_message">Vytvořte na TV nový kód a zkuste to znovu.</string>
+    <string name="session_fork_error_generic_title">Nelze se přihlásit</string>
+    <string name="session_fork_error_fatal_message">Zkontrolujte připojení k síti a zkuste to znovu. Pokud problém přetrvává, obraťte se na náš tým zákaznické podpory. </string>
+    <string name="session_fork_error_network_message">Zkontrolujte připojení k síti a zkuste to znovu.</string>
+    <string name="session_fork_error_try_fallback_message">Klikněte na \‘Problémy s přihlášením?\’ na vaší TV a postupujte podle alternativních kroků.</string>
+    <string name="session_fork_error_report_button">Nahlásit problém</string>
+    <string name="session_fork_qr_code_content_description">QR kód</string>
+    <string name="session_fork_qr_code_message">Naskenujte QR kód a přihlaste se nebo si vytvořte účet.</string>
+    <string name="session_fork_qr_code_trouble_button">Potíže s přihlášením?</string>
+    <string name="session_fork_qr_code_error_expired">Z bezpečnostních důvodů platnost ověřovacího kódu vypršela</string>
+    <string name="session_fork_qr_code_error_network">Zkontrolujte připojení k síti a zkuste to znovu</string>
+    <string name="session_fork_qr_code_error_create_new_button">Vytvořit nový kód</string>
+    <string name="session_fork_user_code_title">Nelze naskenovat kód? Přihlaste se ručně</string>
+    <string name="session_fork_user_code_step1"><![CDATA[Jděte na: <b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">Přihlaste se nebo si vytvořte účet</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[Zadejte kód: <b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[Potřebujete ještě pomoc? Navštivte <b>%1$s</b>]]></string>
 </resources>

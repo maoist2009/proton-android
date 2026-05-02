@@ -272,6 +272,7 @@
     </plurals>
     <string name="netshield_data_saved" comment="Total data saved by netshield shown in kb/mb">节省流量</string>
     <string name="netshield_setting_warning">屏蔽了广告和跟踪器，某些网站可能加载不正常。</string>
+    <string name="netshield_setting_block_adult_content">Block adult content</string>
     <string name="dialogDontShowAgain">不再显示</string>
     <string name="guestHoleNotificationContent">正在尝试绕过网络问题。这有助于连接到 Proton VPN。</string>
     <string name="errorTunMultiUserPermission">由于双应用程序（例如 Dual Messenger）和拆分隧道之间的冲突，无法初始化 VPN 连接。请禁用其中一个并重启设备。</string>
@@ -1443,7 +1444,7 @@
     <string name="info_p2p_why_description_speed">上传下载更快</string>
     <string name="info_p2p_why_description_logs">不记录活动信息</string>
     <string name="info_p2p_why_description_hide">对网络运营商和其他人隐藏 IP 地址</string>
-    <string name="info_dialog_smart_routing_description">利用虚拟服务器，Smart Routing 把可以选择的 VPN 位置扩展到不易设立服务器的地域。\n\n连接到 Smart Routing 服务器后，尽管服务器在目标地域之外，但您看起来就像是在目标地域浏览互联网。  \n\nSmart Routing 可用于绕过反隐私法及其他形式的审查。</string>
+    <string name="info_dialog_smart_routing_description">智能路由使我们能够在难以覆盖的国家/地区提供 VPN 服务。\n\n当您连接到智能路由服务器时，您将显示为在目标国家/地区浏览，即使物理服务器位于其他地方。\n\n智能路由通常用于规避反隐私法律及其他形式的审查。</string>
     <string name="notifications_channel_connection_status_name">连接状态</string>
     <string name="notifications_channel_connection_status_description">显示您连接到的服务器以及您的 VPN 速度。</string>
     <string name="notifications_channel_connection_errors_name">连接错误</string>
@@ -1578,15 +1579,41 @@
     <string name="no_connections_action_sign_out">登出</string>
     <string name="no_connections_help_contact_us"><![CDATA[有问题吗？<a href="">联系我们</a>]]></string>
     <string name="no_connections_help_follow_instructions"><![CDATA[需要的话，把<a href="">操作说明</a>发给管理员，帮管理员开启 VPN 权限。]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_title">启用 OpenVPN？</string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description"><![CDATA[该协议将在不久后移除，因为我们正专注于更快速、更安全的技术。我们建议切换到 Smart Protocol。<a href="proton.me">了解详情</a>。]]></string>
-    <string name="settings_protocol_openvpn_deprecation_dialog_description_tv">该协议将在不久后移除，因为我们正专注于更快速、更安全的技术。我们建议切换到 Smart Protocol。</string>
-    <string name="settings_protocol_openvpn_change_dialog_continue_openvpn">改用 OpenVPN</string>
-    <string name="settings_protocol_openvpn_change_dialog_enable_smart">启用智能协议</string>
     <string name="settings_protocol_proton_protocols">Proton 协议</string>
     <string name="settings_protocol_proton_protocols_description">使用 Proton VPN 自有的 WireGuard 实现。这是一个实验性功能，因此您可能会遇到一些不稳定的情况。</string>
     <string name="connection_preferences_smart_discovery_dialog_title">不是您想要的国家/地区？</string>
     <string name="connection_preferences_smart_discovery_dialog_message">如果有您不希望被自动连接到的位置，您可以将它们从“最快国家/地区”中排除。</string>
     <string name="excluded_locations_adoption_title">避免不希望连接的位置</string>
     <string name="excluded_locations_adoption_description"><![CDATA[您现在可以从 <b>最快</b> 连接中排除国家/地区和城市了！]]></string>
+    <string name="session_fork_no_account_title">在 Android TV 上登录</string>
+    <string name="session_fork_no_account_message">在此设备上完成登录，即可开始在电视上使用 Proton VPN</string>
+    <string name="session_fork_no_account_footnote"><![CDATA[使用本应用程序即表示您接受我们的<a href="">服务条款</a>。]]></string>
+    <string name="session_fork_no_account_signup_button">创建账户</string>
+    <string name="session_fork_no_account_signin_button">登录</string>
+    <string name="session_fork_confirmation_title">在 Android TV 上登录？</string>
+    <string name="session_fork_confirmation_message">这将允许电视访问您的 Proton 账户。</string>
+    <string name="session_fork_confirmation_bottom_note">仅在您信任的设备上登录</string>
+    <string name="session_fork_confirmation_too_soon_toast">请先检查再继续</string>
+    <string name="session_fork_success_title">登录完成</string>
+    <string name="session_fork_success_message">您现在已在电视上登录。</string>
+    <string name="session_fork_error_expired_title">代码已过期</string>
+    <string name="session_fork_error_expired_message">请在电视上生成新的代码后重试。</string>
+    <string name="session_fork_error_generic_title">无法登录</string>
+    <string name="session_fork_error_fatal_message">请检查您的网络后重试。如果问题仍然存在，请联系我们的客户支持团队。</string>
+    <string name="session_fork_error_network_message">请检查您的网络后重试。</string>
+    <string name="session_fork_error_try_fallback_message">点击电视上的“登录遇到问题？”以按照备用步骤操作。</string>
+    <string name="session_fork_error_report_button">报告问题</string>
+    <string name="session_fork_qr_code_content_description">二维码</string>
+    <string name="session_fork_qr_code_message">扫描二维码登录或创建账户</string>
+    <string name="session_fork_qr_code_trouble_button">登录遇到问题？</string>
+    <string name="session_fork_qr_code_error_expired">出于安全考虑，验证码已过期</string>
+    <string name="session_fork_qr_code_error_network">请检查您的网络后重试</string>
+    <string name="session_fork_qr_code_error_create_new_button">获取新代码</string>
+    <string name="session_fork_user_code_title">无法扫描二维码？手动登录</string>
+    <string name="session_fork_user_code_step1"><![CDATA[前往：<b>%1$s</b>]]></string>
+    <string name="session_fork_user_code_step2">登录或创建账户</string>
+    <!-- Parameter: 8 character alphanumeric code, e.g. "AB12 CD34" -->
+    <string name="session_fork_user_code_step3"><![CDATA[输入代码：<b>%1$s</b>]]></string>
+    <!-- Parameter: web address for the support website, e.g. "protonvpn.com/support" -->
+    <string name="session_fork_user_code_support"><![CDATA[仍需帮助？请访问 <b>%1$s</b>]]></string>
 </resources>

@@ -92,11 +92,14 @@ class UpgradeTelemetry @Inject constructor(
         }
     }
 
-    fun onUpgradeSuccess(newPlanId: String?, flowType: UpgradeFlowType) {
+    fun onUpgradeSuccess(newPlanId: String?, flowType: UpgradeFlowType, billingCycle: Int) {
         helper.event {
             currentDimensions?.let { currentDimensions ->
                 val upgradedPlan = newPlanId ?: NO_VALUE
-                val dimensions = currentDimensions + ("upgraded_user_plan" to upgradedPlan)
+                val dimensions = currentDimensions + mapOf(
+                    "upgraded_user_plan" to upgradedPlan,
+                    "billing_cycle" to billingCycle.toString(),
+                )
                 currentUpgradeFlow = null
                 eventData("upsell_success", dimensions.withFlowType(flowType))
             }
@@ -113,8 +116,8 @@ class UpgradeTelemetry @Inject constructor(
         val user = currentUser.user()
         val vpnUser = currentUser.vpnUser()
 
-        commonDimensions.add(this, CommonDimensions.Key.USER_COUNTRY, CommonDimensions.Key.VPN_STATUS,
-            CommonDimensions.Key.USER_TIER, CommonDimensions.Key.IS_CREDENTIAL_LESS_ENABLED)
+        commonDimensions.add(this, CommonDimensions.Key.USER_COUNTRY_LEGACY, CommonDimensions.Key.VPN_STATUS_LEGACY,
+            CommonDimensions.Key.USER_TIER_LEGACY, CommonDimensions.Key.IS_CREDENTIAL_LESS_ENABLED_LEGACY)
         put("modal_source", upgradeSource.reportedName)
         put("new_free_plan_ui", "yes") // Used to be a feature flag.
         put("reference", reference ?: NO_VALUE)

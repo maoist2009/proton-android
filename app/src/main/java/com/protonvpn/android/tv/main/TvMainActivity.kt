@@ -22,20 +22,21 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.protonvpn.android.R
 import com.protonvpn.android.api.GuestHole
-import com.protonvpn.android.auth.usecase.VpnLogin
+import com.protonvpn.android.auth.usecase.AwaitIsQrCodeTvLoginFeatureFlagEnabled
+import com.protonvpn.android.auth.usecase.IsQrCodeTvLoginFeatureFlagEnabled
 import com.protonvpn.android.components.BaseTvActivity
 import com.protonvpn.android.databinding.ActivityTvMainBinding
-import com.protonvpn.android.redesign.app.ui.VpnApp
 import com.protonvpn.android.redesign.app.ui.VpnAppViewModel
 import com.protonvpn.android.tv.IsTvCheck
 import com.protonvpn.android.tv.TvLoginActivity
 import com.protonvpn.android.tv.login.TvPostLoginFragment
-import com.protonvpn.android.ui.main.AccountViewModel
+import com.protonvpn.android.tv.login.TvQrLoginActivity
 import com.protonvpn.android.ui.main.MainActivityHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -47,7 +48,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TvMainActivity : BaseTvActivity() {
 
-    private val accountViewModel: AccountViewModel by viewModels()
+    private val accountViewModel: TvMainAccountViewModel by viewModels()
     private val vpnAppViewModel: VpnAppViewModel by viewModels()
     private var vpnAppStateJob: Job? = null
 
@@ -57,11 +58,18 @@ class TvMainActivity : BaseTvActivity() {
     @Inject
     lateinit var guestHole: GuestHole
 
+    @Inject
+    lateinit var awaitIsQrCodeTvLoginFeatureFlagEnabled: dagger.Lazy<AwaitIsQrCodeTvLoginFeatureFlagEnabled>
+
     private val helper = object : MainActivityHelper(this) {
 
         override suspend fun onLoginNeeded() {
-            clearMainFragment()
-            loginLauncher.launch(Unit)
+            clearMainFragmentAndShowSpinner()
+            if (awaitIsQrCodeTvLoginFeatureFlagEnabled.get().invoke()) {
+                loginLauncher.launch(Unit)
+            } else {
+                legacyLoginLauncher.launch(Unit)
+            }
         }
 
         override suspend fun onReady() {
@@ -75,7 +83,11 @@ class TvMainActivity : BaseTvActivity() {
         }
     }
 
-    private val loginLauncher = registerForActivityResult(TvLoginActivity.createContract()) {
+    private val legacyLoginLauncher = registerForActivityResult(TvLoginActivity.createContract()) {
+        if (it.resultCode == Activity.RESULT_CANCELED)
+            finish()
+    }
+    private val loginLauncher = registerForActivityResult(TvQrLoginActivity.createContract()) {
         if (it.resultCode == Activity.RESULT_CANCELED)
             finish()
     }
@@ -111,12 +123,12 @@ class TvMainActivity : BaseTvActivity() {
         }
     }
 
-    private fun clearMainFragment() = with(supportFragmentManager) {
+    private fun clearMainFragmentAndShowSpinner() = with(supportFragmentManager) {
         vpnAppStateJob?.cancel()
         commit {
-            findFragmentById(R.id.container)?.let {
-                remove(it)
-            }
+            replace(R.id.container, TvFragmentSpinner())
         }
     }
 }
+
+class TvFragmentSpinner : Fragment(R.layout.fragment_tv_spinner)
